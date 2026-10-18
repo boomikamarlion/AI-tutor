@@ -22,3 +22,5 @@ apps/web/test-results/
 apps/web/playwright-report/
 apps/web/e2e/screens/
 dump.rdb
+# azd validation scratch files (contain resolved parameters)
+infra/validation-*.bicepparam
