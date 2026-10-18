@@ -18,6 +18,9 @@ param location string = resourceGroup().location
 @description('Region for Microsoft Foundry. GPT-6 Global Standard deployments are not offered in every region.')
 param foundryLocation string = 'eastus2'
 
+@description('Region for PostgreSQL. Some subscriptions are restricted from provisioning Postgres in southindia.')
+param postgresLocation string = location
+
 @description('Leave empty to create a Foundry account + project here. Set to an existing project endpoint to reuse it.')
 param existingFoundryProjectEndpoint string = ''
 
@@ -183,7 +186,7 @@ resource blobContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = 
 
 resource postgres 'Microsoft.DBforPostgreSQL/flexibleServers@2024-08-01' = {
   name: 'psql-ecosys-${token}'
-  location: location
+  location: postgresLocation
   tags: tags
   sku: { name: 'Standard_B2s', tier: 'Burstable' }
   properties: {
@@ -214,15 +217,15 @@ module postgresAdmin 'modules/postgres-admin.bicep' = {
   params: { serverName: postgres.name, principalId: identity.properties.principalId, principalName: identity.name }
 }
 
-resource redis 'Microsoft.Cache/redisEnterprise@2025-04-01' = {
+resource redis 'Microsoft.Cache/redisEnterprise@2026-09-01' = {
   name: 'redis-ecosys-${token}'
   location: location
   tags: tags
   sku: { name: 'Balanced_B0' }
-  properties: { minimumTlsVersion: '1.2' }
+  properties: { minimumTlsVersion: '1.2', publicNetworkAccess: 'Enabled' }
 }
 
-resource redisDb 'Microsoft.Cache/redisEnterprise/databases@2025-04-01' = {
+resource redisDb 'Microsoft.Cache/redisEnterprise/databases@2026-09-01' = {
   parent: redis
   name: 'default'
   properties: {
@@ -266,6 +269,8 @@ resource deployments 'Microsoft.CognitiveServices/accounts/deployments@2025-06-0
   for d in (createFoundry ? modelDeployments : []): {
     parent: foundry
     name: d.name
+    // Writing deployments while the project is still being created fails with RequestConflict.
+    dependsOn: [foundryProject]
     sku: { name: 'GlobalStandard', capacity: d.capacity }
     properties: {
       model: empty(d.version) ? { format: 'OpenAI', name: d.model } : { format: 'OpenAI', name: d.model, version: d.version }
