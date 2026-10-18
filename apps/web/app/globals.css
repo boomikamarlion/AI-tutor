@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* Visual language: warm paper, deep ink, marigold for progress, indigo for the model.
+   Every colour is a token so the brand pass later is a one-file change. */
+:root {
+  --bg: #fbf8f3;
+  --surface: #ffffff;
+  --surface-2: #f3eee6;
+  --ink: #1b1a17;
+  --ink-2: #57534b;
+  --line: #e6dfd3;
+  --accent: #e8930c; /* marigold — progress, XP, wins */
+  --accent-ink: #4a2c00;
+  --model: #3d42d6; /* indigo — anything the model produced */
+  --good: #14804a;
+  --warn: #b45309;
+  --bad: #c2362b;
+  --radius: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111214;
+    --surface: #191a1d;
+    --surface-2: #222328;
+    --ink: #f1eee8;
+    --ink-2: #aaa59b;
+    --line: #2e3036;
+    --accent: #f5a524;
+    --accent-ink: #1b1100;
+    --model: #8b8ff7;
+    --good: #3ccf86;
+    --warn: #f0a44a;
+    --bad: #f07167;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-model: var(--model);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform 0.08s ease, opacity 0.15s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-accent { background: var(--accent); color: var(--accent-ink); }
+.btn-ghost { border: 1px solid var(--line); background: var(--surface); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+}
+.input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.prose-brief p { margin: 0.4rem 0; }
+.prose-brief ul { list-style: disc; padding-left: 1.2rem; }
+
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.pop { animation: pop 0.45s ease-out both; }
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--surface-2) 0, var(--line) 50%, var(--surface-2) 100%);
+  background-size: 400px 100%;
+  animation: shimmer 1.2s infinite linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop, .shimmer { animation: none; }
+}

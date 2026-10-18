@@ -17,3 +17,8 @@ next-env.d.ts
 .azure/
 # OS
 .DS_Store
+# Playwright
+apps/web/test-results/
+apps/web/playwright-report/
+apps/web/e2e/screens/
+dump.rdb

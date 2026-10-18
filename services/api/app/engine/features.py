@@ -21,7 +21,7 @@ _I = re.IGNORECASE | re.MULTILINE
 RULES: list[Rule] = [
     Rule("role", "Role", re.compile(r"\b(you are|act as|you're an?|as an? (expert|experienced|senior))\b", _I), 2),
     Rule("task", "Clear task", re.compile(
-        r"^\s*(please\s+)?(write|create|generate|draft|summari[sz]e|classify|extract|list|rewrite|translate|"
+        r"(^|[.!?:]\s+)(please\s+)?(write|create|generate|draft|summari[sz]e|classify|extract|list|rewrite|translate|"
         r"analy[sz]e|explain|tag|answer|grade|evaluate|plan|convert|compare|identify|produce|suggest|design|"
         r"review|turn|reply|respond)\b|\b(your task is|you will|i need you to)\b", _I), 3),
     Rule("audience", "Audience", re.compile(

@@ -1,0 +1,9 @@
+{
+  "name": "Ecosys — learn to prompt by doing",
+  "short_name": "Ecosys",
+  "start_url": "/learn",
+  "display": "standalone",
+  "background_color": "#fbf8f3",
+  "theme_color": "#1b1a17",
+  "icons": [{ "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }]
+}

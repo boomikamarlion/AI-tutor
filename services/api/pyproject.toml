@@ -46,3 +46,6 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "ASYNC"]
 ignore = ["B008"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["alembic"]

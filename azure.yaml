@@ -1,0 +1,32 @@
+# Azure Developer CLI. `azd up` provisions infra/main.bicep into AZURE_RESOURCE_GROUP and
+# deploys the three container apps. Images are built remotely in the environment's ACR.
+name: ecosys
+metadata:
+  template: ecosys@0.1.0
+infra:
+  provider: bicep
+  path: infra
+services:
+  web:
+    project: apps/web
+    language: js
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      remoteBuild: true
+  api:
+    project: services/api
+    language: py
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: ../..
+      remoteBuild: true
+  worker:
+    project: services/api
+    language: py
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: ../..
+      remoteBuild: true

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": { "value": "${AZURE_ENV_NAME}" },
+    "location": { "value": "${AZURE_LOCATION=southindia}" },
+    "foundryLocation": { "value": "${FOUNDRY_LOCATION=eastus2}" },
+    "existingFoundryProjectEndpoint": { "value": "${EXISTING_FOUNDRY_PROJECT_ENDPOINT=}" },
+    "entraTenantId": { "value": "${ENTRA_TENANT_ID=}" },
+    "entraTenantSubdomain": { "value": "${ENTRA_TENANT_SUBDOMAIN=}" },
+    "entraApiClientId": { "value": "${ENTRA_API_CLIENT_ID=}" },
+    "entraWebClientId": { "value": "${ENTRA_WEB_CLIENT_ID=}" },
+    "entraWebClientSecret": { "value": "${ENTRA_WEB_CLIENT_SECRET=}" },
+    "bootstrapAdmins": { "value": "${BOOTSTRAP_ADMINS=}" },
+    "authSecret": { "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} auth-secret)" },
+    "devLoginCode": { "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} dev-login-code)" },
+    "webImageName": { "value": "${SERVICE_WEB_IMAGE_NAME=}" },
+    "apiImageName": { "value": "${SERVICE_API_IMAGE_NAME=}" },
+    "workerImageName": { "value": "${SERVICE_WORKER_IMAGE_NAME=}" }
+  }
+}

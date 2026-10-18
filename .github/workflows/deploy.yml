@@ -1,0 +1,43 @@
+name: Deploy to Azure
+
+# Runs `azd up` on pushes to main once these repository variables/secrets exist:
+#   vars:    AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP,
+#            AZURE_LOCATION, AZURE_ENV_NAME  (+ optional ENTRA_* / EXISTING_FOUNDRY_PROJECT_ENDPOINT)
+#   secrets: AZURE_CLIENT_SECRET (or configure OIDC federated credentials and drop it)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency: deploy-${{ github.ref }}
+
+jobs:
+  deploy:
+    if: vars.AZURE_CLIENT_ID != ''
+    runs-on: ubuntu-latest
+    env:
+      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+      AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+      AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+      ENTRA_TENANT_ID: ${{ vars.ENTRA_TENANT_ID }}
+      ENTRA_TENANT_SUBDOMAIN: ${{ vars.ENTRA_TENANT_SUBDOMAIN }}
+      ENTRA_API_CLIENT_ID: ${{ vars.ENTRA_API_CLIENT_ID }}
+      ENTRA_WEB_CLIENT_ID: ${{ vars.ENTRA_WEB_CLIENT_ID }}
+      ENTRA_WEB_CLIENT_SECRET: ${{ secrets.ENTRA_WEB_CLIENT_SECRET }}
+      EXISTING_FOUNDRY_PROJECT_ENDPOINT: ${{ vars.EXISTING_FOUNDRY_PROJECT_ENDPOINT }}
+      BOOTSTRAP_ADMINS: ${{ vars.BOOTSTRAP_ADMINS }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Azure/setup-azd@v2
+      - name: Log in
+        run: |
+          azd auth login --client-id "$AZURE_CLIENT_ID" --client-secret "${{ secrets.AZURE_CLIENT_SECRET }}" --tenant-id "$AZURE_TENANT_ID"
+          az login --service-principal -u "$AZURE_CLIENT_ID" -p "${{ secrets.AZURE_CLIENT_SECRET }}" --tenant "$AZURE_TENANT_ID"
+      - name: azd up
+        run: |
+          azd env new "$AZURE_ENV_NAME" --no-prompt || azd env select "$AZURE_ENV_NAME"
+          azd env set AZURE_RESOURCE_GROUP "$AZURE_RESOURCE_GROUP"
+          azd up --no-prompt
