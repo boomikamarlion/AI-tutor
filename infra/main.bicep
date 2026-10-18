@@ -219,7 +219,7 @@ resource redis 'Microsoft.Cache/redisEnterprise@2026-09-01' = {
   location: location
   tags: tags
   sku: { name: 'Balanced_B0' }
-  properties: { minimumTlsVersion: '1.2' }
+  properties: { minimumTlsVersion: '1.2', publicNetworkAccess: 'Enabled' }
 }
 
 resource redisDb 'Microsoft.Cache/redisEnterprise/databases@2026-09-01' = {
