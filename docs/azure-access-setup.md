@@ -15,6 +15,13 @@ LOCATION=southindia          # Chennai. Use centralindia (Pune) if a service isn
 
 az group create -n $RG -l $LOCATION
 
+# Resource providers are registered per subscription, which the deployer below is not
+# allowed to do. Register the ones the templates use that a new subscription may lack.
+for ns in Microsoft.Cache Microsoft.App Microsoft.DBforPostgreSQL Microsoft.CognitiveServices \
+          Microsoft.ContainerRegistry Microsoft.KeyVault Microsoft.OperationalInsights; do
+  az provider register -n $ns --wait
+done
+
 # Service principal that Claude will log in as, scoped to this resource group only.
 az ad sp create-for-rbac \
   --name sp-ecosys-claude-deployer \
@@ -58,6 +65,11 @@ AZURE_SUBSCRIPTION_ID=<subscription id>
 AZURE_RESOURCE_GROUP=rg-ecosys-prod
 AZURE_LOCATION=southindia
 ```
+
+PostgreSQL defaults to `centralindia` (`POSTGRES_LOCATION`), because some subscriptions are
+restricted from creating Postgres servers in `southindia`. Check yours with
+`az postgres flexible-server list-skus -l southindia`; if it lists versions, you can set
+`azd env set POSTGRES_LOCATION southindia`.
 
 ## 3. Allow Azure hosts in the environment's network access
 
