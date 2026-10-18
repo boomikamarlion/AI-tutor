@@ -214,7 +214,7 @@ module postgresAdmin 'modules/postgres-admin.bicep' = {
   params: { serverName: postgres.name, principalId: identity.properties.principalId, principalName: identity.name }
 }
 
-resource redis 'Microsoft.Cache/redisEnterprise@2025-04-01' = {
+resource redis 'Microsoft.Cache/redisEnterprise@2026-09-01' = {
   name: 'redis-ecosys-${token}'
   location: location
   tags: tags
@@ -222,7 +222,7 @@ resource redis 'Microsoft.Cache/redisEnterprise@2025-04-01' = {
   properties: { minimumTlsVersion: '1.2' }
 }
 
-resource redisDb 'Microsoft.Cache/redisEnterprise/databases@2025-04-01' = {
+resource redisDb 'Microsoft.Cache/redisEnterprise/databases@2026-09-01' = {
   parent: redis
   name: 'default'
   properties: {
