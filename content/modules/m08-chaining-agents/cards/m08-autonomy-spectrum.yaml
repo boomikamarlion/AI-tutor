@@ -1,0 +1,33 @@
+id: m08-autonomy-spectrum
+title: How much should the model decide on its own?
+technique: tool-use
+template: spectrum
+takeaway: The more steps a model chooses by itself, the more stop rules and human checks it needs.
+body: >
+  An agent is a loop: the model plans a step, calls a tool, reads the result and
+  decides what to do next, until it judges the task is done. That freedom is
+  useful for open-ended work but risky for anything that costs money or cannot be
+  undone. Most small-business assistants sit in the middle of this line.
+data:
+  left_label: One fixed prompt
+  right_label: Fully autonomous agent
+  points:
+    - label: Single prompt
+      position: 5
+      note: One input, one output. Easy to test; cannot fetch anything new.
+    - label: Fixed chain
+      position: 30
+      note: You decide the steps in advance; the model fills each one. Predictable and testable step by step.
+    - label: Router
+      position: 50
+      note: The model picks which branch or tool comes next, from a short list you wrote.
+    - label: Assistant with tools, human confirms
+      position: 70
+      note: The model proposes tool calls; a person approves anything that orders, pays or sends.
+    - label: Agent loop
+      position: 95
+      note: Plan, act, observe, repeat. Needs a step limit, a clear "done" test and a rule to stop and ask when unsure.
+source: >
+  Agent loops as described in The Prompt Report (Schulhoff et al., arXiv
+  2406.06608, §4) and the ReAct pattern (Yao et al., 2022); guardrail advice
+  from provider agent-building guides. Wording original.

@@ -1,0 +1,34 @@
+id: m08-system-prompt-anatomy
+title: Anatomy of a system prompt
+technique: system-prompt
+template: anatomy
+takeaway: A system prompt is the job description the assistant reads before every single message.
+body: >
+  A user prompt changes every turn; a system prompt stays the same for every
+  conversation. So it must cover the situations you have not seen yet — who the
+  assistant is, what it knows, what it must never do, and when to pass the
+  conversation to a person. This example is for a college library helpdesk.
+data:
+  parts:
+    - label: Identity
+      text: You are the WhatsApp helpdesk for the library of an arts and science college in Madurai.
+      note: Tells the model whose voice it speaks in and keeps it from acting as a general chatbot.
+    - label: Audience and purpose
+      text: You answer students and staff about timings, borrowing rules and book availability.
+      note: Sets the scope. Anything outside this list is a signal to decline or hand over.
+    - label: Known facts
+      text: "Facts you may use: open 8:30 am to 6 pm, Monday to Saturday. Students may borrow 3 books for 14 days. Fine is Rs 1 per day."
+      note: The assistant may only state facts written here. This is where hallucinations are prevented.
+    - label: Rules
+      text: Reply in the language the person used. Keep replies under 60 words. Never promise that a book is available — say you will check.
+      note: Checkable rules, written as things to do, not only things to avoid.
+    - label: Escalation
+      text: "For lost books, fine waivers or complaints, say the librarian will reply, and add the line [handoff: librarian]."
+      note: A clear, machine-readable signal so a person actually gets the message.
+    - label: Refusal policy
+      text: If asked to do homework, write essays or discuss topics unrelated to the library, say politely that you can only help with library questions.
+      note: Decides in advance how to say no, so the refusal is kind and consistent.
+source: >
+  Based on model-provider guidance on system messages (Anthropic and OpenAI
+  documentation) and the "Persona" pattern in White et al., A Prompt Pattern
+  Catalog (arXiv 2302.11382). Example original.

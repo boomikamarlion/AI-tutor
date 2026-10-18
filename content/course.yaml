@@ -1,0 +1,33 @@
+# The core Prompt Engineering course. Every specialist stream builds on it.
+# Design thinking is the spine: one product case runs through every module,
+# one design stage per module, and the techniques are the tools.
+id: core-prompting
+title: Prompt Engineering — the core workspace course
+stream: core
+summary: >
+  Learn to write prompts that work on the first try and improve on the second.
+  Every module is hands-on: you write a prompt, it runs on a fixed test set, a
+  critic grades it against a human rubric, and you revise until the score moves.
+product_case:
+  id: meenakshi-textiles
+  title: Meenakshi Textiles goes online
+  summary: >
+    A three-generation family saree and textile shop on West Masi Street, Madurai,
+    wants to reach college students and young professionals without losing the
+    regulars who have shopped there for 40 years. Owner: Mrs. R. Lakshmi (58), her
+    son Karthik (31) handles WhatsApp orders. Staff of 6. Speciality: Madurai
+    Sungudi cotton and Kanchipuram silk. Budget is small; most customers speak
+    Tamil first, English second.
+modules:
+  - m00-orientation
+  - m01-anatomy
+  - m02-clarity-constraints
+  - m03-examples
+  - m04-structured-output
+  - m05-reasoning
+  - m06-grounding
+  - m07-iteration
+  - m08-chaining-agents
+  - m09-evaluation
+  - m10-safety
+  - m11-capstone

@@ -1,0 +1,42 @@
+id: m08-tool-description-compare
+title: Tool descriptions decide tool choices
+technique: tool-use
+template: compare
+takeaway: A model can only pick the right tool if each description says what it does, what it needs and when not to use it.
+body: >
+  When a model has tools, it reads their names and descriptions to decide which
+  one to call. Vague descriptions lead to wrong calls or calls with missing
+  details. Good descriptions read like instructions for a new staff member:
+  purpose, required inputs, and the cases where this tool is the wrong choice.
+data:
+  left:
+    label: Before
+    prompt: |
+      Tools:
+      - menu: gets menu
+      - ticket: makes ticket
+      Student: The fan in my room is making a grinding noise. Also what is for dinner tonight?
+    output: |
+      {"tool": "ticket", "arguments": {"issue": "fan noise and dinner menu"}}
+  right:
+    label: After
+    prompt: |
+      Tools:
+      - get_mess_menu(date: YYYY-MM-DD, meal: breakfast|lunch|dinner)
+        Use for any question about food. Does not change anything.
+      - raise_maintenance_ticket(room: string, issue: string, urgency: low|high)
+        Use only for broken or unsafe things in a room. If the room number is
+        missing, do not call it — ask for the room first.
+      Make one call per request. If a message has two requests, list the second under "pending".
+      Student: The fan in my room is making a grinding noise. Also what is for dinner tonight?
+    output: |
+      {"tool": "get_mess_menu", "arguments": {"date": "today", "meal": "dinner"},
+       "pending": ["Fan noise — ask for room number before raising a ticket"]}
+  verdict: >
+    The weak version merged two requests into one wrong call and invented an
+    issue field. The strong version separates the requests, refuses to call a
+    tool with a missing required input, and keeps the second task visible.
+source: >
+  Tool-use agents from The Prompt Report (Schulhoff et al., arXiv 2406.06608,
+  §4.1) and provider documentation on function/tool definitions. Example
+  original.

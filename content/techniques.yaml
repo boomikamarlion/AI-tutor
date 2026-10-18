@@ -1,0 +1,176 @@
+# Controlled vocabulary of prompting techniques.
+# Learners must name one of these when they reflect on a revision; badges and
+# mastery are tracked per technique. IDs are stable — never rename, only deprecate.
+# Sources: The Prompt Report (Schulhoff et al., arXiv 2406.06608) and
+# A Prompt Pattern Catalog (White et al., arXiv 2302.11382).
+techniques:
+  - id: role-prompting
+    name: Role / persona
+    category: framing
+    definition: Assign the model a role or expertise so it adopts the matching knowledge, vocabulary and standards.
+    source: Prompt Report §2.2.1.3; Pattern Catalog "Persona"
+  - id: audience-persona
+    name: Audience persona
+    category: framing
+    definition: State who the output is for so the model adapts depth, tone and vocabulary.
+    source: Pattern Catalog "Audience Persona"
+  - id: explicit-task
+    name: Explicit task statement
+    category: framing
+    definition: Say exactly what to produce with an action verb and a clear deliverable, instead of implying it.
+    source: Prompt Report §2.2 (prompt components — directive)
+  - id: context-provision
+    name: Context provision
+    category: framing
+    definition: Give the background facts, goals and situation the model cannot know on its own.
+    source: Prompt Report §2.2 (prompt components — additional information)
+  - id: constraints
+    name: Constraints
+    category: control
+    definition: Bound the output — length, scope, tone, must-include and must-avoid rules — with checkable limits.
+    source: Prompt Report §2.2 (style instructions)
+  - id: delimiters
+    name: Delimiters
+    category: control
+    definition: Separate instructions from data with clear markers (tags, triple quotes, headings) so the model never confuses them.
+    source: Prompt Report §2.2; OpenAI/Anthropic prompting guides
+  - id: positive-instructions
+    name: Positive instructions
+    category: control
+    definition: Tell the model what to do rather than only what not to do, so it has a target to aim at.
+    source: Prompt engineering guides (Anthropic, OpenAI, Google whitepaper)
+  - id: output-format
+    name: Output format specification
+    category: structure
+    definition: Specify the exact shape of the output — sections, bullet style, table columns, word counts.
+    source: Prompt Report §2.2 (output formatting)
+  - id: structured-output
+    name: Structured output / schema
+    category: structure
+    definition: Require machine-readable output (JSON, CSV) that conforms to a stated schema with field names and types.
+    source: Prompt Report §2.2; Structured Outputs APIs
+  - id: template-pattern
+    name: Template
+    category: structure
+    definition: Give a fill-in template with placeholders the model must preserve and complete.
+    source: Pattern Catalog "Template"
+  - id: zero-shot
+    name: Zero-shot instruction
+    category: examples
+    definition: Ask for the task with instructions alone, no examples — the baseline to improve on.
+    source: Prompt Report §2.2.1
+  - id: one-shot
+    name: One-shot example
+    category: examples
+    definition: Show a single worked example of input and ideal output to anchor format and quality.
+    source: Prompt Report §2.2.1.1
+  - id: few-shot
+    name: Few-shot examples
+    category: examples
+    definition: Show several diverse examples so the model infers the pattern, including edge cases.
+    source: Prompt Report §2.2.1.1 (exemplar quantity, ordering, diversity)
+  - id: exemplar-selection
+    name: Exemplar selection
+    category: examples
+    definition: Choose examples that cover the hard cases and match the real inputs, ordered deliberately.
+    source: Prompt Report §2.2.1.1 (exemplar selection & ordering)
+  - id: chain-of-thought
+    name: Chain-of-thought
+    category: reasoning
+    definition: Ask the model to reason step by step before answering, for multi-step problems.
+    source: Prompt Report §2.2.2 (Wei et al. 2022)
+  - id: decomposition
+    name: Decomposition
+    category: reasoning
+    definition: Break a complex task into explicit sub-tasks and have the model solve them in order.
+    source: Prompt Report §2.2.4 (least-to-most, plan-and-solve)
+  - id: plan-and-solve
+    name: Plan-and-solve
+    category: reasoning
+    definition: Have the model first write a plan, then execute it, then check the result against the plan.
+    source: Prompt Report §2.2.4 (Wang et al. 2023)
+  - id: self-ask
+    name: Self-ask / clarifying sub-questions
+    category: reasoning
+    definition: Have the model list and answer the sub-questions it needs before the final answer.
+    source: Prompt Report §2.2.4 (Press et al. 2022)
+  - id: reasoning-effort-control
+    name: Reasoning-effort control
+    category: reasoning
+    definition: For reasoning models, set effort and state success criteria instead of scripting every step.
+    source: OpenAI reasoning model guide; Foundry reasoning model docs
+  - id: grounding
+    name: Grounding in sources
+    category: grounding
+    definition: Supply source material and require the answer to use only it, with citations to the passages.
+    source: Prompt Report §2.2.6 (RAG); hallucination mitigation guidance
+  - id: uncertainty-permission
+    name: Permission to say "I don't know"
+    category: grounding
+    definition: Explicitly allow and define an "insufficient information" answer so the model does not invent facts.
+    source: Anthropic & OpenAI hallucination guidance
+  - id: context-placement
+    name: Long-context placement
+    category: grounding
+    definition: Put long documents first and the question last, label them, and quote the relevant parts before answering.
+    source: Anthropic long-context tips; Prompt Report §6
+  - id: self-critique
+    name: Self-critique & refine
+    category: iteration
+    definition: Ask the model to critique its draft against criteria and produce an improved version.
+    source: Prompt Report §2.2.5 (Self-Refine, Madaan et al. 2023)
+  - id: question-refinement
+    name: Question refinement
+    category: iteration
+    definition: Ask the model to propose a better version of your prompt or question before answering it.
+    source: Pattern Catalog "Question Refinement"
+  - id: flipped-interaction
+    name: Flipped interaction
+    category: iteration
+    definition: Have the model ask you questions one at a time until it has what it needs to do the task.
+    source: Pattern Catalog "Flipped Interaction"
+  - id: cognitive-verifier
+    name: Cognitive verifier
+    category: iteration
+    definition: Have the model generate verification questions, answer them, and combine them into the final answer.
+    source: Pattern Catalog "Cognitive Verifier"; Chain-of-Verification
+  - id: prompt-chaining
+    name: Prompt chaining
+    category: systems
+    definition: Split work across several prompts where each output feeds the next, with a check in between.
+    source: Prompt Report §4 (agents/chains)
+  - id: system-prompt
+    name: System prompt design
+    category: systems
+    definition: Write durable instructions (identity, rules, tools, refusal policy) separately from per-turn input.
+    source: Model provider system-message guidance
+  - id: tool-use
+    name: Tool use
+    category: systems
+    definition: Describe tools with clear names, parameters and when-to-use rules so the model calls them correctly.
+    source: Prompt Report §4.1 (tool use agents); Responses API tools
+  - id: rubric-evaluation
+    name: Rubric-based evaluation
+    category: evaluation
+    definition: Judge outputs against explicit, human-written criteria with score anchors, on a fixed test set.
+    source: Prompt Report §5 (evaluation); LLM-as-judge literature
+  - id: llm-as-judge
+    name: LLM-as-judge
+    category: evaluation
+    definition: Use a model with a rubric to grade outputs, asking for evidence before the score.
+    source: Prompt Report §5.1
+  - id: injection-defense
+    name: Prompt-injection defense
+    category: safety
+    definition: Treat user and document text as data, fence it, and restate rules after it so embedded instructions are ignored.
+    source: Prompt Report §5.1 (prompt hacking); OWASP LLM Top 10 (LLM01)
+  - id: bias-check
+    name: Bias & fairness check
+    category: safety
+    definition: Ask for balanced perspectives and inspect outputs for stereotypes, especially about people and places.
+    source: Prompt Report §5.3 (alignment — biases)
+  - id: privacy-hygiene
+    name: Privacy hygiene
+    category: safety
+    definition: Keep personal data out of prompts or masked, and instruct the model not to reproduce it.
+    source: India DPDP Act 2023 principles; OWASP LLM Top 10 (LLM02)

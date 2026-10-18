@@ -1,0 +1,20 @@
+id: m04-why-format
+title: The reader decides the format
+technique: output-format
+template: callout
+takeaway: Before you write the task, decide who or what will read the output — then describe that shape exactly.
+body: >
+  A model left to itself picks a format that looks nice once: a few paragraphs
+  here, bullets there, a table on a good day. That is fine for a chat. It breaks
+  the moment the output goes into a spreadsheet, a notice board or a program.
+  Naming the columns, the order, the length and the style turns a one-off answer
+  into something you can rely on every time.
+data:
+  headline: Same prompt, five runs, five different layouts
+  stat: "1 line"
+  detail: >
+    One extra line such as "Reply as a table with columns Name | Date | Fee, one
+    row per event, no text before or after" is usually enough to make every run
+    come back in the same shape. Unstated format is the most common reason a
+    good answer is still unusable.
+source: Idea from The Prompt Report (Schulhoff et al., 2024), §2.2 on output formatting; OpenAI and Anthropic prompting guides on specifying format.

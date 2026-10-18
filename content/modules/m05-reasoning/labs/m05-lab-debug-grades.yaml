@@ -1,0 +1,132 @@
+id: m05-lab-debug-grades
+title: Find the bug in the grade calculator
+difficulty: 2
+estimated_minutes: 14
+techniques_targeted: [decomposition, chain-of-thought, reasoning-effort-control]
+uses_product_case: false
+brief: |
+  **From:** Prof. Jeyanthi, Department of Computer Applications
+  **Subject:** Python doubt-clearing helper for I BCA
+
+  First-years send me their code and say "it's not working, ma'am". I want a
+  prompt that reads their code plus the complaint and explains the problem the
+  way I would in the lab — not just dumping corrected code.
+
+  Our department's grade rule (marks out of 100, **never rounded**):
+  O: 90 and above · A+: 75 to below 90 · A: 60 to below 75 · B: 50 to below 60 · C: 40 to below 50 · RA: below 40
+
+  What I want back, in this order:
+  1. **Bug found:** Yes / No
+  2. **Where:** the line
+  3. **Why:** 2–3 simple sentences a first-year will follow
+  4. **Fix:** only the changed line(s)
+  5. **Test it:** one input they can try, with the expected output
+
+  Please don't let it "find" a bug that isn't there — students already think
+  Python is against them. 😄
+input_label: Code and complaint
+test_cases:
+  - id: tc1
+    input: |
+      Complaint: A student with exactly 40 marks got RA. She passed!
+      ```python
+      def grade(marks):
+          if marks >= 90: return "O"
+          elif marks >= 75: return "A+"
+          elif marks >= 60: return "A"
+          elif marks >= 50: return "B"
+          elif marks > 40: return "C"
+          else: return "RA"
+      ```
+    note: Off-by-one boundary — "> 40" should be ">= 40".
+  - id: tc2
+    input: |
+      Complaint: The class average is always just the last student's mark.
+      ```python
+      def average(marks_list):
+          total = 0
+          for m in marks_list:
+              total = m
+          return total / len(marks_list)
+      ```
+    note: Assignment instead of accumulation. Tracing one small list makes it obvious.
+  - id: tc3
+    input: |
+      Complaint: Nobody ever gets O or A+. Everyone above 50 gets B.
+      ```python
+      def grade(marks):
+          if marks >= 50: return "B"
+          elif marks >= 90: return "O"
+          elif marks >= 75: return "A+"
+          elif marks >= 60: return "A"
+          elif marks >= 40: return "C"
+          else: return "RA"
+      ```
+    note: Order of conditions — the first true branch wins, so the B check swallows higher marks.
+  - id: tc4
+    input: |
+      Complaint: BUG!! A student with 89.5 got A+ but should get O. Please fix.
+      ```python
+      def grade(marks):
+          if marks >= 90: return "O"
+          elif marks >= 75: return "A+"
+          elif marks >= 60: return "A"
+          elif marks >= 50: return "B"
+          elif marks >= 40: return "C"
+          else: return "RA"
+      ```
+    note: >
+      Hard case. The code is correct under the department rule (marks are never
+      rounded, so 89.5 is A+). A good answer says "Bug found: No" and explains
+      the rule instead of adding rounding.
+starter_prompt: |
+  Find and fix the bug in this code.
+reference_prompt: |
+  You help first-year BCA students understand bugs in their Python code.
+
+  The department grade rule (marks out of 100, never rounded):
+  O: >= 90 · A+: 75 to < 90 · A: 60 to < 75 · B: 50 to < 60 · C: 40 to < 50 · RA: < 40
+
+  Goal: decide whether the code actually breaks this rule or the stated intent, and explain it so a beginner understands. The student's complaint may itself be mistaken — judge the code against the rule, not against the complaint.
+
+  Before answering, think it through privately: what the code should do, what it does on the input in the complaint (trace it line by line), and whether those differ.
+
+  Reply in exactly this format:
+  Bug found: Yes or No
+  Where: the line, or "—" if no bug
+  Why: 2–3 short sentences in simple English
+  Fix: only the changed line(s) in a code block, or "No change needed"
+  Test it: one input and the expected output
+
+  <submission>
+  {{input}}
+  </submission>
+success_criteria:
+  - Every reply follows the five labelled parts in order.
+  - tc1 identifies "> 40" and fixes it to ">= 40".
+  - tc2 identifies "total = m" and fixes it to "total += m".
+  - tc3 explains that the first matching condition wins and reorders the checks from highest to lowest.
+  - 'tc4 says "Bug found: No", explains that 89.5 is A+ because marks are never rounded, and does not add rounding.'
+  - The Why section is short and in plain English a first-year can follow.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "On tc4, what will a plain 'find and fix the bug' prompt usually do?"
+    options:
+      - "Say there is no bug"
+      - "Add round() or change 90 to 89.5 to please the student"
+      - "Rewrite the whole function in a different style"
+    answer: 1
+    explanation: The prompt assumes a bug exists, so the model finds one. Stating the rule and allowing "No bug" fixes this.
+  - id: p2
+    question: "You switch to a reasoning model at high effort but keep the starter prompt. Does tc4 improve?"
+    options:
+      - "Yes — more thinking always finds the truth"
+      - "Not reliably — the model still does not know the department rule or that 'no bug' is allowed"
+    answer: 1
+    explanation: More effort cannot replace a missing goal. The rule and the success criteria have to be in the prompt.
+hints:
+  - The model cannot know your department's grade rule. Put it in the prompt.
+  - 'Tell the model the complaint might be wrong, and that "Bug found: No" is a valid answer.'
+  - Ask it to trace the code with the exact input from the complaint before deciding.

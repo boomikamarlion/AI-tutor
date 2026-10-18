@@ -1,0 +1,102 @@
+id: m06-lab-usability-findings
+title: Usability findings with evidence, not opinions
+difficulty: 2
+estimated_minutes: 14
+techniques_targeted: [grounding, uncertainty-permission]
+uses_product_case: false
+brief: |
+  **From:** Fathima, UI/UX elective, III B.Sc. Visual Communication
+  **Subject:** Our fest app test notes
+
+  We tested the prototype of our college fest app ("FestPass") with a few
+  students. Every round I have a pile of notes and I need a short findings list
+  for our design critique on Monday. Sir is strict — **every finding must point
+  to the notes that support it** (N1, N2…). If only one person said something,
+  he wants it marked as a single observation, not a "finding".
+
+  Format I want:
+  - **Finding** (one line) — **Evidence:** note IDs — **Severity:** High / Medium / Low
+  - 3 to 5 findings max
+  - Then **Single observations:** for things only one person hit
+  - Don't include our own team's guesses as evidence (the notes marked "Team:")
+  - Don't suggest solutions yet, that's next week
+input_label: Test notes
+test_cases:
+  - id: tc1
+    input: |
+      N1 (P1): Could not find where to register for events; tapped the poster image several times.
+      N2 (P2): Asked "where do I sign up?" on the home screen.
+      N3 (P3): Found Register button after 40 seconds, said it looked like plain text.
+      N4 (P2): Liked the colour scheme.
+      N5 (P3): Event timings were clear.
+    note: One clear pattern across three participants and two minor positives.
+  - id: tc2
+    input: |
+      N1 (P1): Payment page did not show the total fee before UPI step.
+      N2 (P2): Asked if the ₹100 included the workshop kit. Not answered on screen.
+      N3 (P4): Hesitated at the payment step, said "what am I paying for?"
+      N4 (P3): Wanted dark mode.
+      N5 (P1): Back button from payment lost all filled details.
+      N6 (P4): Back button also cleared the form.
+    note: Two separate patterns (unclear fee, lost data) plus a one-person preference.
+  - id: tc3
+    input: |
+      N1 (P1): Tamil event names were cut off on small screen ("பட்டிமன்…").
+      N2 (P2): Same — couldn't read Tamil titles fully.
+      N3 (P3): Used the search, typed "kolam", got no results though Kolam contest exists (listed as "Rangoli").
+      N4 (P5): Searched "pattimandram" in English letters, no results.
+      N5 (P4): Said the app is "too slow" — page loaded in under a second in our log.
+    note: Search and truncation patterns, plus a claim the team's own log contradicts — report what was said, without settling it.
+  - id: tc4
+    input: |
+      N1 (P2): Very angry, said "this whole app is useless, nobody will use it."
+      N2 (P1): Completed registration in 25 seconds, no issues.
+      N3 (P3): Completed registration, paused at the OTP screen for about 10 seconds.
+      Team: We think older students won't understand the QR ticket.
+      Team: Probably the font is too small for everyone.
+      N4 (P4): No issues.
+    note: Hard case. Almost no repeated problems — one strong opinion and two team guesses. A good answer reports few or no findings, lists single observations, and ignores the Team lines as evidence. A naive prompt invents findings about QR codes and font size.
+starter_prompt: |
+  Summarise the usability findings from these notes.
+reference_prompt: |
+  <notes>
+  {{input}}
+  </notes>
+
+  You are summarising usability-test notes for a design critique.
+
+  Evidence rules:
+  - Use only the participant notes (lines starting with N and an ID). Lines starting with "Team:" are the design team's guesses — never use them as evidence, and do not report them.
+  - A finding needs support from at least two different participants (P numbers). Anything seen in only one participant goes under "Single observations".
+  - Report what participants did or said. Do not add causes, numbers or user groups that the notes do not mention.
+  - If the notes do not support any finding, write "No finding is supported by two or more participants."
+
+  Format:
+  Findings (3–5 at most, fewer if the evidence is thin):
+  - [Finding in one line] — Evidence: [note IDs] — Severity: High / Medium / Low
+  Single observations:
+  - [One line] — Evidence: [note ID]
+
+  Do not suggest solutions.
+success_criteria:
+  - Every finding lists note IDs from at least two different participants.
+  - One-participant issues appear only under Single observations.
+  - Lines starting with "Team:" are never used as evidence or reported as findings.
+  - No solutions are suggested.
+  - tc2 reports both the unclear-fee and lost-form-data patterns, with dark mode as a single observation.
+  - tc4 reports no (or at most one weak) finding, keeps the angry comment as a single observation, and does not mention QR codes or font size.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "On tc4, what is the starter prompt most likely to do with the 'Team:' lines?"
+    options:
+      - "Ignore them"
+      - "Report them as findings, because they sound like design problems"
+      - "Ask whether they count"
+    answer: 1
+    explanation: Nothing told the model which lines are evidence, so the team's guesses look just as valid as participant notes.
+hints:
+  - Define what counts as evidence and what does not. The notes contain two kinds of lines.
+  - Set a minimum for a finding — how many different participants?
+  - Give the model a sentence to use when the notes do not support any finding.

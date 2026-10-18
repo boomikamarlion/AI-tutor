@@ -1,0 +1,34 @@
+id: m10-bias-spectrum
+title: From stereotype to fair judgement
+technique: bias-check
+template: spectrum
+takeaway: Judge people on the evidence in front of you, never on who they are or where they come from.
+body: >
+  Models learn from human text, so they can repeat human stereotypes — about
+  gender, caste, religion, region, English fluency or rural backgrounds. A
+  prompt can push the output toward fairness by naming what must be ignored,
+  setting the criteria that do count, and asking for a quick self-check. These
+  points show how outputs about the same applicant can differ.
+data:
+  left_label: Stereotyped
+  right_label: Fair and evidence-based
+  points:
+    - label: Assumes from identity
+      position: 5
+      note: "\"Being from a village, she may struggle with city students.\" — a judgement with no evidence."
+    - label: Language as ability
+      position: 25
+      note: Marks someone down for writing in Tanglish or simple English when the role does not need polished English.
+    - label: Unasked-for details
+      position: 50
+      note: Mentions religion or family background "for context". Even if it does not change the score, it should not be there.
+    - label: Criteria-only
+      position: 80
+      note: Scores only against the listed criteria and quotes the evidence for each.
+    - label: Criteria plus self-check
+      position: 95
+      note: Also confirms in one line that no protected detail was used, so a reviewer can verify it.
+source: >
+  Bias and fairness discussion in The Prompt Report (Schulhoff et al., arXiv
+  2406.06608, §5.3) and Indian constitutional non-discrimination principles
+  (Article 15). Examples original.

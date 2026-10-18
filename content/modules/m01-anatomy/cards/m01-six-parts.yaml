@@ -1,0 +1,31 @@
+id: m01-six-parts
+title: Anatomy of a complete prompt
+technique: explicit-task
+template: anatomy
+takeaway: Role, task, context, audience, constraints and format — when an output disappoints, look for the part you left out.
+body: >
+  Most good prompts contain the same few parts, though not always in this order and
+  not always all of them. Naming the parts helps you write faster and debug better: a
+  generic output usually means missing context, a wrong tone usually means a missing
+  audience, and a messy layout usually means no format was given.
+data:
+  parts:
+    - label: Role
+      text: You are a placement officer at an arts and science college in Madurai.
+      note: Sets the knowledge and standards the model should bring.
+    - label: Task
+      text: Write feedback on the student's resume summary below.
+      note: An action verb and a clear deliverable. Without it the model may rewrite, praise or summarise instead.
+    - label: Context
+      text: The student is applying for a data-entry internship at a Madurai logistics firm. Recruiters skim each resume for about 10 seconds.
+      note: Facts the model cannot guess, which change what good feedback looks like.
+    - label: Audience
+      text: The student is a first-generation college goer, nervous about English.
+      note: Shapes tone and vocabulary of the feedback.
+    - label: Constraints
+      text: Point out at most 3 issues. Be kind but direct. Do not rewrite the whole summary.
+      note: Checkable limits that stop the model over-delivering.
+    - label: Output format
+      text: "Format: 3 numbered points, each with the problem and a one-line fix."
+      note: The shape of the answer, so every run looks the same.
+source: Prompt components from The Prompt Report (Schulhoff et al., arXiv 2406.06608) §2.2; Persona and Audience Persona patterns from White et al., arXiv 2302.11382. Original example.

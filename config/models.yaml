@@ -1,0 +1,55 @@
+# Model routing. Code asks for a ROLE; this file decides which Azure AI Foundry
+# deployment serves it and with which pinned settings. Change models here, not in code.
+# Any deployment can be overridden per environment with MODEL_<ROLE>_DEPLOYMENT
+# (e.g. MODEL_RUN_DEPLOYMENT=gpt-6.1-sol).
+#
+# Prices: USD per 1M tokens, Global Standard, from the Azure pricing page (Oct 2026).
+# Re-check before budgeting: https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/
+
+deployments:
+  gpt-6-luna:            # most efficient GPT-6 model — high-volume learner runs
+    input_per_m: 0.10
+    output_per_m: 0.50
+  gpt-6.1-sol:           # balanced — critique, coach
+    input_per_m: 2.00
+    output_per_m: 10.00
+  gpt-6-astra:           # frontier — capstone grading only
+    input_per_m: 10.00
+    output_per_m: 50.00
+
+roles:
+  # Executes the learner's prompt on each pinned test case. Pinned so results are
+  # comparable across learners. If Luna is not deployed, point this at gpt-6.1-sol.
+  run:
+    deployment: gpt-6-luna
+    fallback: gpt-6.1-sol
+    reasoning_effort: low
+    max_output_tokens: 1200
+    seed: 20261018
+  # Grades outputs against the human rubric and diagnoses the prompt.
+  critique:
+    deployment: gpt-6.1-sol
+    reasoning_effort: medium
+    max_output_tokens: 4000
+    seed: 20261018
+  # Capstone labs (difficulty 3 in module m11) are graded by the frontier model.
+  capstone_critique:
+    deployment: gpt-6-astra
+    fallback: gpt-6.1-sol
+    reasoning_effort: high
+    max_output_tokens: 6000
+    seed: 20261018
+  # Socratic coach agent — never writes the prompt for the learner.
+  coach:
+    deployment: gpt-6.1-sol
+    reasoning_effort: low
+    max_output_tokens: 800
+
+budgets:
+  # Daily spend caps per learner (USD). Soft cap: cache-only for standard runs.
+  # Hard cap: block new runs until tomorrow (IST).
+  free:  { soft_usd: 0.03, hard_usd: 0.05 }
+  pro:   { soft_usd: 0.30, hard_usd: 0.50 }
+  staff: { soft_usd: 5.00, hard_usd: 10.00 }
+  # Platform-wide credit pool (Founders Hub). Admin dashboard shows burn against this.
+  credit_pool_usd: 50000

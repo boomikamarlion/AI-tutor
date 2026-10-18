@@ -1,0 +1,27 @@
+id: m03-why-examples
+title: Zero, one or a few examples?
+technique: few-shot
+template: spectrum
+takeaway: Start zero-shot; add one example to fix the format, and a few varied ones when the pattern or the edge cases are hard to describe in words.
+body: >
+  Examples are the most direct way to show a model what "good" looks like. They cost
+  space and they can over-steer — the model may copy their length, topic or wording. So
+  move along the scale only as far as the task needs, and check on your test set whether
+  each step actually helped.
+data:
+  left_label: Instructions only
+  right_label: Many examples
+  points:
+    - label: Zero-shot
+      position: 5
+      note: Fine for common tasks with a clear instruction, like "translate into Tamil".
+    - label: One-shot
+      position: 35
+      note: One example fixes the format and length quickly. Risk — the model copies its content too closely.
+    - label: Few-shot (3–5)
+      position: 70
+      note: Varied examples teach the pattern, including the tricky cases. Usually the sweet spot.
+    - label: Many-shot
+      position: 95
+      note: Dozens of examples can help on narrow labelling tasks, but costs tokens and is hard to maintain.
+source: Brown et al. 2020 (few-shot in-context learning); exemplar quantity discussed in The Prompt Report (Schulhoff et al., arXiv 2406.06608) §2.2.1.1. Original wording.

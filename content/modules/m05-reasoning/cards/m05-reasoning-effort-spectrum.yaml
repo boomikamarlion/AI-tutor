@@ -1,0 +1,32 @@
+id: m05-reasoning-effort-spectrum
+title: Reasoning models — set the goal, not the steps
+technique: reasoning-effort-control
+template: spectrum
+takeaway: With a reasoning model, spend your words on the goal, the limits and how success is checked — then pick an effort level to match the task.
+body: >
+  Reasoning models, such as the GPT-6 family, already think before they answer,
+  and let you choose how much effort they spend. Scripting every step for them
+  can make results worse, because it overrides a better route the model would
+  have found. What they still cannot guess is what you want: the goal, the hard
+  limits and how you will judge the answer. Higher effort costs more time and
+  money, so match it to how hard and how important the task is.
+data:
+  left_label: Low effort
+  right_label: High effort
+  points:
+    - label: Rewrite a notice in simpler English
+      position: 10
+      note: One clear step. Low effort is fast and good enough; extra thinking adds little.
+    - label: Tag 200 feedback comments into 5 categories
+      position: 30
+      note: Simple per item but repeated. Keep effort low and put the work into clear category definitions.
+    - label: Split a hostel mess bill with rebates
+      position: 55
+      note: Several rules interact. Medium effort, with the rules and a "show the total checks out" criterion.
+    - label: Schedule a fest under ten constraints
+      position: 80
+      note: Many interacting limits. Higher effort, and state "every constraint must be listed as met or not met".
+    - label: Find the bug in a 300-line project
+      position: 95
+      note: Deep search. High effort, a clear description of expected behaviour, and no step-by-step script.
+source: OpenAI reasoning-model guidance (reasoning effort and goal-focused prompting) and Azure AI Foundry reasoning-model documentation. Wording and examples are original.

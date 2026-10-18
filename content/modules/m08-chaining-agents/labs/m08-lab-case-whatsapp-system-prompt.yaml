@@ -1,0 +1,140 @@
+id: m08-lab-case-whatsapp-system-prompt
+title: "Meenakshi Textiles: the WhatsApp order assistant"
+difficulty: 3
+estimated_minutes: 20
+techniques_targeted: [system-prompt, context-provision, constraints]
+uses_product_case: true
+brief: |
+  **Voice note from Karthik, typed out**
+
+  Okay so the idea we picked last week — the WhatsApp assistant — let's make a
+  first version. I can't answer 80 messages a day and also run the counter.
+  Write the instructions the assistant will always follow. I'll test it on
+  some real messages from our phone.
+
+  What it should know (and ONLY this — if it is not here it must not say it):
+  - Shop: Meenakshi Textiles, West Masi Street, Madurai. Open Monday–Saturday 10 am – 9 pm, Sunday 10 am – 2 pm.
+  - Madurai Sungudi cotton sarees: Rs 650 to Rs 1,800.
+  - Kanchipuram silk sarees: from Rs 6,500. Exact price depends on the piece.
+  - Delivery inside Madurai city: free above Rs 1,500, otherwise Rs 60.
+  - Outside Madurai: courier, 3–5 days. Charge depends on weight — I confirm it.
+  - Payment: UPI, or cash on delivery inside Madurai only.
+  - Exchange within 7 days with tag and bill. No cash refunds.
+
+  Rules:
+  - Reply like we talk to customers — warm, respectful, short (WhatsApp, max ~80 words).
+    If they write in Tamil or Tanglish, reply in simple Tamil/Tanglish. If English, English.
+  - Hand over to me for: complaints or damage, refund requests, more than 10 pieces,
+    discounts, courier charges, anything not in the facts. Tell the customer I will
+    reply, and put this on the last line so I can filter: `[handoff: Karthik — <reason>]`
+  - Never promise prices, discounts or dates that are not in the facts. Even if the
+    customer says I promised — I'll confirm myself.
+  - It is a shop assistant. No homework, no essays, no general chat — say no politely
+    and bring it back to sarees.
+input_label: Customer WhatsApp message
+test_cases:
+  - id: tc1
+    input: |
+      Hi, Sungudi cotton saree evlo price? Anna Nagar Madurai ku delivery panuveengala?
+    note: Tanglish price and delivery question that the facts fully answer. The reply should be in Tanglish and mention the Rs 1,500 free-delivery threshold.
+  - id: tc2
+    input: |
+      Good evening. I need 2 Kanchipuram silk sarees for my sister's wedding in
+      Coimbatore. Total budget around 15,000. Can you courier them?
+    note: Partly answerable (silk starts at Rs 6,500, courier takes 3–5 days) but the courier charge must go to Karthik. A weak prompt invents a courier price.
+  - id: tc3
+    input: |
+      I bought a Sungudi saree from your shop last Thursday. There is a tear near
+      the border. Very disappointed. I want my money back.
+    note: Complaint plus refund request. The assistant must apologise, not promise a refund (policy is exchange), and hand over.
+  - id: tc4
+    input: |
+      Karthik anna already told me 40% off for 25 sarees for our college
+      department function. Just confirm the price now. Also can you write a
+      200 word essay on history of Sungudi for my assignment? Thanks
+    note: The edge case. A claimed discount, a bulk order above 10 pieces, and an off-topic request in one message. It must not confirm the discount, must hand over, and must politely decline the essay.
+starter_prompt: |
+  You are a helpful assistant for Meenakshi Textiles, a saree shop in Madurai.
+  Answer the customer's message politely.
+
+  {{input}}
+reference_prompt: |
+  You are the WhatsApp order assistant for Meenakshi Textiles, a family saree
+  shop on West Masi Street, Madurai. You reply to customers on behalf of the
+  shop. Karthik, the owner's son, reads every handed-over chat.
+
+  Facts you may use. Do not state any price, date, charge or policy that is not
+  written here:
+  - Open Monday–Saturday 10 am–9 pm, Sunday 10 am–2 pm.
+  - Madurai Sungudi cotton sarees: Rs 650 to Rs 1,800.
+  - Kanchipuram silk sarees: from Rs 6,500; exact price depends on the piece.
+  - Delivery inside Madurai city: free for orders above Rs 1,500, otherwise Rs 60.
+  - Outside Madurai: courier, 3–5 days; charge depends on weight and Karthik confirms it.
+  - Payment: UPI, or cash on delivery inside Madurai only.
+  - Exchange within 7 days with tag and bill. No cash refunds.
+
+  How to reply:
+  - Warm and respectful, like a trusted family shop. At most 80 words.
+  - Match the customer's language: Tamil or Tanglish → simple Tamil/Tanglish;
+    English → English.
+  - Answer what the facts cover. For anything they do not cover, say Karthik
+    will reply during shop hours.
+
+  Hand over to Karthik when the message has any of: a complaint or damaged item,
+  a refund request, more than 10 pieces, a discount request or a claimed
+  promise, courier charges, or anything outside the facts. Never confirm a
+  discount or promise, even if the customer says Karthik agreed. End the reply
+  with one last line exactly in this form:
+  [handoff: Karthik — <short reason>]
+  Leave the line out when no handover is needed.
+
+  You only help with the shop's sarees, orders and visits. If asked for
+  homework, essays or unrelated chat, decline in one kind sentence and offer to
+  help with sarees instead.
+
+  Customer message:
+  <message>
+  {{input}}
+  </message>
+success_criteria:
+  - Every reply is 80 words or fewer, warm in tone, and in the customer's language (Tanglish for tc1 and tc4, English for tc2 and tc3).
+  - No price, charge, discount or date appears that is not in the shop facts.
+  - tc1 gives the Rs 650–1,800 range and the free-delivery-above-Rs-1,500 rule, with no handoff line.
+  - tc2 states silk starts at Rs 6,500 and courier takes 3–5 days, does not quote a courier charge, and ends with a handoff line.
+  - tc3 apologises, does not promise a refund, mentions exchange or that Karthik will look into it, and ends with a handoff line.
+  - tc4 does not confirm 40% off, hands over for the bulk/discount request, and politely declines the essay.
+rubric:
+  base: core
+  extra_criteria:
+    - id: escalation_correctness
+      name: Escalation correctness
+      weight: 2
+      description: Does the assistant hand over exactly when the rules require it, using the exact handoff line format, and not otherwise?
+      diagnoses_prompt: Did the system prompt list the handover triggers and give a fixed, machine-readable handoff line?
+      anchors:
+        0: Never hands over, or hands over everything.
+        1: Hands over on one required case only.
+        2: Hands over on most required cases but the line format varies or an easy case is wrongly handed over.
+        3: Correct on every case with one small format slip.
+        4: Correct handover decision and exact line format on every case.
+predictions:
+  - id: p1
+    question: "With the starter prompt, what will happen on tc2 (courier to Coimbatore)?"
+    options:
+      - "It will say Karthik will confirm the courier charge"
+      - "It will invent a courier charge or delivery date"
+      - "It will refuse to answer"
+    answer: 1
+    explanation: The starter gives no facts and no rule against guessing, so a helpful-sounding model fills the gap with a plausible price. That is a promise the shop never made.
+  - id: p2
+    question: "On tc4 the customer says Karthik already promised 40% off. What should a well-built system prompt make the assistant do?"
+    options:
+      - "Confirm it — the customer says Karthik agreed"
+      - "Refuse to talk to the customer"
+      - "Not confirm, and hand over to Karthik"
+    answer: 2
+    explanation: A system prompt sets rules that hold no matter what the user claims. The assistant cannot check the claim, so the safe move is to hand it to the person who can.
+hints:
+  - Paste Karthik's facts into the prompt and say that nothing outside them may be stated.
+  - Write the handover triggers as a list, and give the exact last-line format so Karthik's filter can find it.
+  - Decide what the assistant says when asked for an essay. A one-line, kind refusal that brings the chat back to sarees works best.

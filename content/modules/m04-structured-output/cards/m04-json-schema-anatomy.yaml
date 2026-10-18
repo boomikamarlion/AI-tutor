@@ -1,0 +1,35 @@
+id: m04-json-schema-anatomy
+title: Anatomy of a JSON-output prompt
+technique: structured-output
+template: anatomy
+takeaway: A JSON prompt needs field names, types, allowed values, a missing-data rule and "JSON only".
+body: >
+  When a program will read the answer, "give me JSON" is not enough. The model
+  will invent field names, mix numbers and text, and wrap the answer in a
+  friendly sentence that breaks the parser. Spell out every field, its type and
+  what to do when the value is not in the text.
+data:
+  parts:
+    - label: Task
+      text: "Extract one record per college event mentioned in the notice below."
+      note: Says what counts as one record, so the model knows when to start a new object.
+    - label: Schema
+      text: |
+        Return a JSON array. Each item:
+        { "event": string, "date": "YYYY-MM-DD" | null,
+          "venue": string | null, "fee_inr": integer | null,
+          "category": "cultural" | "technical" | "sports" }
+      note: Exact field names and types. The quoted list limits category to three values.
+    - label: Missing-data rule
+      text: "If a value is not written in the notice, use null. Never guess."
+      note: Without this line the model fills gaps with plausible but false values.
+    - label: Normalisation
+      text: "Write dates as YYYY-MM-DD. Write fees as plain numbers, no ₹ sign."
+      note: One consistent form for each field makes the data sortable and comparable.
+    - label: Output-only rule
+      text: "Output only the JSON array — no explanation, no code fences."
+      note: Stops the friendly preamble that makes the output unparseable.
+    - label: Data
+      text: "<notice>{{input}}</notice>"
+      note: Tags keep the messy notice clearly separate from your instructions.
+source: Structured output guidance from The Prompt Report (Schulhoff et al., 2024), §2.2; provider documentation on JSON schema / structured outputs modes.

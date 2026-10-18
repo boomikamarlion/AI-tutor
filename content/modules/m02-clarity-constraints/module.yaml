@@ -1,0 +1,21 @@
+id: m02-clarity-constraints
+order: 2
+title: Clear and checkable — constraints and delimiters
+summary: >
+  Replace "short and nice" with limits anyone can check, fence off your data from your
+  instructions, and tell the model what to do instead of only what not to do.
+design_stage: define
+design_stage_note: >
+  The interviews are done and the notes are messy. You write a prompt that turns one
+  set of interview notes into a crisp, solution-free problem statement for the shop,
+  under strict, checkable constraints.
+tier: free
+estimated_minutes: 30
+techniques: [constraints, delimiters, positive-instructions]
+objectives:
+  - You will be able to rewrite vague instructions ("keep it short") as checkable constraints ("under 50 words").
+  - You will be able to separate instructions from pasted data with delimiters, so the model never mixes them up.
+  - You will be able to turn "don't" rules into positive instructions that give the model a target.
+  - You will be able to control length and tone reliably across a whole test set.
+cards: [m02-vague-to-checkable, m02-delimiters-anatomy, m02-positive-vs-negative, m02-constraint-checklist]
+labs: [m02-lab-circular-to-whatsapp, m02-lab-case-problem-statement, m02-lab-poster-critique]

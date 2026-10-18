@@ -1,0 +1,24 @@
+id: m01-context-checklist
+title: What context does the model need?
+technique: context-provision
+template: checklist
+takeaway: Give the model the facts only you know — the situation, the goal, what has already happened and what good looks like.
+body: >
+  The model knows a lot about the world in general and nothing about your situation.
+  Before you run a prompt, ask what a smart new classmate would need to know to do this
+  task well. Those facts are your context. Leave out anything that would not change the output.
+data:
+  items:
+    - label: The situation
+      detail: Where, when and what is going on. "A Tamil-medium first-year batch" or "a 40-year-old saree shop".
+    - label: The goal
+      detail: Why the output is needed and what decision it supports. A summary for a decision is different from a summary for a record.
+    - label: What already exists
+      detail: Earlier drafts, past attempts, what did not work. Saves the model from suggesting the same thing again.
+    - label: The real facts
+      detail: Names, dates, prices, rules. If you do not give them, the model will invent plausible ones.
+    - label: What good looks like
+      detail: A quality bar the model can aim at — "a recruiter should understand it in 10 seconds".
+    - label: Remove the noise
+      detail: Drop details that do not change the answer. Extra context can pull the output off track.
+source: Prompt components ("additional information") in The Prompt Report §2.2; provider guidance (Anthropic, OpenAI, Google prompt guides) on giving context. Original wording.

@@ -1,0 +1,19 @@
+id: m06-why-models-guess
+title: Why models make things up
+technique: grounding
+template: callout
+takeaway: A model is built to give a fluent answer; unless you give it sources and permission to stop, it will fill gaps with something plausible.
+body: >
+  A language model predicts likely text. When it does not know a fact — your
+  shop's return policy, a study's sample size, a lecturer's office hours — the
+  likely-sounding answer is still available, and it writes that. This is called
+  hallucination. The fix is not "please be accurate". It is giving the facts,
+  limiting the answer to them, and making "I can't find that" an acceptable reply.
+data:
+  headline: Fluent is not the same as true
+  stat: "3 moves"
+  detail: >
+    Supply the source. Require a citation for every claim. Define exactly what
+    to say when the source is silent. Together these turn a guess into either a
+    checked answer or an honest gap.
+source: Hallucination-mitigation guidance from Anthropic and OpenAI documentation; retrieval-augmented generation as summarised in The Prompt Report (Schulhoff et al., 2024), §2.2.6.

@@ -1,0 +1,123 @@
+id: m08-lab-library-tool-router
+title: Route requests to the right library tool
+difficulty: 3
+estimated_minutes: 15
+techniques_targeted: [tool-use, structured-output]
+uses_product_case: false
+brief: |
+  **WhatsApp from Arun (III BCA), library tech team**
+
+  Bro, the library bot project. The backend has 3 tools and the model must
+  pick ONE per message. We just need the routing prompt: given a student
+  message, output the tool call it should make, as JSON. The backend runs it.
+
+  Tools:
+  - `search_catalog(query, language)` — language is "tamil", "english" or "any"
+  - `check_my_loans(student_id)` — lists the books a student has, with book_id and due date
+  - `renew_loan(student_id, book_id)` — needs the exact book_id, nothing else works
+
+  Problems from testing:
+  - it called `renew_loan` with "DBMS book" as book_id → backend crash
+  - for "what time do you close" it called search_catalog 😅 — that needs no tool, the library hours are just text
+  - when students ask 2 things it only does one and forgets the other
+  - it made up student IDs
+
+  Output format the backend wants:
+  `{"tool": "<name or none>", "arguments": {...}, "reason": "<one line>", "pending": [<other requests not handled yet>], "ask_user": "<question or null>"}`
+
+  Student IDs look like 22BCA031. If you need one and it is not in the message,
+  don't call a tool that needs it — ask for it.
+input_label: Student message
+test_cases:
+  - id: tc1
+    input: |
+      Do you have Ponniyin Selvan in Tamil? Any part is ok.
+    note: The easy case — one clear search request with a language.
+  - id: tc2
+    input: |
+      my id 22BCA031. pls renew the DBMS book, due tomorrow i think
+    note: Renewal needs a book_id the student did not give. The right first call is check_my_loans, not renew_loan with a made-up id.
+  - id: tc3
+    input: |
+      What time does the library close on Saturday?
+    note: No tool is needed. A tool-happy prompt will still call something.
+  - id: tc4
+    input: |
+      Renew all my books and also check if you have any English books on
+      Madurai temple architecture. Also is the discussion room free tomorrow?
+    note: The edge case. Three requests, no student ID, and one request (room booking) that no tool supports. The router must not invent an ID, should start with what it can do, and must keep the rest in pending.
+starter_prompt: |
+  You are a library bot. You have tools search_catalog, check_my_loans and
+  renew_loan. Decide which tool to call for this message and output JSON.
+
+  {{input}}
+reference_prompt: |
+  You are the routing step of a college library WhatsApp bot. Read one student
+  message and decide the single next tool call. You do not answer the student;
+  the backend runs your call.
+
+  Tools:
+  - search_catalog(query: string, language: "tamil" | "english" | "any")
+    Use to find whether the library has a book or books on a topic.
+  - check_my_loans(student_id: string)
+    Use to list a student's borrowed books with book_id and due date. Call this
+    first whenever a renewal is asked but the book_id is not known.
+  - renew_loan(student_id: string, book_id: string)
+    Use only when both the student_id and the exact book_id are known. A title
+    or subject name is not a book_id.
+  - none
+    Use when no tool can help: general questions (timings, rules) or requests
+    no tool supports, such as booking rooms.
+
+  Rules:
+  - Student IDs look like 22BCA031. Use one only if it appears in the message.
+    Never invent one. If a needed ID is missing, choose a request you can do
+    without it; if none is possible, use tool "none" and ask for it in ask_user.
+  - Make exactly one call. Put every other request from the message into
+    pending as a short phrase, so none is forgotten.
+  - If a request is not supported by any tool, put it in pending and say so,
+    e.g. "room booking — not supported, refer to library desk".
+
+  Output exactly one JSON object, nothing else:
+  {"tool": "search_catalog" | "check_my_loans" | "renew_loan" | "none",
+   "arguments": {...},
+   "reason": "one line",
+   "pending": ["..."],
+   "ask_user": "question" or null}
+
+  <student_message>
+  {{input}}
+  </student_message>
+success_criteria:
+  - Output is one valid JSON object with keys tool, arguments, reason, pending and ask_user.
+  - tc1 calls search_catalog with language "tamil".
+  - tc2 calls check_my_loans with student_id 22BCA031, not renew_loan.
+  - tc3 uses tool "none" with empty arguments.
+  - tc4 never invents a student ID; it calls search_catalog (english) or none, asks for the student ID, and lists both the renewal and the room request in pending, marking room booking as unsupported.
+rubric:
+  base: core
+  extra_criteria:
+    - id: routing_accuracy
+      name: Routing accuracy
+      weight: 2
+      description: Is the chosen tool and its arguments correct and safe for the message, with no invented values?
+      diagnoses_prompt: Did the prompt give each tool a when-to-use and when-not-to-use rule, and forbid inventing required arguments?
+      anchors:
+        0: Wrong tool on most cases, or invented IDs.
+        1: Right tool on the easy case only.
+        2: Right tool on most cases but one call has a made-up or missing argument.
+        3: All tools correct; one minor slip in pending or ask_user.
+        4: Correct, safe call on every case, every extra request tracked.
+predictions:
+  - id: p1
+    question: "On tc2, the student says 'renew the DBMS book'. What will the starter prompt most likely do?"
+    options:
+      - "Call check_my_loans first"
+      - "Call renew_loan with book_id 'DBMS'"
+      - "Ask the student for the book_id"
+    answer: 1
+    explanation: Nothing told it that a subject name is not a book_id, so it fills the argument with whatever text it has. That is exactly the backend crash Arun described.
+hints:
+  - For each tool, write one line on when to use it and one on when not to.
+  - Add a rule for missing required arguments. What should happen when the student ID is not in the message?
+  - Give the model a place to put the requests it is not handling right now, so they are not lost.

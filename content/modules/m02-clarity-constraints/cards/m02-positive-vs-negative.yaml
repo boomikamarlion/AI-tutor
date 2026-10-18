@@ -1,0 +1,33 @@
+id: m02-positive-vs-negative
+title: Say what to do, not only what to avoid
+technique: positive-instructions
+template: compare
+takeaway: "\"Don't be boring\" gives no target; \"open with the date and one concrete benefit\" does."
+body: >
+  A list of "don't" rules tells the model where not to go, but not where to go. It may
+  also put the unwanted idea into its head. Turning each "don't" into a "do" gives a
+  clear target. Keep a "don't" only when there is a specific trap to avoid, and pair it
+  with what to do instead.
+data:
+  left:
+    label: Negative only
+    prompt: >
+      Write an Instagram caption for our college book fair. Don't make it long. Don't
+      use too many hashtags. Don't sound boring.
+    output: >
+      📚✨ Get lost in a world of stories! Our book fair is HERE and it's going to be
+      AMAZING! Don't miss out on the fun! #BookFair #Reading #Books #CollegeLife
+      #BookLovers #Madurai #Fun #Events
+  right:
+    label: Positive
+    prompt: >
+      Write an Instagram caption for our college book fair. Use 2 sentences: the first
+      gives the dates (3–5 Feb) and place (library hall); the second names one reason to
+      come (Tamil and English books from ₹50). End with exactly 2 hashtags.
+    output: >
+      Our book fair is on 3–5 Feb in the library hall. Tamil and English books start
+      from just ₹50 — come early for the best picks. #BookFair #MaduraiReads
+  verdict: >
+    The negative version still came out long, hashtag-heavy and generic. The positive
+    version gave the model a structure and facts, so there was nothing left to pad.
+source: Positive-instruction advice from Anthropic, OpenAI and Google prompting guides. Original example.

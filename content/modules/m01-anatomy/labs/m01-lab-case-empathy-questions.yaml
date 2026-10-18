@@ -1,0 +1,111 @@
+id: m01-lab-case-empathy-questions
+title: "Meenakshi Textiles: empathy-interview questions"
+difficulty: 2
+estimated_minutes: 14
+techniques_targeted: [role-prompting, audience-persona, context-provision, explicit-task]
+uses_product_case: true
+brief: |
+  **From:** Your project mentor, Dr. Anitha (Dept. of Business Administration)
+
+  Good work on the shop brief. Next step is **empathise**: you will interview real
+  customers of Meenakshi Textiles before anyone suggests a single solution. Use the
+  AI to draft your interview guide, but it must follow design-thinking interview rules:
+
+  - **Open questions** about their past experiences ("Tell me about the last time…"),
+    not yes/no and not "Would you use an app?".
+  - **Do not pitch** ideas or ask what they want us to build.
+  - Questions must suit the **person** you're interviewing — the regulars are mostly
+    women over 45 who speak Tamil first; the students are 18–22 and mostly shop online.
+  - **6–8 questions**, in simple English the team can say in Tamil on the spot, plus
+    one warm-up question first.
+
+  You'll paste a short note about who you are interviewing and where. Karthik says
+  Amma will check the questions, so nothing rude about the shop please.
+input_label: Interview plan
+test_cases:
+  - id: tc1
+    input: |
+      Group: long-time regulars. Interviewee: a 52-year-old school teacher who has bought silk sarees here for every family wedding since 1995. Interview at the shop, 20 minutes.
+    note: The core regular customer. Questions should explore rituals, trust and how she chooses.
+  - id: tc2
+    input: |
+      Group: college students. Interviewee: a 20-year-old B.A. English student at a Madurai college who bought a saree for her department farewell last month, from an online store.
+    note: A student who bought elsewhere. Good questions explore her journey, not why she didn't choose this shop.
+  - id: tc3
+    input: |
+      Group: long-time regulars. Interviewee: a 64-year-old man who buys sarees as gifts for his wife and daughters-in-law. Prefers Tamil. Interview by phone, 10 minutes.
+    note: A regular who isn't the wearer, on a short phone call — fewer, simpler questions.
+  - id: tc4
+    input: |
+      Group: college students. Interviewee: a 19-year-old B.Sc. Computer Science student who has never worn a saree and says sarees are "not for people like me". Interview at the college canteen, 15 minutes.
+    note: A non-customer. A naive prompt asks "What do you like about Meenakshi Textiles?" or tries to sell sarees. The guide must stay curious and respectful of her view.
+starter_prompt: |
+  Give me interview questions for saree shop customers.
+reference_prompt: |
+  You are a design-thinking researcher who has run many customer interviews for small family businesses in Tamil Nadu.
+
+  Context: Meenakshi Textiles is a 40-year-old family saree shop on West Masi Street, Madurai, known for Sungudi cotton and Kanchipuram silk. It wants to reach college students and young professionals without losing its long-time regulars. A student team is in the empathise stage: they want to understand customers' experiences and needs before thinking of any solution. The shop owner will review the questions.
+
+  Interview plan:
+  {{input}}
+
+  Write an interview guide for this one person:
+  - 1 warm-up question, then 6–8 main questions (fewer if the interview is under 15 minutes, but at least 4).
+  - Every question is open: it asks them to tell a story or describe a past experience. No yes/no questions.
+  - Do not mention or pitch any idea, app, website, offer or product. Do not ask what the shop should build.
+  - Fit the questions to this person's age, language, relationship to sarees and the interview setting. If they do not buy or wear sarees, ask about how they choose clothes for occasions and what they feel about sarees, without trying to change their mind.
+  - Simple English, under 18 words per question, easy to say in Tamil.
+  - Respectful toward the shop and the interviewee.
+
+  Format:
+  Warm-up: <question>
+  1. <question>
+  2. <question>
+  ...
+  Then one line starting "Listen for:" naming 2–3 things the team should notice in the answers.
+success_criteria:
+  - Each guide has one warm-up and the right number of main questions for the interview length (tc3 has fewer).
+  - All main questions are open and about past experience or feelings; none are yes/no.
+  - No question pitches an idea, app, offer or product, or asks what the shop should build.
+  - Questions fit the interviewee — tc3 suits a gift-buyer on the phone; tc4 does not assume she buys sarees or try to persuade her.
+  - Each question is under 18 words in simple English, and the guide ends with a "Listen for:" line.
+rubric:
+  base: core
+  extra_criteria:
+    - id: interview_quality
+      name: Empathy-interview quality
+      weight: 2
+      description: Do the questions invite stories about real past experiences without leading or pitching?
+      diagnoses_prompt: Did the prompt state the empathise-stage rules (open, past-focused, no pitching) and the interviewee's situation?
+      anchors:
+        0: Mostly yes/no or sales questions.
+        1: Some open questions, but several lead or pitch.
+        2: Mostly open; one or two leading or hypothetical questions.
+        3: Open and past-focused, with a small slip.
+        4: Every question is open, specific to the person and free of pitching.
+predictions:
+  - id: p1
+    question: "With the starter prompt, what kind of question will tc4 most likely get?"
+    options:
+      - "\"Tell me about the last time you dressed up for a college event.\""
+      - "\"What do you like most about our sarees?\""
+      - "\"Would you buy sarees if we had an app?\""
+    answer: 2
+    explanation: >
+      With no context about the empathise stage, models drift to survey and sales
+      questions, including "would you use…" hypotheticals. Option 1 is the kind of
+      question you want; option 2 is also likely, and just as unhelpful for this student.
+  - id: p2
+    question: "Which single part of the prompt most changes the questions between tc1 and tc4?"
+    options:
+      - "The role"
+      - "The interviewee description (audience/context)"
+      - "The output format"
+    answer: 1
+    explanation: >
+      The interview plan is the input that changes per case. Your prompt has to tell the
+      model to fit the questions to that person — that is what makes tc1 and tc4 different.
+hints:
+  - Dr. Anitha listed the interview rules. Each one is a constraint your prompt should state.
+  - Tell the model about the shop and the design stage — "we are only listening, not solving yet".
+  - For tc4, say what to do when the person does not buy or wear sarees at all.

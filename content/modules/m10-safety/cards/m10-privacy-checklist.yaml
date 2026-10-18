@@ -1,0 +1,31 @@
+id: m10-privacy-checklist
+title: Privacy and made-up-fact hygiene
+technique: privacy-hygiene
+template: checklist
+takeaway: Put in only the personal data the task needs, and make sure none of it comes back out.
+body: >
+  India's Digital Personal Data Protection Act, 2023 asks that personal data be
+  used only for a clear purpose and only as much as needed. In prompting, that
+  means masking what the model does not need and telling it not to repeat what
+  it sees. The same care applies to facts: an assistant that invents a detail
+  about a person can cause real harm.
+data:
+  items:
+    - label: Ask "does the model need this?"
+      detail: A summary of a complaint rarely needs a phone number or Aadhaar number. Remove or mask it before it goes into the prompt.
+    - label: Mask with labels, not blanks
+      detail: Replace details with [NAME], [PHONE], [AADHAAR], [EMAIL] so the text still reads clearly.
+    - label: Tell the model not to repeat personal data
+      detail: Even if the input contains it, the output should not — unless the task is to use it.
+    - label: Never ask for secrets
+      detail: Assistants must never request OTPs, PINs, passwords or card numbers, and should warn people who share them.
+    - label: Treat sensitive topics with care
+      detail: Health, harassment, caste, religion and finances need fewer details and a human in the loop.
+    - label: Allow "not stated"
+      detail: When a fact about a person is not in the input, the model should say so rather than fill the gap.
+    - label: Use made-up data for testing
+      detail: Build test cases from real patterns with fake names and numbers.
+source: >
+  Principles of the Digital Personal Data Protection Act, 2023 (India), and
+  OWASP Top 10 for LLM Applications (LLM02 Sensitive Information Disclosure).
+  Wording original; this is not legal advice.

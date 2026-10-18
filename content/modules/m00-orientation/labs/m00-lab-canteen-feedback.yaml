@@ -1,0 +1,100 @@
+id: m00-lab-canteen-feedback
+title: Summarise canteen feedback for the principal
+difficulty: 1
+estimated_minutes: 8
+techniques_targeted: [explicit-task]
+uses_product_case: false
+brief: |
+  **From:** Arun, Student Council secretary
+
+  We collect canteen feedback slips every week and I have to send a summary to the
+  Principal's office. Last time I pasted them into ChatGPT with "summarise this" and
+  got a nice paragraph that said "students are mostly satisfied" — but it skipped
+  the one complaint about a cockroach in the sambar! Sir was not happy when he heard
+  it from someone else.
+
+  What I need each week:
+  - The **top issues**, most serious first (anything about hygiene or safety always goes first).
+  - How many slips mention each issue.
+  - One line of **what's going well**.
+  - Short. Sir reads it on his phone.
+input_label: This week's feedback slips
+test_cases:
+  - id: tc1
+    input: |
+      1. Lemon rice too salty
+      2. Queue is very long at 1 pm, lunch break gets over
+      3. Long queue, add one more counter
+      4. Tea is good
+      5. Rice was salty today
+      6. Queue!!
+    note: Simple — two clear issues and one positive.
+  - id: tc2
+    input: |
+      1. Prices increased for vada, 10 to 15 rupees, without notice
+      2. Good variety this week, liked the pongal
+      3. Vada price hike not fair
+      4. No change given, they say "no change, take toffee"
+      5. Pongal super
+      6. Please put price list on the board
+    note: Price issues phrased in different ways. The model should group them, not list them one by one.
+  - id: tc3
+    input: |
+      1. Food was nice
+      2. Nice
+      3. Good
+      4. ok
+    note: Almost nothing to report. A good summary says so honestly instead of inventing problems.
+  - id: tc4
+    input: |
+      1. Parotta was soft today, thanks anna
+      2. Chutney superb
+      3. Fast service this week
+      4. Found a hair in my curd rice
+      5. Very clean tables now
+      6. Love the new filter coffee
+      7. Kitchen drain near back gate smells and water is overflowing onto the floor
+      8. Good
+    note: Mostly praise, with two hygiene issues buried in the middle. "Summarise this" will say "students are happy" and drop them.
+starter_prompt: |
+  Summarise this feedback.
+reference_prompt: |
+  You are helping the Student Council send a weekly canteen feedback summary to the Principal, who reads it on his phone.
+
+  Feedback slips:
+  {{input}}
+
+  Write the summary in this shape:
+  Issues (most serious first):
+  - <issue> — <number of slips that mention it>
+  What is going well: <one line>
+
+  Rules:
+  - Group slips that describe the same issue, and count them.
+  - Any hygiene, safety or cleanliness problem goes at the top, even if only one slip mentions it.
+  - If no slip reports a problem, write "Issues: none reported this week."
+  - Under 70 words in total. Use only what the slips say.
+success_criteria:
+  - Every output lists issues with a count of slips for each, and a one-line "going well" section.
+  - Slips about the same issue are grouped (tc2 price complaints counted together).
+  - In tc4, both the hair in the curd rice and the overflowing drain appear, at the top of the issues list.
+  - tc3 reports that no issues were raised and invents none.
+  - Each output is under 70 words.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "With the starter \"Summarise this feedback.\", what happens to the drain complaint in tc4?"
+    options:
+      - "It is listed first"
+      - "It is lost inside a general \"mostly positive\" sentence, or left out"
+      - "The model refuses to summarise"
+    answer: 1
+    explanation: >
+      A summary keeps what is most common. Six slips are positive, so a plain summary
+      sounds positive. Only an explicit rule ("hygiene goes first") makes the rare,
+      serious slip stand out.
+hints:
+  - Arun's brief lists four things he needs. Is each of them in your prompt?
+  - Give the exact shape of the output — a heading, a bullet per issue, a count.
+  - Add a rule about hygiene and safety, and say what to write when there are no issues.

@@ -1,0 +1,77 @@
+id: m00-lab-leave-letter
+title: Leave request to your class advisor
+difficulty: 1
+estimated_minutes: 8
+techniques_targeted: [zero-shot, explicit-task]
+uses_product_case: false
+brief: |
+  **From:** Divya (III B.Sc. Maths), WhatsApp
+
+  Hey, you're good with this AI stuff right? Every time I ask it for a leave letter
+  it gives me a full-page "Respected Sir/Madam, I humbly beg to state..." thing. Our
+  advisor Dr. Meena wants it on **email**, short, with the **dates** and the
+  **reason** clearly, and she gets annoyed if we don't mention **what we'll do about
+  missed classes or tests**. Can you make a prompt where I just paste my situation
+  and it gives a proper email? Subject line also needed. Not too formal, not too casual.
+  Please don't let it make up things like doctor certificates I don't have.
+input_label: Your situation
+test_cases:
+  - id: tc1
+    input: |
+      fever since yesterday, need leave tomorrow and day after (Thu 14 and Fri 15 Nov). will get notes from Priya.
+    note: The easy case — clear dates, clear reason, a plan for notes.
+  - id: tc2
+    input: |
+      cousin's wedding in Tirunelveli, need leave 20 to 22 Nov. 3 days. will come back Saturday.
+    note: Family function. A good email gives the reason honestly without over-explaining.
+  - id: tc3
+    input: |
+      NCC camp selection at Madurai Kamaraj Univ on 18 Nov full day. have selection letter.
+    note: Here a document really exists, so the email may mention it. Compare with tc1, where none does.
+  - id: tc4
+    input: |
+      paati hospital la admit, amma oorla illa so naan dhaan paakanum. Mon 25 to Wed 27 Nov. Internal test 2 is on 26th, I'll miss it 😟
+    note: Tamil-English mix and a missed internal test. A naive prompt forgets to ask for a re-test, or invents a medical certificate.
+starter_prompt: |
+  Write a leave letter.
+reference_prompt: |
+  Write a short leave-request email from a college student to her class advisor, Dr. Meena.
+
+  The student's situation is below. It may be in Tamil-English mix; understand it and write the email in clear English.
+
+  Situation:
+  {{input}}
+
+  The email must have:
+  - A subject line in the form "Leave request: <dates>".
+  - A greeting ("Dear Dr. Meena,").
+  - One sentence with the exact dates and number of days.
+  - One sentence with the reason, stated simply and honestly.
+  - One sentence on how she will cover missed classes. If a test or exam falls in the leave dates, politely ask whether a re-test is possible.
+  - A sign-off: "Thank you," then "Divya, III B.Sc. Maths".
+
+  Keep the body under 90 words. Polite but plain — no "humbly beg" phrases.
+  Mention a certificate or letter only if the situation says she has one. Do not invent any facts.
+success_criteria:
+  - Every output is an email with a subject line that includes the leave dates.
+  - The body states the exact dates and the reason from the input, and nothing invented.
+  - The body is under 90 words and avoids old-fashioned phrases like "humbly beg to state".
+  - Each email says how missed classes will be handled; tc4 asks about a re-test for the 26 Nov internal test.
+  - No certificate or document is mentioned unless the input says one exists (only tc3).
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "You run the one-line starter \"Write a leave letter.\" on tc4. What is most likely?"
+    options:
+      - "A short email that mentions the missed internal test"
+      - "A long, formal letter with generic reasons and no re-test request"
+      - "The model asks you which dates you need"
+    answer: 1
+    explanation: >
+      With no task details the model falls back on the most common pattern it has seen —
+      the classic formal leave letter — and it has no instruction to look for a test date.
+hints:
+  - Divya's message lists exactly what Dr. Meena wants. Turn each of those into a line in your prompt.
+  - Say what the output is (an email with a subject line) and give a word limit you can check.
+  - For tc4, tell the model what to do if a test falls inside the leave dates, and tell it not to mention documents unless the situation does.

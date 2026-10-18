@@ -1,0 +1,23 @@
+id: m10-safety
+order: 10
+title: Safe by design — injection, bias, privacy and made-up facts
+summary: >
+  A prompt that works on friendly inputs can still be tricked, unfair or
+  careless with people's data. Learn to treat user text as data, check outputs
+  for stereotypes, keep personal details out, and stop the model from inventing.
+design_stage: test
+design_stage_note: >
+  The order assistant faces hostile and careless messages: customers pasting
+  instructions, forwarding fake "owner" messages, and sharing phone numbers, PINs
+  and OTPs. You harden its system prompt so it stays safe for the shop and its
+  customers.
+tier: pro
+estimated_minutes: 50
+techniques: [injection-defense, delimiters, bias-check, privacy-hygiene]
+objectives:
+  - Fence user and document text with delimiters and restate the rules after it so embedded instructions are ignored.
+  - Spot and prevent outputs that judge people by name, gender, caste, religion or hometown.
+  - Mask personal data and follow basic DPDP hygiene in prompts and outputs.
+  - Reduce hallucination risk by limiting the model to given facts and allowing "not stated".
+cards: [m10-injection-anatomy, m10-fencing-compare, m10-bias-spectrum, m10-privacy-checklist]
+labs: [m10-lab-volunteer-screener, m10-lab-helpdesk-redaction, m10-lab-case-harden-assistant]

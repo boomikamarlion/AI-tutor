@@ -1,0 +1,29 @@
+id: m04-structured-output
+order: 4
+title: Shape the answer — structured output
+summary: >
+  Learn to tell the model exactly what shape the answer must take — a table, a
+  fill-in template or JSON that a program can read — and to pull clean records
+  out of messy text without inventing anything.
+design_stage: prototype
+design_stage_note: >
+  Prototype with structured specs. Karthik's stock updates arrive as rushed
+  WhatsApp messages. You turn them into clean JSON catalogue entries — the first
+  working piece of the shop's online catalogue, ready to test with real customers.
+tier: pro
+estimated_minutes: 40
+techniques: [output-format, structured-output, template-pattern]
+objectives:
+  - Specify an output's exact shape — sections, columns, order and length — so every run looks the same.
+  - Write a JSON schema in a prompt with field names, types, allowed values and a rule for missing data.
+  - Use a fill-in template so the model keeps your structure and only fills the gaps.
+  - Extract records from messy, mixed-language text without guessing values that are not there.
+cards:
+  - m04-why-format
+  - m04-json-schema-anatomy
+  - m04-template-compare
+  - m04-extraction-checklist
+labs:
+  - m04-lab-internship-table
+  - m04-lab-sql-helper
+  - m04-lab-case-stock-catalogue

@@ -1,0 +1,189 @@
+id: m09-lab-summary-judge
+title: Write a judge for study-note summaries
+difficulty: 3
+estimated_minutes: 18
+techniques_targeted: [llm-as-judge, rubric-evaluation, structured-output]
+uses_product_case: false
+brief: |
+  **Message from Dr. K. Selvi, Department of History**
+
+  Our first-years are using AI to summarise reading passages for revision. Some
+  summaries are good. Some sound very confident and are simply wrong. I cannot
+  check 200 a week. I want a grader prompt: give it the source passage and a
+  student's summary, and it scores the summary on my rubric.
+
+  My rubric (score each 0–4):
+  - **accuracy** — every fact in the summary is in the passage. 4 = all facts
+    supported; 2 = one minor unsupported detail; 0 = any wrong date, name or
+    event.
+  - **coverage** — has the 3 or 4 key points of the passage. 4 = all; 2 = about
+    half; 0 = misses the main point.
+  - **clarity** — a first-year student can follow it. 4 = clear, plain sentences;
+    2 = understandable but clumsy; 0 = confusing.
+  - **length** — must be 80 words or fewer. Just true/false.
+
+  Please make it show me *what in the summary* it based each score on — I will
+  spot-check. A summary with a wrong fact is never "accept", however nicely
+  written. Output JSON so I can put it in a spreadsheet:
+  `{"criteria": [{"id", "evidence", "score"}], "length_ok", "word_count", "verdict": "accept" | "revise", "feedback_for_student"}`
+
+  Feedback for the student: one or two sentences, kind, specific.
+input_label: Passage and summary
+test_cases:
+  - id: tc1
+    input: |
+      <passage>
+      The Thirumalai Nayakkar Mahal in Madurai was built around 1636 for King
+      Thirumalai Nayak, who ruled the Madurai Nayak kingdom. Its design mixes
+      Dravidian building traditions with Islamic features such as arches and
+      domes. The palace is known for its huge pillars and its open courtyard.
+      Only part of the original complex survives today; much of it was taken
+      apart in later years. In the 1870s the British administration of the
+      Madras Presidency carried out repairs. Today it is a protected monument
+      and hosts a sound-and-light show for visitors.
+      </passage>
+      <summary>
+      Thirumalai Nayakkar Mahal was built around 1636 for King Thirumalai Nayak.
+      It combines Dravidian and Islamic styles and is famous for its giant
+      pillars and courtyard. Much of the original palace is gone; the British
+      repaired it in the 1870s. It is now a protected monument with a
+      sound-and-light show.
+      </summary>
+    note: A good summary — accurate, covers the key points, within length. The judge should accept it.
+  - id: tc2
+    input: |
+      <passage>
+      The Thirumalai Nayakkar Mahal in Madurai was built around 1636 for King
+      Thirumalai Nayak, who ruled the Madurai Nayak kingdom. Its design mixes
+      Dravidian building traditions with Islamic features such as arches and
+      domes. The palace is known for its huge pillars and its open courtyard.
+      Only part of the original complex survives today; much of it was taken
+      apart in later years. In the 1870s the British administration of the
+      Madras Presidency carried out repairs. Today it is a protected monument
+      and hosts a sound-and-light show for visitors.
+      </passage>
+      <summary>
+      The palace has big pillars. It is in Madurai. People visit it.
+      </summary>
+    note: Accurate but thin. Accuracy should stay high while coverage drops. A judge that gives one overall impression will blur the two.
+  - id: tc3
+    input: |
+      <passage>
+      Madurai's Sungudi is a cotton fabric decorated by tie-and-dye. Small
+      points of cloth are tied tightly with thread before dyeing, so those
+      points stay undyed and form dotted patterns. The craft is linked to the
+      Saurashtrian community, who settled in Madurai centuries ago. Sungudi
+      received a Geographical Indication tag, which protects the name for
+      products made in the region. Many weavers today struggle with low prices
+      and competition from machine-printed imitations.
+      </passage>
+      <summary>
+      Sungudi is Madurai's tie-and-dye cotton. Tiny points are tied with thread
+      before dyeing so they stay undyed, making dot patterns. The Saurashtrian
+      community is linked to the craft. It has a GI tag protecting the name.
+      Weavers face low prices and printed copies.
+      </summary>
+    note: A different passage, to check the judge is not tuned to one text. Should be accepted.
+  - id: tc4
+    input: |
+      <passage>
+      The Thirumalai Nayakkar Mahal in Madurai was built around 1636 for King
+      Thirumalai Nayak, who ruled the Madurai Nayak kingdom. Its design mixes
+      Dravidian building traditions with Islamic features such as arches and
+      domes. The palace is known for its huge pillars and its open courtyard.
+      Only part of the original complex survives today; much of it was taken
+      apart in later years. In the 1870s the British administration of the
+      Madras Presidency carried out repairs. Today it is a protected monument
+      and hosts a sound-and-light show for visitors.
+      </passage>
+      <summary>
+      The magnificent Thirumalai Nayakkar Mahal, completed in 1736 under King
+      Thirumalai Nayak of the Madurai Nayak dynasty, is a stunning fusion of
+      Dravidian and Islamic architecture, celebrated for its colossal pillars
+      and grand open courtyard. Although large portions of the original complex
+      were later dismantled, the British administration restored it during the
+      1870s, and it was declared a UNESCO World Heritage Site in 1998. Today
+      this protected monument delights visitors with a sound-and-light show.
+      </summary>
+    note: The edge case. Polished and confident, but the date is wrong (1736), it adds a UNESCO claim that is not in the passage, and it is over 80 words. A judge swayed by fluency will accept it.
+starter_prompt: |
+  Grade this summary out of 4 for accuracy, coverage and clarity, and say if
+  it is under 80 words. Give JSON.
+
+  {{input}}
+reference_prompt: |
+  You grade first-year history students' summaries of a reading passage. You
+  are strict about facts and kind in feedback. Grade only what is written; do
+  not reward style.
+
+  The input contains a <passage> and a <summary>:
+  {{input}}
+
+  Work in this order for each criterion: first collect evidence by quoting the
+  exact words from the summary, then compare them to the anchors, then score.
+
+  accuracy (0–4): List each factual claim in the summary (dates, names,
+  events, numbers, titles). For each, check it against the passage and mark
+  "supported", "contradicted" or "not in passage".
+    4 = all supported. 3 = one vague or slightly reworded claim. 2 = one minor
+    unsupported detail. 1 = two or more unsupported details. 0 = any
+    contradicted date, name or event, or any major claim not in the passage.
+  coverage (0–4): Identify the 3–4 key points of the passage yourself, then
+  check which ones the summary includes.
+    4 = all key points. 3 = all but one minor point. 2 = about half.
+    1 = one key point. 0 = misses the main point.
+  clarity (0–4): Can a first-year student follow it?
+    4 = clear, plain sentences. 3 = clear with one clumsy part. 2 = understandable
+    but clumsy. 1 = hard to follow. 0 = confusing.
+  length: Count the words in the summary. length_ok is true if 80 or fewer.
+
+  verdict is "accept" only if accuracy is 3 or more, coverage is 3 or more and
+  length_ok is true. Otherwise "revise".
+  feedback_for_student: 1–2 kind sentences naming the most important fix.
+
+  Output only this JSON:
+  {"criteria": [
+     {"id": "accuracy", "evidence": "quotes with supported/contradicted/not in passage", "score": 0},
+     {"id": "coverage", "evidence": "key points found and missing", "score": 0},
+     {"id": "clarity", "evidence": "quote that shows the clarity level", "score": 0}],
+   "length_ok": true, "word_count": 0, "verdict": "accept", "feedback_for_student": "..."}
+success_criteria:
+  - Output is valid JSON with the requested keys, with evidence written before each score.
+  - Evidence quotes the summary's own words.
+  - tc1 and tc3 are accepted with accuracy 3–4.
+  - tc2 keeps accuracy high (3–4) but scores coverage 1 or lower, and is marked revise.
+  - tc4 scores accuracy 0, flags both 1736 and the UNESCO claim, marks length_ok false, and is marked revise.
+rubric:
+  base: core
+  extra_criteria:
+    - id: judge_reliability
+      name: Judge reliability
+      weight: 2
+      description: Do the judge's scores match what a careful human grader would give, with evidence that actually supports each score?
+      diagnoses_prompt: Did the prompt give anchors for each score and require quoted evidence before the score?
+      anchors:
+        0: Scores look random or the fluent wrong summary is accepted.
+        1: Gets the obvious cases right but evidence does not support the scores.
+        2: Most scores sensible; misses one planted error in tc4.
+        3: All verdicts right; one score is a point off a careful human's.
+        4: Every score and verdict matches a careful human, each backed by quotes.
+predictions:
+  - id: p1
+    question: "With the starter prompt, how will tc4 (the polished summary) most likely be graded?"
+    options:
+      - "High accuracy and accepted, because it reads well"
+      - "Accuracy 0, because of the wrong date"
+      - "The judge will refuse to grade"
+    answer: 0
+    explanation: Without a rule to check each fact against the passage, judges tend to reward fluent, confident writing. The wrong date and the invented UNESCO claim slip through.
+  - id: p2
+    question: "In tc2, the summary is accurate but very short. Should accuracy and coverage get the same score?"
+    options:
+      - "Yes — it is a weak summary overall"
+      - "No — accuracy stays high, coverage drops"
+    answer: 1
+    explanation: Separate criteria exist so that one problem does not leak into every score. Nothing in tc2 is false; it is just incomplete.
+hints:
+  - Tell the judge to quote first and score second, for every criterion.
+  - Spell out the anchors for each score. "0–4" alone means something different to every grader.
+  - Make the verdict a rule (for example, "accept only if accuracy ≥ 3") instead of leaving it to the judge's taste.

@@ -1,0 +1,26 @@
+id: m02-vague-to-checkable
+title: From vague to checkable
+technique: constraints
+template: spectrum
+takeaway: A constraint is only useful if you could check it with a ruler — words, items, a list of allowed values.
+body: >
+  "Short", "simple" and "professional" mean different things to different readers, and
+  to the model. A checkable constraint has a number or a clear yes/no test. It makes the
+  output steadier across runs and gives you, and the critic, a fair way to judge it.
+data:
+  left_label: Vague
+  right_label: Checkable
+  points:
+    - label: "\"Keep it short\""
+      position: 5
+      note: Short could be one line or one page.
+    - label: "\"Keep it brief, like a WhatsApp message\""
+      position: 35
+      note: A reference point helps, but still no limit.
+    - label: "\"Under 50 words\""
+      position: 75
+      note: Anyone can count. Models are approximate with exact counts, so leave a little room.
+    - label: "\"Under 50 words, 3 bullets, each starting with a verb\""
+      position: 95
+      note: Length, shape and style are all checkable.
+source: Style and length instructions in The Prompt Report (Schulhoff et al., arXiv 2406.06608) §2.2; provider guidance on being specific. Original wording.

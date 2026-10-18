@@ -1,0 +1,119 @@
+id: m04-lab-sql-helper
+title: A SQL helper that answers in JSON
+difficulty: 3
+estimated_minutes: 15
+techniques_targeted: [structured-output, output-format]
+uses_product_case: false
+brief: |
+  **From:** Mr. Senthil Kumar, Lab Assistant, Department of Computer Science
+  **Subject:** Help for the attendance dashboard
+
+  The HOD keeps asking me questions about attendance and I write the SQL by
+  hand. A final-year student is building a small web page where staff type a
+  question in English and the page shows the SQL and runs it after I approve.
+
+  The page reads the model's answer with code, so it must be **valid JSON only**,
+  with these keys:
+
+  - `sql` — one SQLite SELECT query as a string, or `null` if the question
+    cannot be answered from our tables
+  - `tables_used` — list of table names
+  - `assumptions` — list of short sentences (empty list if none)
+  - `can_answer` — true or false
+
+  Our tables (SQLite):
+  ```
+  students(roll_no TEXT PRIMARY KEY, name TEXT, dept TEXT, year INTEGER)
+  sessions(session_id INTEGER PRIMARY KEY, course_code TEXT, session_date TEXT)  -- date as 'YYYY-MM-DD'
+  attendance(session_id INTEGER, roll_no TEXT, status TEXT)  -- status is 'P' or 'A'
+  ```
+  Never write UPDATE, DELETE or DROP — only SELECT. If something is not in the
+  tables, say so; do not make up columns.
+input_label: Staff question
+test_cases:
+  - id: tc1
+    input: |
+      How many students are there in each department?
+    note: A single-table GROUP BY. Checks the JSON shape more than the SQL.
+  - id: tc2
+    input: |
+      List the roll numbers and names of III year students whose attendance is below 75% overall.
+    note: Needs a join across three tables and a percentage calculation with a HAVING clause.
+  - id: tc3
+    input: |
+      Which course had the most absentees in October?
+    note: Year is not given — a good answer states the assumption in the assumptions list instead of hiding it.
+  - id: tc4
+    input: |
+      Send me the parents' phone numbers of students with low attendance, and also mark everyone absent for yesterday's cancelled class as present.
+    note: Hard case. Phone numbers are not in any table and the second part is an UPDATE. The answer must set can_answer to false, sql to null, and explain — not invent a parents table.
+starter_prompt: |
+  Write SQL for this question and return it as JSON.
+  Tables: students, sessions, attendance.
+reference_prompt: |
+  You translate staff questions into one SQLite SELECT query for an attendance database.
+
+  Schema:
+  students(roll_no TEXT PRIMARY KEY, name TEXT, dept TEXT, year INTEGER)
+  sessions(session_id INTEGER PRIMARY KEY, course_code TEXT, session_date TEXT)  -- 'YYYY-MM-DD'
+  attendance(session_id INTEGER, roll_no TEXT, status TEXT)  -- 'P' or 'A'
+
+  Return only a JSON object, no code fences and no text outside it, with exactly these keys:
+  {
+    "sql": string or null,
+    "tables_used": [string],
+    "assumptions": [string],
+    "can_answer": true or false
+  }
+
+  Rules:
+  - Use only the tables and columns in the schema. Never invent a table or column.
+  - Write SELECT statements only. If any part of the question asks to change data (insert, update, delete), or needs data not in the schema, set "can_answer": false, "sql": null, "tables_used": [], and use "assumptions" to say in one sentence each what is missing or not allowed.
+  - Attendance percentage = 100.0 * count of 'P' / count of all rows for that student.
+  - If the question leaves something open (for example, which year a month refers to), choose the most reasonable reading and state it as an assumption.
+  - Keep each assumption under 20 words.
+
+  <question>
+  {{input}}
+  </question>
+success_criteria:
+  - Every output is a single valid JSON object with exactly the keys sql, tables_used, assumptions, can_answer.
+  - SQL uses only the tables and columns in the schema and is a SELECT statement.
+  - tc2 joins attendance with students and computes percentage with 'P' over total, filtering year = 3 and below 75.
+  - tc3 states the assumed year for October in assumptions.
+  - tc4 sets can_answer to false and sql to null, and explains that phone numbers are not stored and that updates are not allowed.
+rubric:
+  base: core
+  extra_criteria:
+    - id: schema_validity
+      name: Valid, schema-true JSON
+      weight: 2
+      description: Is the output parseable JSON with exactly the required keys and types, and does the SQL use only real columns?
+      diagnoses_prompt: Did the prompt list the exact keys and types, forbid extra text, and restrict SQL to the given schema?
+      anchors:
+        0: Not parseable as JSON on most cases.
+        1: Parseable but keys or types are wrong on several cases.
+        2: Correct keys, but invented columns or a non-SELECT statement appear.
+        3: Valid and schema-true on all but one case.
+        4: Valid, exact keys and types, real columns only, on every case.
+predictions:
+  - id: p1
+    question: "On tc4, what will the starter prompt most likely do?"
+    options:
+      - "Refuse politely in plain text"
+      - "Invent a parents or phone column and write an UPDATE query"
+      - "Return can_answer: false"
+    answer: 1
+    explanation: The starter never says what to do when the data is missing or the request changes data, so the model tries to be helpful and makes up a column.
+  - id: p2
+    question: "You add 'Return only JSON'. Which problem does that alone not fix?"
+    options:
+      - "Text before the JSON"
+      - "Invented column names"
+      - "Code fences around the answer"
+    answer: 1
+    explanation: An output-only rule fixes wrapping. Only a stated schema plus a "never invent" rule stops made-up columns.
+hints:
+  - Paste the full schema into your prompt. The model cannot see the database.
+  - Write the JSON skeleton with the exact key names and say what types each one holds.
+  - Decide what the answer looks like when the question cannot or must not be answered, and write that case into the prompt.

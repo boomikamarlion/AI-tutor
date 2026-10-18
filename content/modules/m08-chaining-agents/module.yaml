@@ -1,0 +1,22 @@
+id: m08-chaining-agents
+order: 8
+title: From one prompt to a system — chains, system prompts and tools
+summary: >
+  Big jobs work better as small, checked steps. Learn to split a task into a
+  chain, write a system prompt that holds steady across hundreds of messages,
+  and describe tools so a model picks the right one.
+design_stage: prototype
+design_stage_note: >
+  Meenakshi Textiles gets its first working prototype — a system prompt for the
+  WhatsApp order assistant that Karthik can try on real customer messages, with
+  clear rules for when to hand over to him.
+tier: pro
+estimated_minutes: 50
+techniques: [prompt-chaining, system-prompt, tool-use]
+objectives:
+  - Split a large task into a chain of prompts, each with a clear hand-over format and a check in between.
+  - Write a system prompt with identity, known facts, rules, escalation and a refusal policy.
+  - Describe tools with names, parameters and when-to-use rules so a model routes requests correctly.
+  - Explain how an agent loop works and which guardrails it needs.
+cards: [m08-chain-flow, m08-system-prompt-anatomy, m08-tool-description-compare, m08-autonomy-spectrum]
+labs: [m08-lab-internship-extractor, m08-lab-library-tool-router, m08-lab-case-whatsapp-system-prompt]

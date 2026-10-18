@@ -1,0 +1,21 @@
+id: m03-examples
+order: 3
+title: Show, don't just tell — examples
+summary: >
+  Sometimes the fastest way to explain what you want is to show it. Learn when to use
+  zero, one or a few examples, how to pick them, and how examples teach format and voice.
+design_stage: define
+design_stage_note: >
+  The team has defined the problem: customers want quick, warm, trustworthy answers on
+  WhatsApp. You capture the shop's voice in a few-shot prompt that drafts replies Karthik
+  can send — in English, with an optional Tamil greeting.
+tier: pro
+estimated_minutes: 35
+techniques: [zero-shot, one-shot, few-shot, exemplar-selection]
+objectives:
+  - You will be able to decide when a zero-shot instruction is enough and when examples are needed.
+  - You will be able to write a one-shot or few-shot prompt with clearly separated, consistent examples.
+  - You will be able to choose examples that cover the hard cases and match real inputs, in a sensible order.
+  - You will be able to use examples to fix an output format or a voice that instructions alone cannot describe.
+cards: [m03-why-examples, m03-few-shot-anatomy, m03-format-by-example, m03-choosing-examples]
+labs: [m03-lab-review-tagger, m03-lab-commit-messages, m03-lab-case-whatsapp-replies]

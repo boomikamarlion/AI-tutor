@@ -1,0 +1,41 @@
+id: m03-format-by-example
+title: One example can teach a format
+technique: one-shot
+template: compare
+takeaway: When a format is easier to show than to describe, a single worked example often does what a paragraph of instructions cannot.
+body: >
+  Describing a layout in words — which fields, in which order, with what punctuation —
+  is slow and easy to get wrong. One example makes it concrete. Keep the example's
+  content different from the real input, so the model copies the shape and not the facts.
+data:
+  left:
+    label: Zero-shot
+    prompt: >
+      Turn this alumni talk note into an event listing for our department website:
+      "Ms. Revathi (2014 batch), data analyst at a Chennai bank, will talk on careers in
+      analytics, Friday 3 pm, Room 204."
+    output: >
+      We are delighted to announce an inspiring alumni talk by Ms. Revathi, a proud
+      member of our 2014 batch, who now works as a data analyst at a leading bank in
+      Chennai. Join us on Friday at 3 pm in Room 204 to learn about careers in analytics!
+  right:
+    label: One-shot
+    prompt: |
+      Turn the alumni talk note into an event listing. Follow the example's format exactly.
+
+      Example note: "Mr. Siva (2010 batch), teacher at a Theni school, talk on B.Ed options, Monday 11 am, Seminar Hall."
+      Example listing:
+      TALK · B.Ed options after your degree
+      Speaker: Mr. Siva, 2010 batch — teacher, Theni
+      When: Monday, 11 am · Where: Seminar Hall
+
+      Note: "Ms. Revathi (2014 batch), data analyst at a Chennai bank, will talk on careers in analytics, Friday 3 pm, Room 204."
+      Listing:
+    output: |
+      TALK · Careers in analytics
+      Speaker: Ms. Revathi, 2014 batch — data analyst, Chennai bank
+      When: Friday, 3 pm · Where: Room 204
+  verdict: >
+    The zero-shot output is a friendly paragraph, but not a listing. One example fixed
+    the labels, order, separators and length — with no rules written out at all.
+source: One-shot prompting, The Prompt Report (Schulhoff et al., arXiv 2406.06608) §2.2.1.1. Original example.

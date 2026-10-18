@@ -1,0 +1,136 @@
+id: m07-lab-case-instagram-launch
+title: "Meenakshi Textiles: test and improve the Instagram launch"
+difficulty: 3
+estimated_minutes: 20
+techniques_targeted: [self-critique, cognitive-verifier]
+uses_product_case: true
+brief: |
+  **From:** Karthik, Meenakshi Textiles
+  **On WhatsApp:**
+
+  Finally starting our Instagram page! 🎉 I wrote the bio and the first 3 posts
+  myself (forwarding my drafts). Before I post, can your prompt **check them
+  properly and fix them**? Everything we learnt so far should be checked:
+
+  1. **Audience:** speaks to college students / young working people, without
+     pushing away our regulars
+  2. **Language:** Tamil first, with simple English — not English-only
+  3. **Bio:** max 150 characters, says what we sell, where we are, how to order
+  4. **Posts:** each under 60 words, one clear call to action (WhatsApp / visit),
+     max 5 hashtags
+  5. **True facts only:** nothing that isn't in our fact sheet — Amma will
+     kill me if we promise something wrong 🙏
+
+  **Fact sheet** (only these are true):
+  - Family shop on West Masi Street, Madurai, serving customers for over 40 years
+  - Speciality: Madurai Sungudi cotton and Kanchipuram silk (Silk Mark tagged)
+  - WhatsApp orders: [WhatsApp number] — full UPI payment before dispatch
+  - Free delivery inside Madurai city above ₹2,000; ₹80 courier elsewhere in Tamil Nadu
+  - Open 9:30 am – 9 pm, every day
+  - No discounts or sales planned — Amma's rule
+
+  What I want back: a **check table** (criterion | pass/fail | proof from my
+  draft), a **list of every factual claim** checked against the fact sheet, then
+  the **improved bio and 3 posts**, then a one-line summary of what changed.
+input_label: Karthik's draft
+test_cases:
+  - id: tc1
+    input: |
+      BIO: Meenakshi Textiles. Best sarees in town. Come visit!
+      POST 1: Welcome to our page! We sell sarees. Follow us for more.
+      POST 2: New Sungudi cotton collection is here. Visit our shop. #saree #madurai
+      POST 3: Silk sarees for weddings. Contact us.
+    note: Generic and English-only, with no location, ordering route or student angle. "Best sarees in town" is an unverifiable claim.
+  - id: tc2
+    input: |
+      BIO: Meenakshi Textiles 🌸 Three generations of weaving love on West Masi Street, Madurai 🙏 Sungudi cotton | Kanchipuram silk | Bridal collection | Custom blouse stitching | WhatsApp us anytime for orders and enquiries 💬
+      POST 1: புதிய Sungudi collection! Light, breathable cotton for college days ☀️ WhatsApp [WhatsApp number] #sungudi #madurai #cotton #saree #handloom #tamilnadu #collegefashion #ootd #madurastyle
+      POST 2: Kanchipuram silk with Silk Mark tag — for the wedding you've been waiting for. நேரில் வாருங்கள், West Masi Street.
+      POST 3: Free delivery in Madurai above ₹2,000! ₹80 courier anywhere in Tamil Nadu. Order on WhatsApp.
+    note: Mostly good, but the bio is far over 150 characters and claims a custom blouse service that is not in the fact sheet; post 1 has 9 hashtags. Fixes should be targeted, not a full rewrite.
+  - id: tc3
+    input: |
+      BIO: Est. 40+ yrs. Madurai's heritage textiles. Sungudi & Kanchi silk. Order: [WhatsApp number]
+      POST 1: Our patti's favourite saree shop is now your favourite too. Sungudi cotton from ₹950 — light enough for 8:30 am classes. WhatsApp to order. #sungudi #madurai
+      POST 2: Interview next week? A simple cotton saree says confident without trying too hard. Visit us on West Masi Street, 9:30 am – 9 pm.
+      POST 3: For 40 years, Madurai families have trusted us for wedding silk. Now it's your turn. #kanchipuramsilk
+    note: Good audience thinking but English-only, and "from ₹950" is a price not in the fact sheet. Post 3 has no call to action.
+  - id: tc4
+    input: |
+      BIO: India's No.1 silk shop since 1950 👑 Free delivery all over India 🚚 DM for orders
+      POST 1: PONGAL MEGA SALE!! Flat 50% off on all silk sarees. Only this week!!
+      POST 2: 100% pure handwoven Sungudi, made by our own weavers in our factory. Lowest price guaranteed.
+      POST 3: Students get extra 20% off — show your ID card! Open 24/7 on WhatsApp.
+    note: Hard case. Almost every claim is false against the fact sheet — "No.1", "since 1950", free delivery across India, 50% sale, own factory, lowest price, student discount, 24/7. A good answer lists and removes each one and does not replace them with new invented claims. A naive prompt polishes the wording and keeps the promises.
+starter_prompt: |
+  Make this Instagram bio and these posts better for our saree shop.
+reference_prompt: |
+  You are reviewing the Instagram launch content for Meenakshi Textiles, a family saree shop in Madurai.
+
+  <fact_sheet>
+  - Family shop on West Masi Street, Madurai, serving customers for over 40 years
+  - Speciality: Madurai Sungudi cotton and Kanchipuram silk (Silk Mark tagged)
+  - WhatsApp orders: [WhatsApp number] — full UPI payment before dispatch
+  - Free delivery inside Madurai city above ₹2,000; ₹80 courier elsewhere in Tamil Nadu
+  - Open 9:30 am – 9 pm, every day
+  - No discounts or sales planned
+  </fact_sheet>
+
+  <draft>
+  {{input}}
+  </draft>
+
+  Criteria:
+  C1 Audience — speaks to college students and young professionals without pushing away long-time regular customers.
+  C2 Language — Tamil first, with simple English; not English-only.
+  C3 Bio — at most 150 characters; says what the shop sells, where it is and how to order.
+  C4 Posts — each under 60 words, exactly one clear call to action (WhatsApp or visit), at most 5 hashtags.
+  C5 Facts — every factual claim is in the fact sheet.
+
+  Do this in order:
+  1. Check table: Criterion | Pass/Fail | Proof (short exact quote from the draft). Judge fairly — pass what passes.
+  2. Claim check: list every factual claim in the draft (dates, prices, offers, services, delivery, hours, rankings). For each, ask "Does the fact sheet say this?" and mark Supported, Not supported or Contradicted.
+  3. Improved version: the bio and three posts, fixing every failed criterion and removing every claim not Supported. Keep what already works. Do not add any fact, price, offer or service that is not in the fact sheet.
+  4. One line starting "Changed:" summarising the changes.
+success_criteria:
+  - A check table covers C1–C5 with pass/fail and a quote from the draft for each.
+  - Every factual claim in the draft is listed and marked against the fact sheet.
+  - The improved bio is at most 150 characters and names what, where and how to order.
+  - Each improved post is under 60 words, has one call to action and at most 5 hashtags.
+  - Improved content is Tamil-first with simple English.
+  - The improved version contains no claim outside the fact sheet.
+  - tc2 is fixed with targeted edits (bio shortened, blouse-stitching claim removed, hashtags cut) rather than rewritten from scratch.
+  - tc4 flags and removes all false claims (No.1, since 1950, all-India free delivery, 50% sale, own factory, lowest price, student discount, 24/7) and adds no new invented claims.
+rubric:
+  base: core
+  extra_criteria:
+    - id: critique_quality
+      name: Critique quality
+      weight: 2
+      description: Does the critique judge each criterion fairly with evidence, and does the rewrite fix exactly what failed?
+      diagnoses_prompt: Did the prompt list explicit criteria, require quoted evidence, ask for a claim-by-claim check, and limit the rewrite to the failures?
+      anchors:
+        0: No real critique; just a rewrite.
+        1: Vague critique without evidence; rewrite ignores it.
+        2: Criteria checked but evidence thin, or false claims missed.
+        3: Fair, evidenced critique with one missed claim or one unnecessary change.
+        4: Every criterion fairly judged with quotes, every claim checked, and the rewrite fixes exactly the failures.
+predictions:
+  - id: p1
+    question: "On tc4, what will 'make this better' most likely do with 'Flat 50% off'?"
+    options:
+      - "Remove it because the shop has no sale"
+      - "Keep it and make it sound more exciting"
+    answer: 1
+    explanation: The starter prompt has no fact sheet and no claim check, so it treats the draft's promises as true and polishes them.
+  - id: p2
+    question: "You add the fact sheet but no step that lists claims. What is still likely to slip through?"
+    options:
+      - "Obvious false offers like the 50% sale"
+      - "Quieter claims such as 'since 1950' or 'own factory'"
+    answer: 1
+    explanation: Loud claims get caught by a general rule. Asking the model to list and check every claim separately is what catches the quiet ones.
+hints:
+  - Turn Karthik's five checks into numbered criteria the model must mark pass or fail, with a quote as proof.
+  - Add a separate step where every factual claim is checked against the fact sheet before any rewriting.
+  - In tc4, removing a false claim is not enough. What must the rewrite not do in its place?

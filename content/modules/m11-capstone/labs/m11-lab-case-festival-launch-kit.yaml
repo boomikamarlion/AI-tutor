@@ -1,0 +1,198 @@
+id: m11-lab-case-festival-launch-kit
+title: "Capstone: Meenakshi Textiles festival launch kit"
+difficulty: 3
+estimated_minutes: 45
+techniques_targeted: [decomposition, plan-and-solve, structured-output, grounding, constraints, context-provision]
+uses_product_case: true
+brief: |
+  **Mrs. R. Lakshmi and Karthik — a note for the whole year**
+
+  Thank you for everything so far. Now we want one tool we can use before
+  *every* festival and season. Karthik will paste a short note — which
+  festival, budget, what stock we want to push, any problems — and the tool
+  should give us a complete launch kit.
+
+  What the kit must contain, in this order, because this is how we think:
+  1. **Problem statement** — one or two sentences: who we want to reach this
+     time, and what is stopping them.
+  2. **Three ideas** — different from each other, each with a one-line risk
+     and whether it fits our budget and people.
+  3. **The chosen idea** — and why, linked to the problem statement.
+  4. **Launch plan** — a timeline with who does what (only Amma, Karthik or
+     "staff" — we are 6 staff, no agency), which channel (WhatsApp, Instagram,
+     shop poster, word of mouth), and the cost of each step in rupees. Total
+     must stay within the budget. Give 2–3 ways to measure success that we
+     can actually count, and the main risks with what we will do about them.
+  5. **Copy** — a WhatsApp broadcast (max 60 words), an Instagram caption
+     (max 40 words + 3 hashtags) and a poster headline (max 8 words). Each in
+     simple English *and* Tamil, so our regulars and the college crowd both
+     understand. Keep "Sungudi" and "Kanchipuram" as they are.
+
+  Things that are always true about us:
+  - West Masi Street, Madurai. Three generations, 40 years. Speciality: Madurai
+    Sungudi cotton (Rs 650 – 1,800) and Kanchipuram silk (from Rs 6,500).
+  - Regulars are mostly older, Tamil-first, come to the shop. Young customers
+    find us on Instagram and WhatsApp. Karthik is the only one who handles
+    WhatsApp orders.
+  - **Discounts never above 10%** — Amma's rule. No fake "70% off" style offers.
+  - Only message customers who have agreed to get our messages.
+
+  Karthik needs to load it into his planning sheet, so please give JSON. Don't
+  invent sales numbers or statistics about us — if the tool needs something we
+  didn't say, it should list it as an assumption or a question.
+input_label: Karthik's festival note
+test_cases:
+  - id: tc1
+    input: |
+      Festival: Deepavali, about 4 weeks away.
+      Budget: Rs 15,000.
+      Push: new pastel Sungudi range + entry-level silk for young professionals
+      buying their first silk saree.
+      Notes: last Deepavali the shop was too crowded on the last weekend and
+      some people left without buying.
+    note: The typical case with a healthy budget and a clear audience. The crowding note should shape the plan (for example, early-booking or appointment slots).
+  - id: tc2
+    input: |
+      Festival: Pongal, 3 weeks away.
+      Budget: Rs 8,000.
+      Push: cotton sarees and dhotis for family gifting.
+      Notes: this one is for our regulars. Many of them are not on Instagram.
+      Amma wants it to feel traditional, not "young".
+    note: A different audience. The plan should lean on WhatsApp, posters and word of mouth, and the copy should be Tamil-first and traditional in tone.
+  - id: tc3
+    input: |
+      Festival: Chithirai Thiruvizha. The chariot (ther) goes around the Masi
+      streets — huge crowds right outside our shop, many visitors from other
+      districts.
+      Budget: Rs 10,000.
+      Push: light Sungudi cotton for the summer heat.
+      Notes: on chariot day the police put barricades, and our entrance is
+      hard to reach for a few hours. Staff also want to see the procession.
+    note: A local, crowd-driven festival with an access problem. A good kit plans around barricade hours, serves out-of-town visitors, and does not schedule all staff during the procession.
+  - id: tc4
+    input: |
+      Not a festival — Aadi month. Weddings are few and sales are slow.
+      Big Chennai stores are advertising 50% Aadi offers.
+      Budget: only Rs 3,000.
+      Karthik will be travelling for 10 days in the middle of the month, so no
+      one will answer WhatsApp orders then.
+      Karthik also asks: we have 600 old customer numbers from bills — can we
+      just send the offer to all of them?
+    note: The edge case. A tiny budget, a 50% competitor offer that clashes with the 10% cap, a gap in WhatsApp cover, and a privacy question. A naive prompt matches the 50% offer, overspends, plans WhatsApp campaigns while Karthik is away, and says "yes" to messaging everyone.
+starter_prompt: |
+  Create a festival marketing plan for Meenakshi Textiles, a saree shop in
+  Madurai, with some ideas and social media posts in English and Tamil. Give
+  JSON.
+
+  {{input}}
+reference_prompt: |
+  You are a marketing planner for Meenakshi Textiles, a three-generation family
+  saree shop on West Masi Street, Madurai. You plan for a small team with a
+  small budget, and you write for two audiences at once: older Tamil-first
+  regulars and college students and young professionals.
+
+  Fixed facts about the shop (use only these, plus the note below):
+  - 40 years old. Owner Mrs. R. Lakshmi; her son Karthik is the only person who
+    handles WhatsApp orders. Six staff. No agency.
+  - Madurai Sungudi cotton Rs 650–1,800. Kanchipuram silk from Rs 6,500.
+  - Regulars mostly visit the shop and prefer Tamil; young customers find the
+    shop on Instagram and WhatsApp.
+  Fixed rules:
+  - No discount above 10%. No exaggerated or fake offers.
+  - Message only customers who have agreed to receive messages.
+  - Do not invent sales figures, statistics or facts about the shop. Put
+    anything you need but were not told in "assumptions" or "questions".
+
+  Karthik's note for this season:
+  <note>
+  {{input}}
+  </note>
+
+  Work through these steps in order and put each in the JSON:
+  1. problem_statement: 1–2 sentences — who to reach this season and what is
+     stopping them, drawn from the note.
+  2. ideas: exactly 3 ideas that differ in approach (not three versions of a
+     discount). For each: name, summary (one sentence), fits_budget_and_team
+     (true/false with a short why), risk (one line).
+  3. chosen_idea: the name of one idea and a why that refers back to the
+     problem statement.
+  4. launch_plan:
+     - timeline: steps with when (e.g. "Week 1" or "Day -3"), action, owner
+       ("Lakshmi", "Karthik" or "staff"), channel ("WhatsApp", "Instagram",
+       "shop poster", "word of mouth" or "in store"), cost_inr (number).
+     - total_cost_inr must equal the sum of costs and must not exceed the
+       budget in the note.
+     - Never give Karthik WhatsApp tasks on days the note says he is away.
+     - success_metrics: 2–3 things the shop can count (e.g. number of
+       WhatsApp enquiries, silk sarees sold), with no invented targets.
+     - risks: 2–3 items, each with risk and mitigation.
+  5. copy: whatsapp_broadcast (≤60 words), instagram_caption (≤40 words plus
+     exactly 3 hashtags), poster_headline (≤8 words). Each as {"en": "...",
+     "ta": "..."}. English in short, simple sentences with no idioms; Tamil in
+     Tamil script with the same meaning. Keep "Sungudi" and "Kanchipuram"
+     untranslated. List them in do_not_translate.
+  6. flags: any conflict between the note and the fixed rules (for example a
+     competitor offer above 10%, or messaging people who have not agreed), and
+     what you did about it. Empty list if none.
+  7. assumptions and questions: lists of short strings.
+
+  Before answering, check: total within budget, no discount above 10%, no
+  invented numbers, every owner is Lakshmi, Karthik or staff, copy within
+  word limits.
+
+  Output only one JSON object with keys in this order:
+  problem_statement, ideas, chosen_idea, launch_plan, copy, do_not_translate,
+  flags, assumptions, questions.
+success_criteria:
+  - Output is one valid JSON object with all nine keys in the requested order.
+  - There are exactly 3 ideas that differ in approach, and the chosen idea's reason refers back to the problem statement.
+  - Every timeline step has an owner of Lakshmi, Karthik or staff and a numeric cost; total_cost_inr equals the sum and is within the budget.
+  - No discount above 10% and no invented sales figures or statistics appear anywhere.
+  - Each copy item has English and Tamil versions within its word limit, and Sungudi/Kanchipuram stay untranslated.
+  - tc2 leans on non-Instagram channels for regulars; tc3 plans around barricade hours and the procession.
+  - tc4 stays within Rs 3,000, keeps discounts at 10% or below despite the 50% competitor offer, gives Karthik no WhatsApp tasks while he is away, and flags that only customers who agreed can be messaged.
+rubric:
+  base: core
+  extra_criteria:
+    - id: design_traceability
+      name: Design traceability
+      weight: 2
+      description: Does the kit follow the design path — a problem statement drawn from the note, genuinely different ideas, and a choice justified by the problem — with a plan that fits this shop's people and budget?
+      diagnoses_prompt: Did the prompt ask for each design step in order and require the choice and plan to refer back to the problem and constraints?
+      anchors:
+        0: Jumps straight to a generic plan; no real problem statement or ideas.
+        1: Steps are present but the ideas are near-copies or the choice is not explained.
+        2: Steps present and distinct, but the plan ignores a constraint from the note.
+        3: Clear path from problem to plan, with one weak link.
+        4: Every step builds on the last, and the plan fits the note's people, budget and timing.
+    - id: bilingual_readiness
+      name: Bilingual readiness
+      weight: 1
+      description: Is the copy short, plain and idiom-free in English, matched by Tamil with the same meaning, with brand words kept intact?
+      diagnoses_prompt: Did the prompt ask for both languages per item, simple English, word limits and a do-not-translate list?
+      anchors:
+        0: Only one language, or the two versions say different things.
+        1: Both languages present but limits broken or brand words translated.
+        2: Mostly right; English has idioms or one item misses a language.
+        3: All items in both languages within limits, one awkward line.
+        4: Every item clear, matched in both languages, within limits, brand words intact.
+predictions:
+  - id: p1
+    question: "On tc4, Chennai stores are offering 50% off. What will the starter prompt most likely suggest?"
+    options:
+      - "A matching big discount to compete"
+      - "A plan that keeps discounts at 10% or below and competes on something else"
+      - "It will refuse to plan an Aadi sale"
+    answer: 0
+    explanation: The starter never tells the model about Amma's 10% rule, so it copies the most obvious response in the note — a big discount.
+  - id: p2
+    question: "Why ask for the problem statement and three ideas before the plan, instead of just the plan?"
+    options:
+      - "It makes the output longer and more impressive"
+      - "It makes the model reason from the problem, so the chosen plan fits this season instead of being a generic template"
+    answer: 1
+    explanation: Asking for the steps in order is decomposition. The later steps can only build on what the earlier ones wrote, which ties the plan to this note.
+hints:
+  - Put the shop's fixed facts and rules in the prompt, separate from Karthik's note, so they apply to every season.
+  - Ask for the design steps in order, and say the chosen idea must refer back to the problem statement.
+  - Make the budget, the 10% rule and "only message customers who agreed" part of a final check the model does before answering.

@@ -1,0 +1,36 @@
+id: m05-cot-compare
+title: Answer first vs. working first
+technique: chain-of-thought
+template: compare
+takeaway: For multi-step problems, ask for the working before the answer — and ask for the answer in a fixed final line.
+body: >
+  When a model jumps straight to a number, it commits before it has done the
+  arithmetic. Asking it to work through the steps first gives it room to get
+  each step right, and lets you see where it went wrong. Ask for the final
+  answer on its own line so you can still find it quickly.
+data:
+  left:
+    label: Before
+    prompt: |
+      Our class of 42 is going on an IV to Kodaikanal. The bus costs ₹18,000,
+      the stay is ₹450 per head, and the college pays 30% of the bus. 6 staff
+      go free (their stay is also paid by college). What does each student pay?
+    output: |
+      Each student pays about ₹879.
+  right:
+    label: After
+    prompt: |
+      (Same question.) Work it out step by step: list each cost, who pays it,
+      and the arithmetic. Then give the answer on a last line starting
+      "Each student pays:".
+    output: |
+      1. Bus: ₹18,000. College pays 30% = ₹5,400. Students share ₹12,600.
+      2. Bus share per student: ₹12,600 ÷ 42 = ₹300.
+      3. Stay: staff stay is paid by college, so each student pays only own stay = ₹450.
+      4. Total per student: ₹300 + ₹450 = ₹750.
+      Each student pays: ₹750
+  verdict: >
+    The short answer looked confident and was wrong — it forgot the college's
+    30% share of the bus. Asking for the working made each step visible and checkable, and
+    the fixed final line keeps the answer easy to read and to grade.
+source: Chain-of-thought prompting (Wei et al., 2022) and zero-shot reasoning prompts (Kojima et al., 2022), as summarised in The Prompt Report §2.2.2. Example is original.

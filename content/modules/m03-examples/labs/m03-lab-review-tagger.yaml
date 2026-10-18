@@ -1,0 +1,106 @@
+id: m03-lab-review-tagger
+title: Tag reviews for a Simmakkal mess
+difficulty: 2
+estimated_minutes: 12
+techniques_targeted: [few-shot, exemplar-selection]
+uses_product_case: false
+brief: |
+  **From:** Bala, runs his family's mess near Simmakkal (his cousin is in your class)
+
+  We get 20–30 Google reviews a week and I want to track what people complain about.
+  Can you make something where I paste one review and get back **one line** like:
+
+  `negative | food, wait`
+
+  - Sentiment: **positive, negative or mixed**.
+  - Topics, only from this list: **food, service, price, cleanliness, wait**. One or more.
+  - Exactly that format, nothing else — I'll paste the lines into a sheet.
+
+  Problem: people write in Tamil-English mix and some are **sarcastic**. Last time
+  "Wow, only 1 hour wait, super fast 👏" got tagged positive 🤦.
+input_label: Review
+test_cases:
+  - id: tc1
+    input: |
+      Meals were excellent, especially the kara kuzhambu. Staff were friendly. Will come again.
+    note: Plainly positive, two topics.
+  - id: tc2
+    input: |
+      Food taste ok but ₹180 for a meals is too much for this area. Tables were sticky also.
+    note: Mixed — one neutral, two complaints. Tests multiple tags.
+  - id: tc3
+    input: |
+      Biryani semma taste, but parking illa and waiter romba rude ah pesinaaru.
+    note: Tamil-English mix with praise and a complaint. "Parking" is not in the list — the model must not invent a tag.
+  - id: tc4
+    input: |
+      Wow, only 1 hour wait for two parottas 👏👏 super fast service. Totally worth it, my lunch break is over anyway.
+    note: Sarcasm. A zero-shot prompt reads "super fast" and "worth it" and tags it positive.
+starter_prompt: |
+  Tell me the sentiment and topics of this review.
+reference_prompt: |
+  Tag a restaurant review with its sentiment and topics.
+  Sentiment is one of: positive, negative, mixed.
+  Topics are one or more of: food, service, price, cleanliness, wait. Use only these words. Ignore aspects not in the list.
+  Reviews may mix Tamil and English, and may be sarcastic — judge what the reviewer really means.
+  Reply with one line only, in the format: sentiment | topic, topic
+
+  Review: The dosa was crisp and the chutney fresh, but we waited 40 minutes for a table.
+  Tags: mixed | food, wait
+
+  Review: Romba costly, ₹120 for 2 idli. Taste also average dhaan.
+  Tags: negative | price, food
+
+  Review: Oh great, a cockroach on the wall as a free side dish. Loved it.
+  Tags: negative | cleanliness
+
+  Review: Server anna was so kind, explained every dish to my parents. Clean place too.
+  Tags: positive | service, cleanliness
+
+  Review: {{input}}
+  Tags:
+success_criteria:
+  - Every output is one line in the form "sentiment | topic, topic" with nothing else.
+  - Sentiment is only positive, negative or mixed; topics are only food, service, price, cleanliness or wait.
+  - tc2 is mixed or negative with price and cleanliness.
+  - tc3 is mixed with food and service, and does not add a parking tag.
+  - tc4 is tagged negative with wait (and optionally service), not positive.
+rubric:
+  base: core
+  extra_criteria:
+    - id: label_accuracy
+      name: Label accuracy
+      weight: 2
+      description: Do sentiment and topic labels match what the reviewer really meant, including sarcasm and code-mixed text?
+      diagnoses_prompt: Did the prompt include examples covering sarcasm, mixed sentiment and Tamil-English text, with balanced labels?
+      anchors:
+        0: Most labels wrong.
+        1: Easy cases right; sarcasm and mixed cases wrong.
+        2: One hard case mislabelled.
+        3: All sentiments right; a topic missed or extra.
+        4: Every label correct on every case.
+predictions:
+  - id: p1
+    question: "Your few-shot prompt includes one sarcastic example. What will change most on tc4?"
+    options:
+      - "Nothing — sarcasm cannot be taught"
+      - "The sentiment flips from positive to negative"
+      - "The output gets longer"
+    answer: 1
+    explanation: >
+      An example of sarcasm tagged negative shows the model that cheerful words can carry
+      a complaint. That is far easier to show than to explain.
+  - id: p2
+    question: "If all four of your examples were negative, what risk would you add?"
+    options:
+      - "The model leans toward tagging everything negative"
+      - "The model stops using the format"
+      - "No risk, more negatives are better"
+    answer: 0
+    explanation: >
+      Models pick up on label frequency in examples. Balance the labels so the
+      examples teach the pattern, not a bias.
+hints:
+  - Bala gave you the exact output format. One example would lock it in.
+  - Add a few examples, and make at least one sarcastic and one in Tamil-English mix.
+  - Check your examples' labels — are positive, negative and mixed all represented? Do not copy any test review as an example.

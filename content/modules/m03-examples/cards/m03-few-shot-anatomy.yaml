@@ -1,0 +1,31 @@
+id: m03-few-shot-anatomy
+title: Anatomy of a few-shot prompt
+technique: few-shot
+template: anatomy
+takeaway: Instruction first, then examples in one fixed format, then the real input in the same format with the answer left open.
+body: >
+  A few-shot prompt is a small pattern for the model to continue. Every example must
+  use the same labels and layout, so the model can see exactly where the answer goes.
+  The final slot repeats the layout with the real input and an empty answer — the most
+  natural continuation is now an answer in your format.
+data:
+  parts:
+    - label: Instruction
+      text: Classify each student query to the college office as fees, exams, certificates or other.
+      note: Still state the task and the allowed labels. Examples support instructions; they do not replace them.
+    - label: Example 1
+      text: "Query: When is the last date to pay semester fees? → Label: fees"
+      note: A plain, common case.
+    - label: Example 2
+      text: "Query: I lost my hall ticket, exam is tomorrow → Label: exams"
+      note: Mentions an urgent problem, but the topic is exams.
+    - label: Example 3
+      text: "Query: Need bonafide certificate for bus pass → Label: certificates"
+      note: Mentions transport, yet the request is a certificate — teaches the model to look for the actual ask.
+    - label: Example 4
+      text: "Query: Is the canteen open on Saturday? → Label: other"
+      note: Shows the fallback label is allowed.
+    - label: Real input
+      text: "Query: {{input}} → Label:"
+      note: Same layout, answer left open. The model fills in one label.
+source: Few-shot prompting from Brown et al. 2020; exemplar format and ordering from The Prompt Report §2.2.1.1. Original example.

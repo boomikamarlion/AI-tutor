@@ -1,0 +1,98 @@
+id: m07-lab-cover-letter-refine
+title: Critique and improve an internship cover letter
+difficulty: 2
+estimated_minutes: 15
+techniques_targeted: [self-critique]
+uses_product_case: false
+brief: |
+  **From:** Ms. Kavitha, Career Guidance Cell
+  **Subject:** Cover letter feedback for II year students
+
+  Every week 30 students send me cover letters for internships. I can't give
+  each one proper feedback. I want a prompt that:
+
+  1. **Checks** the draft against our five criteria, one line each — Met / Not met
+     — with a **quote** from the letter as proof:
+     - Names the role and the company
+     - Connects at least one specific experience to the job ad
+     - Under 200 words
+     - Polite, simple English — no "I am a hardworking, passionate go-getter" clichés
+     - Ends with a clear next step (e.g. available for interview, contact details)
+  2. **Rewrites** the letter fixing only what failed.
+  3. **Never adds** achievements, marks or skills the student didn't mention.
+     If something is missing, put a placeholder like **[ADD: one project you did]**.
+
+  If a letter is already good, say so and make only small changes. I don't want
+  students thinking every letter is bad.
+input_label: Job ad and draft letter
+test_cases:
+  - id: tc1
+    input: |
+      Job ad: Content Writing Intern, The Madurai Times (digital desk). Write short local news and event pieces in English. 2 months.
+      Draft:
+      Respected Sir/Madam, I am a hardworking and passionate student. I am interested in your company. I like writing. Please give me a chance. Thank you.
+    note: Fails almost every criterion. The rewrite must use placeholders, not invent writing experience.
+  - id: tc2
+    input: |
+      Job ad: Data Entry & Excel Intern, Sri Lakshmi Agencies (FMCG distributor), Madurai. Must know Excel basics. 6 weeks.
+      Draft:
+      Dear Hiring Manager, I am writing to apply for the Data Entry & Excel Intern role at Sri Lakshmi Agencies. In my B.Com CA course I built an Excel sheet to track our college canteen's weekly sales using SUM and VLOOKUP, and I updated it for three months. I am comfortable with careful, repetitive work and I check my entries twice. I have also completed my second year with good marks and I am a regular member of the NSS unit, where I helped organise two blood donation camps, which taught me how to coordinate with many people and keep records of donors and timings in a register, and I have also been the class representative for one year where I took attendance and gave it to the department office every day without fail. Apart from this, I enjoy reading Tamil novels, playing chess with my friends in the hostel and helping my father in his small provision store on weekends, where I sometimes note down the stock that comes in and the bills that go out in a notebook. I have also attended a two-day workshop on Tally conducted by our department last semester and received a participation certificate. I believe all these experiences together make me a very good fit for your company and its values and goals, and I am sure that I will learn a lot from your team during the internship period.
+    note: Good content but over 200 words and no closing next step — the critique must be specific and the rewrite should trim, not restart.
+  - id: tc3
+    input: |
+      Job ad: UI Design Intern, PixelKolam Studio, remote. Figma required. Share portfolio.
+      Draft:
+      Hi PixelKolam team, I want to apply for the internship. I am expert in Figma, Photoshop, Illustrator, Blender, After Effects and coding. I can do any design work you give. I am available anytime. My number is 98xxxxxx01.
+    note: Big skill claims with no evidence, no portfolio link and no specific role name. The rewrite must not keep or upgrade "expert" claims without proof — it should add placeholders for a project and portfolio link.
+  - id: tc4
+    input: |
+      Job ad: Research Intern, Dhan Foundation (microfinance field study), Madurai. Tamil speaking, field visits to villages, basic data collection.
+      Draft:
+      Dear Ms. Priya, I would like to apply for the Research Intern position at Dhan Foundation. As part of my B.A. Economics project, I interviewed 25 women from self-help groups in Melur in Tamil and recorded their savings patterns in a simple Google Form. I enjoyed listening to their stories and learnt to ask questions without leading the answer. I am comfortable travelling for field visits. I would be glad to discuss this at an interview; I can be reached at kavya.r@example.com or 98xxxxxx45. Thank you for your time.
+    note: Hard case. This letter already meets all five criteria. A good answer marks them all Met with quotes and changes little or nothing. A naive critique invents problems and rewrites it into something blander.
+starter_prompt: |
+  Give feedback on this cover letter and improve it.
+reference_prompt: |
+  You review internship cover letters for second-year college students in Madurai.
+
+  <submission>
+  {{input}}
+  </submission>
+
+  Step 1 — Critique. Check the draft against these five criteria. For each, write one line: the criterion, "Met" or "Not met", and a short exact quote from the draft as evidence (or "no matching text" if absent).
+  1. Names the role and the company.
+  2. Connects at least one specific experience to the job ad.
+  3. Under 200 words.
+  4. Polite, simple English without clichés such as "hardworking", "passionate", "go-getter".
+  5. Ends with a clear next step (availability for interview and contact details).
+  Judge fairly: if a criterion is met, say so. Do not invent problems.
+
+  Step 2 — Rewrite. If every criterion is met, write "This letter already meets all criteria." and give the letter with at most two small edits, or unchanged. Otherwise, rewrite the letter fixing only the criteria marked Not met and keeping the student's own facts and voice.
+
+  Rules for the rewrite:
+  - Never add an achievement, skill, mark, project or contact detail the student did not mention. Where one is needed, insert a placeholder in the form [ADD: ...].
+  - Do not upgrade claims (e.g. do not keep "expert" without evidence; tone it down or ask for evidence with a placeholder).
+  - Under 200 words.
+
+  Step 3 — One line starting "Changed:" listing what you changed, or "Changed: nothing".
+success_criteria:
+  - Five criterion lines, each with Met/Not met and a real quote or "no matching text".
+  - The rewrite fixes only failed criteria and stays under 200 words.
+  - 'No new achievements, skills, marks or contact details appear; placeholders in the form [ADD: ...] are used instead.'
+  - tc2 is trimmed and gains a closing next step without losing the canteen Excel example.
+  - tc3 removes or tones down unsupported "expert" claims and adds placeholders for evidence such as a portfolio link.
+  - tc4 marks all five criteria Met and changes the letter little or not at all.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "On tc4 (an already strong letter), what does the starter prompt most likely do?"
+    options:
+      - "Says it is good and leaves it"
+      - "Finds several 'improvements' and rewrites it in a more generic style"
+    answer: 1
+    explanation: '"Improve it" assumes something is wrong. Without criteria and permission to say "already good", the model always changes something.'
+hints:
+  - Put the five criteria in the prompt and ask for a quote as evidence for each judgement.
+  - Tell the model what to do when the letter is already good.
+  - Ask yourself what the model should do when a fact the letter needs is missing. Should it make one up?

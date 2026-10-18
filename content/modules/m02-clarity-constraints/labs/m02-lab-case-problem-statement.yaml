@@ -1,0 +1,134 @@
+id: m02-lab-case-problem-statement
+title: "Meenakshi Textiles: from interview notes to a problem statement"
+difficulty: 2
+estimated_minutes: 15
+techniques_targeted: [constraints, delimiters, positive-instructions]
+uses_product_case: true
+brief: |
+  **From:** Dr. Anitha, project mentor
+
+  Your interview notes are honest but messy — half observations, half your own ideas.
+  The **define** stage needs one crisp problem statement per interview, in this form:
+
+  > **[Specific person] needs a way to [need, as a verb] because [insight from what they said or did].**
+
+  Rules:
+  - **One sentence, at most 35 words.**
+  - Describe a **need**, not a solution. No apps, websites, discounts, reels.
+  - The insight must come from **what the customer said or did**, not from the team's opinions.
+  - Below it, give **2 short quotes or observations** from the notes as evidence.
+  - If the notes don't contain enough to write an insight, say "Not enough evidence" and name what to ask next time.
+
+  Karthik will show these to Amma, so be fair to the shop and the customer.
+input_label: Interview notes
+test_cases:
+  - id: tc1
+    input: |
+      Interviewee: Mrs. Kamala, 55, regular since 1990s.
+      - comes in person every time, "I must touch the silk, otherwise how will I know"
+      - always asks for Murugan anna (senior salesman), trusts his advice
+      - bought 3 silk sarees for niece's wedding last month
+      - said parking on Masi street is a nightmare now, came by auto
+      - knee pain, found the stairs to the silk section hard
+    note: Rich notes with a clear behaviour (touch, trust a person) and a physical barrier.
+  - id: tc2
+    input: |
+      Interviewee: Preethi, 21, final-year B.Com
+      - bought farewell saree from Instagram seller, Rs 1,400
+      - "I didn't know what to ask for in a big shop, felt everyone was watching"
+      - went to Masi street once with mom, "staff only talked to amma"
+      - checks reels for draping styles
+      - wants to look "different from everyone else" at farewell
+      Team note: she would definitely use an online catalogue!!
+    note: A strong insight (felt out of place) and a team note that pushes a solution. The statement must ignore the team note.
+  - id: tc3
+    input: |
+      Interviewee: Mr. Raghavan, 60s
+      - buys for wife
+      - phone call cut after 4 min, he was at work
+      - said "it's fine, no complaints"
+    note: Almost nothing to go on. The right answer is "Not enough evidence" plus what to ask next time.
+  - id: tc4
+    input: |
+      Interviewee: Sangeetha, 34, software tester at the IT park, Tamil-first, grew up near Masi street
+      - "Amma used to bring me here for every Deepavali" (smiled)
+      - now buys online, "no time on weekends, and Masi street on Saturday is crazy"
+      - said she would pay more for Sungudi if she was sure it's original — "online it's all printed fake Sungudi"
+      - ordered on WhatsApp once from a different shop, "they sent photos, I chose, done in 10 min"
+      - Team discussion afterwards: we should build a WhatsApp catalogue + home delivery + 10% Diwali offer. Ravi thinks prices are the real issue.
+      - she kept asking whether Meenakshi still has the "red and black checked one" from her childhood
+    note: Several possible needs, a memory, a past WhatsApp experience that sounds like a solution, and a long team brainstorm. A naive prompt writes "needs a WhatsApp catalogue with delivery".
+starter_prompt: |
+  Write a problem statement from these notes. Don't suggest solutions and don't make it too long.
+reference_prompt: |
+  You are helping a student design team at the define stage of a project with Meenakshi Textiles, a family saree shop in Madurai.
+
+  The notes from one customer interview are inside the <notes> tags. Lines marked "Team note" or "Team discussion" are the students' own opinions, not evidence from the customer.
+
+  <notes>
+  {{input}}
+  </notes>
+
+  Write one problem statement in exactly this form:
+  [Specific person] needs a way to [need, written as a verb phrase] because [insight].
+
+  Rules:
+  - One sentence, at most 35 words.
+  - Describe the person specifically (age or life stage, relationship to sarees).
+  - The need is something the person wants to achieve or feel. Write it so it could be met in more than one way — name no product, channel, app, offer or feature.
+  - The insight explains why, based only on what the customer said or did.
+  - If the notes hold several needs, choose the one with the strongest evidence.
+
+  Then write:
+  Evidence:
+  - <short quote or observation from the customer>
+  - <short quote or observation from the customer>
+
+  If the customer's own words and actions are not enough to support an insight, write instead:
+  Not enough evidence. Ask next time: <one or two open questions>.
+success_criteria:
+  - Each statement follows "[person] needs a way to [need] because [insight]" and is at most 35 words.
+  - No statement names a solution such as an app, catalogue, WhatsApp, delivery, discount or reels.
+  - Insights and evidence come only from the customer's words or actions, never from team notes.
+  - tc3 returns "Not enough evidence" with follow-up questions instead of a forced statement.
+  - Each statement (except tc3) is followed by exactly 2 evidence items quoted or paraphrased from the notes.
+rubric:
+  base: core
+  extra_criteria:
+    - id: solution_free
+      name: Need, not solution
+      weight: 2
+      description: Is the need framed so it can be met in several ways, with no product or feature smuggled in?
+      diagnoses_prompt: Did the prompt define what a need is and tell the model to ignore the team's own ideas?
+      anchors:
+        0: The statement is a solution ("needs an app").
+        1: The need is a thinly disguised solution ("needs to order on WhatsApp").
+        2: Mostly a need, but tied to one channel or feature.
+        3: A real need with slightly narrow wording.
+        4: A real, specific need that leaves room for many solutions.
+predictions:
+  - id: p1
+    question: "On tc4, the starter prompt says \"Don't suggest solutions.\" What is likely to happen?"
+    options:
+      - "A clean need about trusting that Sungudi is genuine"
+      - "A statement that still mentions WhatsApp ordering or delivery"
+      - "\"Not enough evidence\""
+    answer: 1
+    explanation: >
+      The notes are full of solutions — the team's brainstorm and Sangeetha's WhatsApp story.
+      "Don't suggest solutions" does not say what a need looks like, and nothing marks the
+      team notes as opinions, so the solutions leak into the "need".
+  - id: p2
+    question: "What does putting the notes inside <notes> tags mainly help with?"
+    options:
+      - "It makes the output shorter"
+      - "It separates material from instructions, so you can give rules about parts of the notes"
+      - "It makes the model more creative"
+    answer: 1
+    explanation: >
+      With a named block, you can say exactly how to treat what is inside it — for
+      example, "lines marked Team note are opinions, not evidence".
+hints:
+  - Give the exact sentence template and a word limit — both are checkable.
+  - Instead of only "don't suggest solutions", explain what a need is and give the model a test (could it be met more than one way?).
+  - Fence the notes and tell the model how to treat team notes, and what to write when evidence is thin (tc3).

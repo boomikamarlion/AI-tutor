@@ -1,0 +1,30 @@
+id: m09-test-set-checklist
+title: What goes into a good test set
+technique: rubric-evaluation
+template: checklist
+takeaway: A small, fixed set of varied inputs tells you more than a hundred random tries.
+body: >
+  If you test a prompt on whatever input comes to mind, you cannot tell whether
+  a change helped. A test set is a short list of inputs you keep fixed and run
+  every time. Its value comes from variety: each case is there for a reason, and
+  you write down what good behaviour looks like before you run it.
+data:
+  items:
+    - label: Typical cases
+      detail: Two or three inputs that look like what real users send most days.
+    - label: Edge cases
+      detail: Inputs that are very short, very long, mixed language, missing a key detail, or ask two things at once.
+    - label: Adversarial cases
+      detail: Inputs that try to make the prompt misbehave — false claims, instructions hidden in the text, off-topic requests.
+    - label: Expected behaviour written first
+      detail: For each case, one or two lines on what a good output must do. Decide this before you see any output.
+    - label: A reason for every case
+      detail: Note why the case is in the set. If two cases test the same thing, drop one.
+    - label: Pinned, not random
+      detail: Keep the same inputs across versions so scores can be compared fairly.
+    - label: No real personal data
+      detail: Build cases from real patterns but replace names, numbers and addresses with made-up ones.
+source: >
+  Evaluation practice from The Prompt Report (Schulhoff et al., arXiv
+  2406.06608, §5) and provider guidance on building eval sets. Wording
+  original.

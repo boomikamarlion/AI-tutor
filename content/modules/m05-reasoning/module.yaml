@@ -1,0 +1,30 @@
+id: m05-reasoning
+order: 5
+title: Think it through — reasoning prompts
+summary: >
+  Some tasks need working, not just answering. Learn when to ask for
+  step-by-step reasoning, how to break a problem into parts, and why newer
+  reasoning models need a clear goal and a way to check success more than a
+  script of steps.
+design_stage: ideate
+design_stage_note: >
+  Ideate under constraints. Meenakshi Textiles has ₹15,000 for Pongal. You get
+  the model to generate many campaign ideas, cost them, test each against the
+  shop's real limits and rank them — instead of accepting the first clever idea.
+tier: pro
+estimated_minutes: 45
+techniques: [chain-of-thought, decomposition, plan-and-solve, self-ask, reasoning-effort-control]
+objectives:
+  - Recognise tasks that need multi-step reasoning and ask for working before the answer.
+  - Break a messy problem into ordered sub-tasks, and have the model plan, solve and check against the plan.
+  - Get the model to list the sub-questions it needs answered before it commits to an answer.
+  - Prompt a reasoning model with goals, constraints and success criteria instead of scripted steps, and choose a sensible reasoning-effort setting.
+cards:
+  - m05-cot-compare
+  - m05-decomposition-flow
+  - m05-self-ask-anatomy
+  - m05-reasoning-effort-spectrum
+labs:
+  - m05-lab-fest-schedule
+  - m05-lab-debug-grades
+  - m05-lab-case-pongal-ideas

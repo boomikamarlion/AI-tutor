@@ -1,0 +1,96 @@
+id: m00-lab-case-meet-the-shop
+title: "Meenakshi Textiles: brief your team"
+difficulty: 1
+estimated_minutes: 9
+techniques_targeted: [explicit-task, zero-shot]
+uses_product_case: true
+brief: |
+  **From:** Karthik, Meenakshi Textiles (WhatsApp, forwarded to your project team)
+
+  Hi all, thanks for taking up our shop as your college project 🙏. I've been sending
+  you voice-note transcripts about the shop. They are all over the place. Before you
+  start interviewing customers, can you make a prompt that turns any of my notes into
+  a **clean team brief**: 5 bullet points max, facts only, so your whole team has the
+  same picture.
+
+  Please — if I say "I think" or "maybe", don't write it as a fact. Mark it as a guess.
+  And don't add marketing ideas yet, Amma wants us to understand first.
+input_label: Karthik's note
+test_cases:
+  - id: tc1
+    input: |
+      So the shop is on West Masi Street, my grandfather started it, Amma runs it now, she is 58. I handle WhatsApp orders. We have 6 staff. Main things are Sungudi cotton and Kanchipuram silk.
+    note: Clean facts. The brief should simply organise them.
+  - id: tc2
+    input: |
+      Regulars are mostly aunties and families who've come for 40 years. Festival season, Deepavali and Pongal, is when we make most sales. College girls come only for farewell or Onam-type events, they say our shop looks "old".
+    note: Customer facts plus a reported quote. Good practice is to keep "old" as what customers said, not as the shop's verdict.
+  - id: tc3
+    input: |
+      WhatsApp orders, I get maybe 15 a day? Not sure. Most ask the price and then don't reply. We don't have a website. Budget is small, Amma doesn't want to spend on ads.
+    note: A guess ("maybe 15 a day? not sure") mixed with facts. The brief must flag it as a guess.
+  - id: tc4
+    input: |
+      Honestly I think sales are down like 30-40% since the new mall opened, but I haven't checked the books. Amma says it's just a bad year. Maybe we should do Instagram reels? My friend said reels will fix everything. Also the AC is broken lol.
+    note: Two conflicting guesses, an unverified number, and a marketing idea the brief must not push. A naive prompt reports "sales fell 35%" as fact and recommends reels.
+starter_prompt: |
+  Summarise this.
+reference_prompt: |
+  You are helping a student project team that is studying Meenakshi Textiles, a family saree shop in Madurai.
+
+  Turn the shop owner's voice-note transcript below into a team brief.
+
+  Transcript:
+  {{input}}
+
+  Write at most 5 bullet points. Each bullet is one short sentence that starts with a label in bold: **Fact:**, **Guess:** or **Customer said:**.
+  - Use **Guess:** for anything the speaker is unsure about ("I think", "maybe", "not sure", numbers not checked), and say whose guess it is.
+  - Use **Customer said:** for opinions the speaker reports from customers.
+  - If two people disagree, keep both views as separate guesses.
+  - Leave out jokes and side remarks that do not help the team understand the shop or its customers.
+  - Do not suggest solutions or marketing ideas. If the speaker mentions one, you may note it as "Idea raised (not evaluated): ...".
+  - Use only the transcript. Add no outside facts.
+success_criteria:
+  - Each output has at most 5 bullets, each starting with Fact, Guess or Customer said.
+  - Uncertain statements are labelled as guesses (tc3's "15 a day", tc4's "30-40%").
+  - tc4 keeps Karthik's and Amma's views separate and does not present the sales drop as fact.
+  - No output recommends marketing actions; the reels idea, if mentioned, is marked as not evaluated.
+  - No fact appears that is not in the transcript.
+rubric:
+  base: core
+  extra_criteria:
+    - id: fact_vs_guess
+      name: Fact vs guess
+      weight: 2
+      description: Does the brief keep verified facts separate from guesses and reported opinions?
+      diagnoses_prompt: Did the prompt tell the model how to label uncertain or second-hand statements?
+      anchors:
+        0: Guesses and opinions are stated as facts.
+        1: Some labelling, but key guesses (like the sales drop) read as facts.
+        2: Most guesses labelled; one slips through as fact.
+        3: All guesses labelled; labels slightly inconsistent.
+        4: Every statement correctly labelled as fact, guess or customer view.
+predictions:
+  - id: p1
+    question: "Running \"Summarise this.\" on tc4, how will the 30-40% figure most likely appear?"
+    options:
+      - "As a guess, with a note that the books were not checked"
+      - "As a plain fact, like \"sales have dropped about 35%\""
+      - "It will be left out"
+    answer: 1
+    explanation: >
+      Summaries compress, and hedges like "I think" are the first words to go. Unless the
+      prompt asks the model to keep facts and guesses apart, the guess turns into a fact.
+  - id: p2
+    question: "Will the starter prompt mention Instagram reels?"
+    options:
+      - "Yes, probably as a suggestion"
+      - "No, it will skip it"
+    answer: 0
+    explanation: >
+      The note mentions reels, and a summary tries to cover what was said. Without a rule
+      against solutions, it often turns the idea into a recommendation.
+hints:
+  - Karthik gave you three rules. Write each one into the prompt as a clear instruction.
+  - Give the model a way to label each bullet so facts and guesses look different.
+  - For tc4, tell the model what to do when two people disagree, and what to do with ideas like reels.

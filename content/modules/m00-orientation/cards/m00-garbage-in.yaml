@@ -1,0 +1,33 @@
+id: m00-garbage-in
+title: Garbage in, garbage out
+technique: explicit-task
+template: compare
+takeaway: If the prompt does not say what you want, who it is for and how long it should be, the model fills the gaps with guesses.
+body: >
+  The model cannot read your mind or your situation. When a prompt leaves out the
+  real task, it produces something generic that looks fine but is not usable. The fix
+  is not magic words — it is saying plainly what to produce, for whom, and in what shape.
+data:
+  left:
+    label: Before
+    prompt: Write a message about the NSS camp.
+    output: >
+      The NSS camp is a wonderful opportunity for students to serve society and
+      develop leadership skills. Join us for an enriching experience full of learning,
+      fun and community service! Don't miss it!
+  right:
+    label: After
+    prompt: >
+      Write a WhatsApp message to second-year B.Com students announcing the NSS
+      village camp at Thiruparankundram, 12–14 Jan. Include: report at college gate
+      6:30 am, bring water bottle and one bedsheet, consent form due 8 Jan to Prof.
+      Selvi. Under 60 words, friendly, no exclamation marks.
+    output: >
+      Hi B.Com II year — the NSS village camp is at Thiruparankundram, 12–14 Jan.
+      Report at the college gate by 6:30 am. Please bring a water bottle and one
+      bedsheet. Submit your signed consent form to Prof. Selvi by 8 Jan. See you there.
+  verdict: >
+    The "after" prompt names the task (announce), the audience, the facts the model
+    could never guess, and a length and tone limit. The output is now something you
+    could actually send.
+source: "\"Garbage in, garbage out\" is a long-standing computing maxim; prompt components from The Prompt Report §2.2 (directive, additional information). Original example."

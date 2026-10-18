@@ -1,0 +1,28 @@
+id: m11-technique-recap
+title: Your toolkit, stage by stage
+technique: self-critique
+template: checklist
+takeaway: Before you call a prompt finished, walk it through every stage and ask which tool you used — and which one you skipped.
+body: >
+  Every technique in this course belongs to a moment in the design journey.
+  Use this list as a self-critique pass on your capstone prompt: for each
+  stage, check the prompt actually does it. A gap here usually shows up later
+  as a low score on one rubric criterion.
+data:
+  items:
+    - label: Empathise — who is this for?
+      detail: "Audience persona and context provision: the prompt names the reader and gives the background facts the model cannot know. Flipped interaction helps when you do not yet know enough."
+    - label: Define — what exactly is the job?
+      detail: "Explicit task, role, constraints and positive instructions: one clear deliverable, checkable limits on length, tone and scope, written as things to do."
+    - label: Ideate — how should the model think?
+      detail: "Decomposition, plan-and-solve, chain-of-thought and self-ask for multi-step work; few-shot examples chosen to cover the hard cases."
+    - label: Prototype — what shape comes out?
+      detail: "Output format, structured output, templates and delimiters; grounding with permission to say 'not stated'; chains, system prompts and tool descriptions when one prompt is not enough."
+    - label: Test — does it hold up?
+      detail: "A pinned test set, a rubric with anchors, an evidence-first judge; injection defence, bias check and privacy hygiene on the hostile cases."
+    - label: Iterate — what changed, and why?
+      detail: "Self-critique, cognitive verifier and question refinement; one change at a time, re-run every case, and name the technique behind each fix."
+source: >
+  Technique families from The Prompt Report (Schulhoff et al., arXiv
+  2406.06608) and A Prompt Pattern Catalog (White et al., arXiv 2302.11382);
+  design-thinking stages after the Stanford d.school model. Wording original.

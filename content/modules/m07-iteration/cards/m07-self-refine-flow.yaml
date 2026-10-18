@@ -1,0 +1,24 @@
+id: m07-self-refine-flow
+title: The draft–critique–improve loop
+technique: self-critique
+template: flow
+takeaway: A critique is only as good as its criteria — name them, ask for evidence, then rewrite to fix only what failed.
+body: >
+  Asking "can you make this better?" gets a different draft, not a better one.
+  Self-critique works when the model judges the draft against criteria you wrote,
+  quotes the part that fails each one, and then rewrites to fix exactly those
+  failures. One or two rounds is usually enough; more rounds can start to polish
+  away what was good.
+data:
+  steps:
+    - label: Write the criteria
+      detail: Three to six checkable statements — audience, length, tone, must-include, must-avoid.
+    - label: Draft
+      detail: Produce or paste the first version.
+    - label: Critique with evidence
+      detail: For each criterion, mark met or not met and quote the words in the draft that show it.
+    - label: Rewrite
+      detail: Fix only the criteria that failed. Keep what passed.
+    - label: Re-check
+      detail: Run the same criteria on the new version. Stop when all pass, or after two rounds.
+source: Self-Refine (Madaan et al., 2023), as summarised in The Prompt Report §2.2.5. Wording is original.

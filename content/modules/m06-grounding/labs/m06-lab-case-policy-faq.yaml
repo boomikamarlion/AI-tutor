@@ -1,0 +1,146 @@
+id: m06-lab-case-policy-faq
+title: "Meenakshi Textiles: FAQ answers from the policy only"
+difficulty: 3
+estimated_minutes: 18
+techniques_targeted: [grounding, uncertainty-permission, context-placement]
+uses_product_case: true
+brief: |
+  **From:** Karthik, Meenakshi Textiles
+  **On WhatsApp:**
+
+  Now that the catalogue is going online, customers are asking SO many
+  questions on WhatsApp. Amma is scared I'll promise something we don't do 😅
+  Last month our new staff girl told a customer "30 days return" — we never had
+  that!
+
+  Below is our policy (Amma and I wrote it). I want a prompt that answers a
+  customer's question **only from this policy**:
+
+  - after each point, put the clause number like **[1.2]**
+  - if the policy doesn't cover it, say **"This is not in our written policy —
+    I'll check with Karthik and reply."** Never guess.
+  - if the customer says something wrong about our policy, correct them politely
+  - reply in the **same language mix** the customer used (Tamil / Tanglish / English)
+  - warm, short — WhatsApp style, max 80 words. Sign off "– Meenakshi Textiles"
+
+  ```
+  MEENAKSHI TEXTILES — CUSTOMER POLICY (Oct 2026)
+  1. Returns and exchange
+  1.1 Unused items with the price tag and bill can be exchanged within 7 days of purchase.
+  1.2 We do not give cash refunds. Exchange or store credit (valid 6 months) only.
+  1.3 Items bought in a sale (marked "Offer") cannot be returned or exchanged.
+  1.4 Items that have been altered — blouse piece cut, fall or pico stitched — cannot be exchanged.
+  2. Delivery
+  2.1 Free home delivery inside Madurai city for orders above ₹2,000.
+  2.2 Elsewhere in Tamil Nadu: ₹80 flat courier charge, 3–5 working days.
+  2.3 Outside Tamil Nadu: on request; Karthik confirms the charge on WhatsApp.
+  3. Payment
+  3.1 In the shop: cash, UPI, debit and credit cards.
+  3.2 WhatsApp orders: full payment by UPI before dispatch.
+  4. Care and quality
+  4.1 Sungudi cotton: wash separately in cold water the first time. Slight colour release in the first wash is normal and not a defect.
+  4.2 Kanchipuram silk: dry clean only. Every silk saree comes with a Silk Mark tag.
+  4.3 Manufacturing defects reported within 48 hours of delivery, with photos, will be replaced.
+  5. Shop hours
+  5.1 Open 9:30 am to 9:00 pm every day. Hours may change during festival weeks; see our WhatsApp status.
+  ```
+input_label: Customer's question
+test_cases:
+  - id: tc1
+    input: |
+      Hi, I bought a cotton saree 4 days ago, didn't like the colour at home. Can I get my money back? I still have the bill.
+    note: Two clauses apply — no refund [1.2], but exchange is possible within 7 days if unused with tag [1.1].
+  - id: tc2
+    input: |
+      My sungudi saree gave colour in the first wash 😟 is it a defect? will you replace it?
+    note: Policy says slight colour release is normal [4.1]; replacement is only for manufacturing defects within 48 hours [4.3]. How much colour is "slight" is not defined — the answer should not decide it for the customer.
+  - id: tc3
+    input: |
+      Coimbatore ku deliver pannuveengala? evlo charge? cash on delivery irukka?
+    note: Tanglish. Delivery charge and time are covered [2.2]; COD is effectively answered by [3.2] (full UPI before dispatch). Reply should be in Tanglish.
+  - id: tc4
+    input: |
+      Your Instagram page said students get 30 days return. I bought an Offer silk saree for my sister's wedding 10 days back and already got the fall stitched. Can I exchange it? Also do you have EMI option?
+    note: Hard case. A false premise (30-day return is not in the policy), two separate reasons the exchange is not possible [1.3][1.4], and EMI is not covered at all. A naive prompt agrees with the 30 days or guesses about EMI.
+starter_prompt: |
+  You are a helpful assistant for a saree shop. Answer this customer's question politely.
+reference_prompt: |
+  <policy>
+  MEENAKSHI TEXTILES — CUSTOMER POLICY (Oct 2026)
+  1. Returns and exchange
+  1.1 Unused items with the price tag and bill can be exchanged within 7 days of purchase.
+  1.2 We do not give cash refunds. Exchange or store credit (valid 6 months) only.
+  1.3 Items bought in a sale (marked "Offer") cannot be returned or exchanged.
+  1.4 Items that have been altered — blouse piece cut, fall or pico stitched — cannot be exchanged.
+  2. Delivery
+  2.1 Free home delivery inside Madurai city for orders above ₹2,000.
+  2.2 Elsewhere in Tamil Nadu: ₹80 flat courier charge, 3–5 working days.
+  2.3 Outside Tamil Nadu: on request; Karthik confirms the charge on WhatsApp.
+  3. Payment
+  3.1 In the shop: cash, UPI, debit and credit cards.
+  3.2 WhatsApp orders: full payment by UPI before dispatch.
+  4. Care and quality
+  4.1 Sungudi cotton: wash separately in cold water the first time. Slight colour release in the first wash is normal and not a defect.
+  4.2 Kanchipuram silk: dry clean only. Every silk saree comes with a Silk Mark tag.
+  4.3 Manufacturing defects reported within 48 hours of delivery, with photos, will be replaced.
+  5. Shop hours
+  5.1 Open 9:30 am to 9:00 pm every day. Hours may change during festival weeks; see our WhatsApp status.
+  </policy>
+
+  You reply to customers on WhatsApp for Meenakshi Textiles, a family saree shop in Madurai.
+
+  Rules:
+  - Use only the policy above. Every policy fact in your reply ends with its clause number in square brackets, e.g. [1.2].
+  - For any part of the question the policy does not cover, write exactly: "This is not in our written policy — I'll check with Karthik and reply." Do not guess, and do not describe what shops usually do.
+  - If the customer states something about our policy that the policy does not say, politely correct it.
+  - Answer every part of the question.
+  - Reply in the same language mix the customer used (English, Tamil or Tanglish). Clause numbers stay as digits.
+  - Warm and short: at most 80 words, then sign off "– Meenakshi Textiles".
+
+  Customer's message:
+  <question>
+  {{input}}
+  </question>
+success_criteria:
+  - Every policy fact in the reply is followed by the correct clause number.
+  - Nothing is promised that the policy does not say.
+  - Uncovered parts use the exact "not in our written policy" sentence.
+  - tc1 says no cash refund [1.2] and offers exchange within 7 days with tag and bill [1.1].
+  - tc2 cites [4.1] and [4.3] and does not declare the saree defective or not defective beyond what the policy says.
+  - tc3 replies in Tanglish with ₹80 and 3–5 working days [2.2] and explains UPI before dispatch [3.2].
+  - tc4 politely corrects the 30-day claim, refuses exchange citing [1.3] and [1.4], and uses the not-in-policy sentence for EMI.
+  - Each reply is at most 80 words and ends with "– Meenakshi Textiles".
+rubric:
+  base: core
+  extra_criteria:
+    - id: citation_accuracy
+      name: Citation accuracy
+      weight: 2
+      description: Is every policy fact cited to the clause that actually says it, with no fact left uncited and no clause misquoted?
+      diagnoses_prompt: Did the prompt label the source by clause, require a citation per fact, and give a fixed sentence for uncovered questions?
+      anchors:
+        0: No citations, or facts invented.
+        1: Citations present but often wrong or missing.
+        2: Mostly correct citations with one invented or uncited fact.
+        3: All facts correctly cited with one slip in clause number.
+        4: Every fact correctly cited on every case; uncovered parts handled with the fixed sentence.
+predictions:
+  - id: p1
+    question: "On tc4, what will the starter prompt most likely say about EMI?"
+    options:
+      - "That it is not in the policy"
+      - "Something plausible, like 'EMI is available on credit cards'"
+      - "Nothing — it will skip the question"
+    answer: 1
+    explanation: With no policy supplied and no permission to say "not covered", the model fills the gap with a common shop practice.
+  - id: p2
+    question: "You move the policy below the question. What is most likely to change?"
+    options:
+      - "Nothing — order never matters"
+      - "Answers may drift from the policy or miss clauses, especially as documents get longer"
+    answer: 1
+    explanation: For long sources, putting the document first and the question last tends to keep answers better tied to the text.
+hints:
+  - Put the whole policy in your prompt, inside tags, before the customer's question.
+  - Write the exact sentence the model should use when the policy says nothing.
+  - Read tc4 as Amma would — which statement in it is not true about our shop?

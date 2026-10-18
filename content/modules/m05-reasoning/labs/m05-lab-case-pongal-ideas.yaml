@@ -1,0 +1,96 @@
+id: m05-lab-case-pongal-ideas
+title: "Meenakshi Textiles: Pongal campaign on ₹15,000"
+difficulty: 3
+estimated_minutes: 20
+techniques_targeted: [decomposition, plan-and-solve, reasoning-effort-control]
+uses_product_case: true
+brief: |
+  **From:** Karthik, Meenakshi Textiles
+  **On WhatsApp:**
+
+  Pongal is coming (14 Jan) and Amma has kept **₹15,000** for promotion. Every
+  year we just print flyers and give them in the shop. This year I want college
+  students and young working people to come in — but Amma says don't forget our
+  old customers, they are our bread and butter 🙏
+
+  I'll send you the situation (it keeps changing 😅). Can your prompt give me:
+
+  - **6 ideas** first, quick ones, different from each other
+  - then a **cost for each** in rupees, roughly — what we pay for
+  - then **rank** them: does it bring young people? does it keep regulars happy?
+    can our 6 staff + me actually do it? cost?
+  - then a **final plan**: the top 2 or 3 ideas that fit the budget together,
+    with the total. **Total must be within the money we have.**
+
+  Things you should know: I can give about 1 hour a day. Amma is not on
+  Instagram but I am. Our speciality is Sungudi cotton and Kanchipuram silk.
+  Most customers are Tamil-first. Please don't make up numbers like "this will
+  bring 500 customers" — nobody knows that.
+input_label: This week's situation
+test_cases:
+  - id: tc1
+    input: |
+      Budget: ₹15,000. Three weeks to Pongal. Main goal: get college students into the shop.
+    note: The open case. Checks variety of ideas, honest costing and a plan that adds up.
+  - id: tc2
+    input: |
+      Budget: ₹15,000. Amma says no paid Instagram or Facebook ads — she doesn't trust them. At least one idea must be for our regular customers (many are 50+ and come every Pongal).
+    note: A channel is ruled out and a second audience must be served. Ideas that rely on paid ads must be dropped or changed.
+  - id: tc3
+    input: |
+      ₹6,000 is already promised to a local FM radio slot (Amma's friend's station), so only ₹9,000 is left. At least one idea must cost ₹0. Karthik is busy with wedding orders in the first week.
+    note: The real budget is ₹9,000, not ₹15,000 — and a free idea is mandatory. A naive prompt plans against ₹15,000.
+  - id: tc4
+    input: |
+      Budget ₹15,000. Amma: "No discounts. We are not a sale shop." Karthik: "Students need a 20% student discount or they won't come." The print shop quote for 5,000 colour flyers is ₹16,500.
+    note: Hard case. The two owners disagree and the usual flyer plan alone exceeds the budget. A good answer surfaces the conflict, offers ideas that respect it (e.g. value-adds instead of discounts), and never recommends a plan over ₹15,000.
+starter_prompt: |
+  Give me some good Pongal marketing ideas for a saree shop in Madurai with ₹15,000 budget.
+reference_prompt: |
+  You are helping a family textile shop in Madurai (Meenakshi Textiles, West Masi Street) plan a Pongal campaign. Speciality: Madurai Sungudi cotton and Kanchipuram silk. Customers are mostly Tamil-first. Staff: 6, plus Karthik who has about 1 hour a day and runs the shop's Instagram and WhatsApp. Pongal is on 14 January.
+
+  Goal: a campaign plan that brings in college students and young professionals while keeping regular customers happy, within the money actually available.
+
+  Situation and constraints for this week:
+  <situation>
+  {{input}}
+  </situation>
+
+  Success criteria — your answer is good only if:
+  - The budget you plan against is the money actually available after anything already committed.
+  - Every hard constraint in the situation is respected. If two people's wishes conflict, say so plainly and do not silently pick one.
+  - Costs are rough rupee estimates with what they pay for; no invented results (no footfall or sales predictions).
+  - The final plan's total is within the available budget, shown as a sum.
+
+  Answer in this order, using these headings:
+  1. Budget available: one line.
+  2. Ideas: 6 short, clearly different ideas (one line each).
+  3. Cost: for each idea, an estimate in ₹ and what it covers.
+  4. Ranking: a table with columns Idea | Young people (High/Med/Low) | Regulars (High/Med/Low) | Effort for staff (High/Med/Low) | Cost ₹ | Fits constraints (Yes/No + reason). Ideas that break a constraint are marked No.
+  5. Final plan: 2–3 ideas that work together, the total as a sum, and one line on why.
+  6. Open questions for Amma and Karthik: only if a conflict or unknown affects the plan.
+
+  Keep the whole answer under 350 words.
+success_criteria:
+  - Six distinct ideas, each with a rupee cost and what it covers.
+  - A ranking table that scores young people, regulars, staff effort and cost, and marks constraint fit.
+  - The final plan has 2–3 ideas and its total, shown as a sum, is within the available budget.
+  - tc2 contains no paid social-media ads in the final plan and at least one idea for regular customers.
+  - tc3 plans against ₹9,000 and includes at least one ₹0 idea.
+  - tc4 names the discount disagreement, does not recommend the ₹16,500 flyer order, and keeps the total within ₹15,000.
+  - No invented outcome numbers such as expected customers or sales.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "On tc3, which mistake is the starter prompt most likely to make?"
+    options:
+      - "Plans against ₹15,000 instead of the ₹9,000 left"
+      - "Refuses because the budget is too small"
+      - "Writes everything in Tamil"
+    answer: 0
+    explanation: The starter hard-codes ₹15,000 and never asks the model to work out what is actually available, so the committed ₹6,000 is ignored.
+hints:
+  - Split the task into stages — ideas, costs, ranking, final plan — and ask for them in that order.
+  - Instead of scripting how to think, write what a good answer must satisfy, including "the total is within the money actually available".
+  - Look at tc4 — what should the model do when two owners want opposite things?

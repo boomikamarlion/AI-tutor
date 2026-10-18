@@ -1,0 +1,30 @@
+id: m06-grounding
+order: 6
+title: Stick to the sources — grounding
+summary: >
+  Models fill gaps with confident guesses. Learn to give them the source
+  material, make them cite it, place long documents where they work best, and
+  give them a clear way to say "this is not stated".
+design_stage: empathise
+design_stage_note: >
+  Research. Before answering customers online, the shop must answer only what
+  its own policy says. You build an FAQ helper that quotes the shop's policy
+  clauses and says "not stated" instead of inventing promises — listening to
+  what customers actually ask, not what we wish they asked.
+tier: pro
+estimated_minutes: 40
+techniques: [grounding, uncertainty-permission, context-placement]
+objectives:
+  - Supply source material and require answers that use only it, with a citation for each claim.
+  - Define an explicit "not stated" answer so the model stops inventing facts.
+  - Place long documents first, label them, and put the question last.
+  - Spot unsupported claims, false premises and borrowed findings in a model's answer.
+cards:
+  - m06-why-models-guess
+  - m06-grounded-prompt-anatomy
+  - m06-not-stated-compare
+  - m06-long-context-flow
+labs:
+  - m06-lab-lit-review-notes
+  - m06-lab-usability-findings
+  - m06-lab-case-policy-faq

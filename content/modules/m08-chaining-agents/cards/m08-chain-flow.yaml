@@ -1,0 +1,28 @@
+id: m08-chain-flow
+title: How a prompt chain works
+technique: prompt-chaining
+template: flow
+takeaway: Each link in a chain does one job and hands a fixed format to the next, with a check in between.
+body: >
+  One giant prompt that reads, decides, writes and checks at once tends to do
+  all four badly. A chain gives each job its own prompt. The output of one step
+  becomes the input of the next, so each prompt is short and easy to test on its
+  own. The check between steps catches a bad result before it spreads.
+data:
+  steps:
+    - label: Name the sub-tasks
+      detail: Write the job as 3-4 verbs in order, for example extract, decide, write, check. Each verb becomes one prompt.
+    - label: Fix the hand-over format
+      detail: Decide exactly what each step passes on — usually JSON with named fields — so the next prompt knows what it will receive.
+    - label: Stage 1 — extract
+      detail: Pull facts out of the messy input into the hand-over format. Nothing creative happens here; missing facts become null, not guesses.
+    - label: Gate — check before moving on
+      detail: A small rule or a tiny prompt asks "are the required fields present and sensible?" If not, stop and ask a human instead of continuing.
+    - label: Stage 2 — produce
+      detail: Write the final output using only the checked facts from stage 1.
+    - label: Stage 3 — verify
+      detail: Compare the output against the stage 1 facts and flag anything that was added or changed.
+source: >
+  Idea of prompt chains and agents from The Prompt Report (Schulhoff et al.,
+  arXiv 2406.06608, §4) and the "chain complex prompts" advice in Anthropic's
+  prompt engineering guide. Wording original.

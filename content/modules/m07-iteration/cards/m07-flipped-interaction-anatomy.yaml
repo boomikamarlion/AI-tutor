@@ -1,0 +1,27 @@
+id: m07-flipped-interaction-anatomy
+title: Anatomy of a flipped interaction
+technique: flipped-interaction
+template: anatomy
+takeaway: Let the model interview you — one question at a time, with a clear goal and a clear stopping point.
+body: >
+  Sometimes you do not know what details matter. Flip the roles: the model asks,
+  you answer. It works best when you say what the end product is, limit it to one
+  question per turn, and tell it when to stop asking and start working.
+data:
+  parts:
+    - label: Goal
+      text: "I want a one-page budget for our department's industrial visit."
+      note: The model needs to know the end product to know which questions matter.
+    - label: Flip
+      text: "Ask me questions until you have what you need. Do not write the budget yet."
+      note: Stops the model jumping ahead with assumptions.
+    - label: One at a time
+      text: "Ask one question per message, most important first."
+      note: A wall of ten questions is hard to answer on a phone and gets skipped.
+    - label: Helpful questions
+      text: "Where useful, offer two or three likely options I can pick from."
+      note: Makes answering quick for people unsure of the details.
+    - label: Stop rule
+      text: "When you have enough — or after at most 6 questions — say 'Ready' and write the budget."
+      note: Without a stopping point the interview drags on.
+source: Flipped Interaction pattern from A Prompt Pattern Catalog (White et al., 2023). Example is original.

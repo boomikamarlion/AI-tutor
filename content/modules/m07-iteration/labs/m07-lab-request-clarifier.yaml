@@ -1,0 +1,83 @@
+id: m07-lab-request-clarifier
+title: Ask before you build — a request clarifier
+difficulty: 2
+estimated_minutes: 12
+techniques_targeted: [question-refinement, flipped-interaction]
+uses_product_case: false
+brief: |
+  **From:** Sathish, Student Council tech volunteer
+  **On WhatsApp:**
+
+  bro, the council made an AI helper for clubs. problem — people type "make a
+  poster" and it immediately makes something useless, then they type 10 more
+  messages to fix it 🤦
+
+  I want a **first step** prompt. It should NOT do the task. It should:
+
+  - rewrite the request as a **clear, complete request** (using what they said)
+  - list the **missing details as questions** — max 3, most important first,
+    each with 2–3 example options so people can just pick one
+  - say **Ready to start: Yes / No**
+
+  If the request is already clear, don't annoy people with questions — say Ready
+  to start: Yes with zero or one question. Keep it short, people read on phones.
+input_label: Club member's request
+test_cases:
+  - id: tc1
+    input: |
+      make a poster for blood donation camp
+    note: Very vague — date, venue, audience and language are all missing.
+  - id: tc2
+    input: |
+      Can you analyse our Instagram numbers and tell us what's working? We're the Tamil Mandram page.
+    note: The data itself is missing — the most important question is to ask for it, not about colours or tone.
+  - id: tc3
+    input: |
+      write a survey for canteen food feedback, around 10 questions, for hostel and day scholars
+    note: Partly specified. Questions should target what is still missing (e.g. language, anonymous or not, Google Form), not repeat what was given.
+  - id: tc4
+    input: |
+      Write a 3-line WhatsApp reminder in English for Eco Club members: tree planting drive this Saturday 7 am at the college main gate, bring a water bottle and wear old clothes. Friendly tone.
+    note: Hard case. This request is already complete. A good answer says "Ready to start — Yes" with no (or one optional) question. A naive prompt asks three needless questions or just does the task.
+starter_prompt: |
+  Before doing this task, ask me some questions about it.
+reference_prompt: |
+  You are the first step of a helper for college club members. You do not do the task. You make sure the request is clear before anyone starts.
+
+  <request>
+  {{input}}
+  </request>
+
+  Reply in exactly this format:
+
+  Refined request: one or two sentences restating the request clearly, using only details the member gave. Mark anything still unknown as [?].
+
+  Questions:
+  1. ... (Options: ... / ... / ...)
+  Ask at most 3 questions, most important first — the ones whose answers would change the result the most. Do not ask about anything the member already said. If the request is already clear enough to do well, ask no questions (or one optional one) and write "None needed".
+
+  Ready to start: Yes or No
+
+  Do not produce the poster, message, survey or analysis itself. Keep the whole reply under 90 words.
+success_criteria:
+  - The reply follows the three-part format and does not perform the task itself.
+  - The refined request uses only the member's details and marks unknowns with [?].
+  - At most 3 questions, each with 2–3 options, ordered by importance.
+  - No question asks for something the request already states.
+  - tc2's first question asks for the Instagram data itself.
+  - tc4 answers "Yes" to Ready to start, with no questions or a single optional one.
+  - Every reply is under 90 words.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "On tc4, what does the starter prompt most likely do?"
+    options:
+      - "Says the request is clear"
+      - "Asks several questions anyway, because you told it to ask"
+    answer: 1
+    explanation: The starter makes asking compulsory. Without a "no questions needed" path, the model asks something every time.
+hints:
+  - Tell the model clearly that it must not do the task yet.
+  - Limit the number of questions and say how to pick the most important ones.
+  - What should the reply look like when nothing is missing?

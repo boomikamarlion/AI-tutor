@@ -1,0 +1,110 @@
+id: m04-lab-case-stock-catalogue
+title: "Meenakshi Textiles: from WhatsApp stock messages to a catalogue"
+difficulty: 3
+estimated_minutes: 18
+techniques_targeted: [structured-output, template-pattern]
+uses_product_case: true
+brief: |
+  **From:** Karthik, Meenakshi Textiles
+  **On WhatsApp (voice note, typed up by you):**
+
+  Ok so the website boy says he can show products online if we give him a
+  "JSON file". Every evening I send stock updates to our staff group — like
+  the ones I'm forwarding you. Messy, I know 😅 Half Tamil, half English, I type
+  fast.
+
+  Can you make a prompt that reads one of my messages and gives the JSON for the
+  website? He said each product needs these fields:
+
+  - `name` — short English name, like "Sungudi cotton saree – maroon"
+  - `category` — only one of: `sungudi-cotton`, `kanchipuram-silk`, `cotton-silk`, `dhoti`, `other`
+  - `colour` — in English
+  - `price_inr` — number only. if I give a range like 1200-1500, put the lower one in `price_inr` and `price_max_inr` the higher one, otherwise `price_max_inr` is null
+  - `quantity` — number of pieces; 0 if I say sold out / stock illa
+  - `notes` — anything useful for customers (zari, border, blouse piece), else null
+  - `needs_check` — true if you were not sure about anything
+
+  Important: Amma does not want wrong prices online. If I didn't say the price,
+  **don't fill one** — leave it null and mark needs_check. Only the JSON array
+  please, the website boy will paste it directly.
+input_label: Karthik's stock message
+test_cases:
+  - id: tc1
+    input: |
+      New arrival: Sungudi cotton saree maroon with mustard border, 12 pcs, 950 each. Blouse piece included.
+    note: One clean item. The baseline for shape and field names.
+  - id: tc2
+    input: |
+      Today stock: kanchi silk pattu - peacock green 3 nos 14500, temple border, pure zari. Also cotton dhoti white 40 pcs 350. Mango yellow sungudi stock illa.
+    note: Three products in one line, Tamil words ("pattu", "stock illa" = out of stock) and an item with quantity 0.
+  - id: tc3
+    input: |
+      cotton silk sarees diff colours — rani pink 5, navy 4, bottle green 6 — rate 1800-2200 depending on design
+    note: One line that is really three products sharing a price range, so price_inr and price_max_inr are both needed.
+  - id: tc4
+    input: |
+      Sungudi new lot came from Chinnalapatti 👌 parrot green 8 pcs, sandal 10 pcs. price same as last time. Oh wait sandal is 6 only, 4 went for Meena akka's order. Also 2 silk sarees kept aside for wedding order, don't put online.
+    note: Hard case. "Price same as last time" is not a price — it must be null with needs_check. The sandal quantity is corrected from 10 to 6. The two reserved silk sarees must be left out. A naive prompt guesses a price and lists 10.
+starter_prompt: |
+  Convert this stock message into JSON for our website.
+reference_prompt: |
+  You turn a textile shop's WhatsApp stock message into catalogue entries for its website.
+
+  Output only a JSON array (no code fences, no other text). Each element is one product — one colour of one item is one product. Use exactly these keys:
+  {
+    "name": string,            // short English name, e.g. "Sungudi cotton saree – maroon"
+    "category": "sungudi-cotton" | "kanchipuram-silk" | "cotton-silk" | "dhoti" | "other",
+    "colour": string,          // in English
+    "price_inr": integer | null,
+    "price_max_inr": integer | null,
+    "quantity": integer,
+    "notes": string | null,    // customer-useful details such as border, zari, blouse piece
+    "needs_check": boolean
+  }
+
+  Rules:
+  - Use only what the message says. Never guess a price, colour or quantity.
+  - Price: one number goes in price_inr with price_max_inr null. A range "A-B" gives price_inr A and price_max_inr B. If no actual number is given (for example "same as last time"), set both to null and needs_check to true.
+  - Quantity: "stock illa", "sold out" or "no stock" means 0. If a later sentence corrects a quantity or price, use the corrected value.
+  - Leave out any item the message says is reserved, kept aside or not for online.
+  - "pattu" and "kanchi silk" mean kanchipuram-silk. Translate Tamil words in name, colour and notes into English.
+  - Set needs_check to true whenever you had to interpret something unclear.
+
+  <message>
+  {{input}}
+  </message>
+success_criteria:
+  - Output is only a valid JSON array; every object has exactly the eight listed keys with the right types.
+  - category is always one of the five allowed values.
+  - Each colour of a product is a separate object (tc2 has 3 objects, tc3 has 3, tc4 has 2).
+  - Out-of-stock items have quantity 0 (mango yellow in tc2).
+  - Price ranges fill both price_inr and price_max_inr (tc3 1800 and 2200).
+  - In tc4, prices are null with needs_check true, sandal quantity is 6, and the reserved silk sarees do not appear.
+  - No price, colour or quantity is invented.
+rubric:
+  base: core
+  extra_criteria:
+    - id: schema_validity
+      name: Valid, schema-true JSON
+      weight: 2
+      description: Is the output parseable JSON with exactly the required keys, types and allowed category values?
+      diagnoses_prompt: Did the prompt give the exact keys, types and allowed values, and forbid any text outside the JSON?
+      anchors:
+        0: Not parseable as JSON on most cases.
+        1: Parseable but with wrong or extra keys on several cases.
+        2: Right keys, but wrong types or categories outside the allowed list.
+        3: Valid and schema-true on all but one case.
+        4: Valid, exact keys, types and categories on every case.
+predictions:
+  - id: p1
+    question: "On tc4, what will a prompt without a missing-price rule most likely do?"
+    options:
+      - "Put null for the price"
+      - "Make up a typical Sungudi price like 950"
+      - "Skip the product"
+    answer: 1
+    explanation: Models fill gaps with plausible values. Only an explicit "never guess, use null" rule stops a made-up price reaching the website.
+hints:
+  - Write the JSON object with all eight keys in your prompt, and list the five allowed categories.
+  - Decide what "one product" means. Is "rani pink 5, navy 4" one entry or two?
+  - Re-read tc4 as Amma would. What must never appear online, and what changed halfway through the message?

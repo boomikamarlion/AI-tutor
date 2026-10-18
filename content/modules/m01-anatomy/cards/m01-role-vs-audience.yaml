@@ -1,0 +1,32 @@
+id: m01-role-vs-audience
+title: Who is writing vs who is reading
+technique: audience-persona
+template: compare
+takeaway: The role says who the model is; the audience says who the output is for — the audience usually changes the output more.
+body: >
+  Learners often add "You are an expert…" and stop there. An expert writing for other
+  experts uses jargon and skips steps. Telling the model who will read the answer —
+  their age, background and what they already know — changes depth, vocabulary and
+  examples far more than the role alone.
+data:
+  left:
+    label: Role only
+    prompt: You are an expert economist. Explain inflation.
+    output: >
+      Inflation is a sustained increase in the general price level, typically measured
+      by CPI. It arises from demand-pull or cost-push factors and is influenced by
+      monetary policy, including repo-rate adjustments by the RBI…
+  right:
+    label: Role + audience
+    prompt: >
+      You are an economics teacher. Explain inflation to a Class 9 student in Madurai
+      who has never studied economics. Use one example from daily life. Under 80 words.
+    output: >
+      Inflation means prices slowly go up over time, so the same money buys less. Five
+      years ago a plate of idli at the corner shop might have been ₹20; now it may be
+      ₹35. Your ₹100 note did not change, but it buys fewer idlis. A little inflation
+      is normal; too much makes life hard for families.
+  verdict: >
+    The audience line made the model drop jargon, choose a familiar example and keep it
+    short. The role still matters — it keeps the explanation accurate and teacher-like.
+source: Persona and Audience Persona patterns, White et al., "A Prompt Pattern Catalog" (arXiv 2302.11382). Original example.

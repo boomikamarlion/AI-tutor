@@ -1,0 +1,27 @@
+id: m03-choosing-examples
+title: Choosing good examples
+technique: exemplar-selection
+template: checklist
+takeaway: Pick examples that look like your real inputs, cover the hard cases, vary on purpose and are ordered with care.
+body: >
+  The model learns from everything in your examples — their labels, length, tone, even
+  their topics. Badly chosen examples teach the wrong pattern as confidently as good
+  ones teach the right one. Spend your effort on choosing three or four examples well,
+  rather than adding more.
+data:
+  items:
+    - label: Match the real inputs
+      detail: Same kind of text, same length, same language mix. If customers write in Tanglish, so should some examples.
+    - label: Cover the hard cases
+      detail: Include the sarcasm, the complaint, the missing detail — whatever breaks a plain instruction.
+    - label: Balance the labels
+      detail: If three of four examples are "positive", the model leans positive. Spread examples across the answers.
+    - label: Vary what should not matter
+      detail: Change topic, length and wording across examples, so the model does not copy surface details.
+    - label: Keep the format identical
+      detail: Same labels, separators and order in every example and in the final slot.
+    - label: Order with care
+      detail: The last example has the strongest pull. Do not end on an unusual case, and avoid grouping all of one label together.
+    - label: Never reuse a test input
+      detail: Examples copied from your test set make the score look better than the prompt really is.
+source: Exemplar selection, ordering and label balance in The Prompt Report §2.2.1.1 (citing Lu et al. 2022 and Min et al. 2022). Original wording.

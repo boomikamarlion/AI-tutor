@@ -1,0 +1,98 @@
+id: m01-lab-sql-explainer
+title: Explain SQL to the fest treasurer
+difficulty: 2
+estimated_minutes: 12
+techniques_targeted: [audience-persona, role-prompting, explicit-task]
+uses_product_case: false
+brief: |
+  **From:** Nandhini, Treasurer, Commerce Association (B.Com III year)
+
+  Our CS friend Vignesh built the registration database for our inter-college fest,
+  and he keeps sending me SQL queries saying "run this to get the totals". I don't
+  know SQL and I'm the one who signs off the money. I want a prompt where I paste a
+  query and get a **plain-English explanation** — what it will show or change, in
+  words a commerce student understands. No jargon, or if a term is needed, explain it.
+
+  Most important: if a query will **change or delete data**, I need a clear warning
+  at the top so I don't run it by mistake. Keep it short, 5 lines or so.
+
+  Tables, if it helps: `registrations(id, student_name, college, event, fee_paid, paid_on)`,
+  `events(event, fee)`.
+input_label: SQL query
+test_cases:
+  - id: tc1
+    input: |
+      SELECT event, COUNT(*) FROM registrations GROUP BY event;
+    note: A simple read-only count per event.
+  - id: tc2
+    input: |
+      SELECT r.college, SUM(r.fee_paid) AS total
+      FROM registrations r
+      WHERE r.paid_on >= '2026-01-01'
+      GROUP BY r.college
+      ORDER BY total DESC;
+    note: Aliases, a filter and a sort — each needs a plain-English phrase.
+  - id: tc3
+    input: |
+      SELECT r.student_name, r.event, e.fee - r.fee_paid AS balance
+      FROM registrations r JOIN events e ON r.event = e.event
+      WHERE r.fee_paid < e.fee;
+    note: A join. The explanation should say what "balance" means for the treasurer — who still owes money.
+  - id: tc4
+    input: |
+      UPDATE registrations SET fee_paid = 0;
+    note: No WHERE clause — this wipes every payment record. A naive prompt calmly describes it as "updates the fee". The warning must come first.
+starter_prompt: |
+  You are an expert database administrator. Explain this SQL query.
+reference_prompt: |
+  You are a patient tutor who explains databases to commerce students.
+
+  The reader is the treasurer of a college fest. She does not know SQL. She decides whether to run queries sent to her, and she is responsible for the fest's money.
+
+  The database has two tables:
+  - registrations(id, student_name, college, event, fee_paid, paid_on)
+  - events(event, fee)
+
+  Query:
+  {{input}}
+
+  Explain the query in at most 5 short lines:
+  1. If the query changes or deletes data (UPDATE, DELETE, INSERT, DROP, ALTER), the first line must be "⚠ WARNING: This query changes data." followed by exactly what will change and for which rows. If it affects every row, say so.
+  2. Then say in plain English what the query shows or does, in terms of students, events and money.
+  3. If you must use a technical word, explain it in brackets in a few words.
+  Do not include any SQL in your answer.
+success_criteria:
+  - Each explanation is at most 5 lines and contains no SQL code.
+  - Explanations use fest and money terms (students, events, colleges, fees) rather than database jargon, or explain any jargon used.
+  - tc3 explains that the result lists students who still owe money and how much.
+  - tc4 starts with a clear warning that every row's payment will be set to zero.
+  - tc1–tc3 contain no data-change warning.
+rubric:
+  base: core
+  extra_criteria:
+    - id: risk_flag
+      name: Risk flagged
+      weight: 2
+      description: Are queries that change or delete data flagged clearly and first, with their scope?
+      diagnoses_prompt: Did the prompt tell the model to check for data-changing queries and where to put the warning?
+      anchors:
+        0: The destructive query is described as harmless.
+        1: A warning exists but is buried or vague.
+        2: Warning at the top but the scope (all rows) is not stated.
+        3: Clear warning with scope; minor wording issues.
+        4: Clear first-line warning with exact scope, and no false warnings on read-only queries.
+predictions:
+  - id: p1
+    question: "The starter prompt says \"You are an expert database administrator.\" What will the tc2 explanation sound like?"
+    options:
+      - "Plain English for a commerce student"
+      - "Technical — words like aggregate, alias, predicate"
+      - "A one-word answer"
+    answer: 1
+    explanation: >
+      The role tells the model who is speaking, but nothing says who is listening. An
+      expert talking to nobody in particular talks like an expert.
+hints:
+  - The role is fine, but who is the reader? Add a line about Nandhini and what she already knows.
+  - Give the model the table names and what the money columns mean — that is context it cannot guess.
+  - For tc4, tell the model exactly when to warn and where the warning goes.

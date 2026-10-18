@@ -1,0 +1,117 @@
+id: m05-lab-fest-schedule
+title: Fit the fest onto one stage
+difficulty: 3
+estimated_minutes: 15
+techniques_targeted: [decomposition, plan-and-solve, chain-of-thought]
+uses_product_case: false
+brief: |
+  **From:** Nandhini, Secretary, Fine Arts Club
+  **On WhatsApp:**
+
+  we have ONE stage for the inter-department fest and every coordinator is
+  fighting for time slots 😵 I'll send you the events and their rules each time
+  it changes. can your prompt give me a timetable that follows ALL the rules?
+
+  - Slots are in 30-minute blocks. Events can't overlap and can't be split.
+  - Show it as a table: **Time | Event**. Any empty block shows as "Break".
+  - Under the table, list every rule and say ✔ met or ✘ not met.
+  - If it's impossible, DON'T fudge a timetable. Tell me which rules clash and
+    the smallest change that would fix it. I'll go and argue with the HOD 😤
+  - Keep it short, I'm reading on my phone.
+input_label: Events and rules
+test_cases:
+  - id: tc1
+    input: |
+      Stage time: 10:00 to 13:00.
+      Events: Kolam judging (30 min), Quiz (30 min), Debate (60 min), Bharatanatyam (60 min).
+      Rules:
+      1. Kolam judging must be first (morning light).
+      2. The chief guest is there only 11:00–12:00 and must watch the whole Bharatanatyam.
+      3. Quiz must happen before Debate.
+    note: Exactly one valid timetable — Kolam 10:00, Quiz 10:30, Bharatanatyam 11:00, Debate 12:00.
+  - id: tc2
+    input: |
+      Stage time: 9:30 to 13:00.
+      Events: Kolam judging (30), Quiz (30), Debate (60), Bharatanatyam (60), Silambam (30).
+      Rules:
+      1. Kolam judging must be first.
+      2. Chief guest only 11:00–12:00, must watch the whole Bharatanatyam.
+      3. Quiz before Debate.
+      4. Silambam cannot be immediately after Bharatanatyam (mats need clearing).
+    note: Needs elimination — Quiz and Silambam must share 10:00–11:00, so Debate goes to 12:00. Two orders of Quiz/Silambam are valid.
+  - id: tc3
+    input: |
+      Stage time: 14:00 to 17:00.
+      Events: Silambam (30), Debate (60), Short film screening (30), Quiz (30).
+      Rules:
+      1. Silambam must be first (sports students leave at 14:30).
+      2. Short film needs the hall dark — only from 16:00.
+      3. Debate before Quiz.
+      4. Quiz must be the last event (prizes at the end).
+    note: Total is 150 minutes in a 180-minute window, so one 30-minute block must be shown as Break.
+  - id: tc4
+    input: |
+      Stage time: 10:00 to 13:00.
+      Events: Kolam judging (30), Quiz (30), Debate (60), Bharatanatyam (60).
+      Rules:
+      1. Kolam judging must be first.
+      2. Chief guest only 11:00–12:00, must watch the whole Bharatanatyam.
+      3. Quiz before Debate.
+      4. Quiz needs the projector, which is free only from 12:00.
+    note: Hard case. No valid timetable exists — the Quiz cannot start before 12:00, and Debate (60 min) must come after it, but only 12:00–13:00 is left. A naive prompt quietly breaks a rule and presents a "timetable".
+starter_prompt: |
+  Make a timetable for these events following the rules.
+reference_prompt: |
+  You schedule events on a single stage.
+
+  Goal: a timetable that satisfies every rule, or a clear statement that none exists.
+
+  Work in this order, and show brief working:
+  1. Plan: list the 30-minute blocks in the stage time and the total minutes needed versus available.
+  2. Place the events with fixed times first, then the rest, checking each rule as you go. If a choice is forced, say why in one line.
+  3. Check: go through every rule and mark it ✔ met or ✘ not met.
+
+  Then give the final answer:
+  - If a valid timetable exists: a table with columns Time | Event, one row per 30-minute block or event, empty blocks shown as "Break", followed by the rule checklist.
+  - If no valid timetable exists: say "No timetable meets every rule." Name the rules that clash in one or two sentences, then give the smallest single change that would make it possible. Do not show a timetable that breaks a rule.
+
+  Events cannot overlap or be split. Keep the final answer under 120 words.
+
+  <events>
+  {{input}}
+  </events>
+success_criteria:
+  - Every timetable shown obeys every rule; no event overlaps or is split.
+  - tc1 gives Kolam 10:00, Quiz 10:30, Bharatanatyam 11:00, Debate 12:00.
+  - tc2 places Debate at 12:00–13:00 and Quiz plus Silambam in 10:00–11:00.
+  - tc3 shows exactly one 30-minute Break and ends with the Quiz at 16:30.
+  - Each answer ends with a rule-by-rule ✔/✘ check.
+  - tc4 states that no timetable is possible, names the clashing rules (projector timing vs. Quiz before Debate) and suggests one minimal change, without presenting a rule-breaking timetable.
+  - Final answer stays short enough to read on a phone.
+rubric:
+  base: core
+  extra_criteria:
+    - id: logical_validity
+      name: Logically valid schedule
+      weight: 2
+      description: Does every proposed timetable actually satisfy all rules, and is infeasibility reported honestly?
+      diagnoses_prompt: Did the prompt ask for a plan, a rule-by-rule check, and an explicit "no solution" path?
+      anchors:
+        0: Timetables break rules on most cases.
+        1: Breaks a rule on several cases, or fakes a solution for tc4.
+        2: Correct on easy cases but fakes or fumbles tc4.
+        3: Correct on all cases, with a weak explanation on tc4.
+        4: Correct on all cases, with a clear clash explanation and fix on tc4.
+predictions:
+  - id: p1
+    question: "On tc4, what will the starter prompt most likely produce?"
+    options:
+      - "A message saying it is impossible"
+      - "A timetable that quietly breaks one rule"
+      - "A list of questions back to you"
+    answer: 1
+    explanation: Without an explicit "no solution" path, models try to please and hand over a timetable, often moving the Quiz before 12:00 or the Debate past 13:00.
+hints:
+  - Ask the model to count minutes needed versus minutes available before it places anything.
+  - Tell it to place the events with fixed times first. They decide where everything else can go.
+  - Write down what the answer must look like when no timetable can follow every rule.

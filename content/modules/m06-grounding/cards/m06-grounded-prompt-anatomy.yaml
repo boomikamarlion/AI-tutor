@@ -1,0 +1,33 @@
+id: m06-grounded-prompt-anatomy
+title: Anatomy of a grounded prompt
+technique: grounding
+template: anatomy
+takeaway: Source first, rules in the middle, question last — and every claim points back to the source.
+body: >
+  A grounded prompt has a clear boundary: inside it is the material the model
+  may use, outside it is everything else. Labels such as clause numbers or note
+  IDs let the model cite exactly where each fact came from, and let you check it
+  in seconds.
+data:
+  parts:
+    - label: Labelled source
+      text: |
+        <circular id="C1">
+        1. The scholarship is open to first-generation graduates.
+        2. Apply on the portal by 30 November.
+        3. Family income must be below ₹2.5 lakh per year.
+        </circular>
+      note: Numbered lines give the model something precise to cite.
+    - label: Use-only rule
+      text: "Answer using only the circular above. Do not use outside knowledge."
+      note: Draws the boundary. Without it the model mixes in other scholarships it has read about.
+    - label: Citation rule
+      text: "After each fact, cite the line in square brackets, e.g. [C1-3]."
+      note: Makes every claim checkable and discourages facts with no home.
+    - label: Not-stated rule
+      text: "If the circular does not answer part of the question, say 'The circular does not say.' for that part."
+      note: Gives the model a respectable way out instead of a guess.
+    - label: Question last
+      text: "<question>{{input}}</question>"
+      note: Placed after the source so the model reads the material with the question fresh in mind.
+source: Grounding and citation practice from The Prompt Report §2.2.6 and Anthropic long-context prompting tips. Example is original.

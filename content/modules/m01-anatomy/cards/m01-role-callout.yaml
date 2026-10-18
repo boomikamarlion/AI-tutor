@@ -1,0 +1,19 @@
+id: m01-role-callout
+title: A role is a shortcut, not a guarantee
+technique: role-prompting
+template: callout
+takeaway: A role sets vocabulary and standards, but it cannot supply facts — pair it with context.
+body: >
+  Saying "You are a senior tax consultant" makes the model sound like one: careful
+  wording, the right terms, the usual checklist. It does not give it your client's
+  numbers or the latest rule changes. Use a role to set the voice and the standard of
+  work, then supply the facts yourself.
+data:
+  headline: Roles change style more than truth
+  stat: 1 line
+  detail: >
+    A one-line role is cheap and often helps — especially when it names a specific
+    job and setting ("a Tamil Nadu government school science teacher") rather than a
+    vague "expert". But a confident role can also make invented details sound more
+    believable, so check facts more carefully, not less.
+source: Role prompting discussed in The Prompt Report §2.2.1.3, which notes mixed evidence on accuracy gains; Persona pattern in White et al. (arXiv 2302.11382). Original wording.

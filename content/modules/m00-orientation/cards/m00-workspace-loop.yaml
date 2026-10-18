@@ -1,0 +1,23 @@
+id: m00-workspace-loop
+title: The workspace loop
+technique: explicit-task
+template: flow
+takeaway: Write, run on the test set, read the critique, change one thing, and name the technique you used.
+body: >
+  Every lab in this course works the same way. You never judge a prompt on one output —
+  you run it on a small fixed set of inputs, including a hard one. A critic scores the
+  outputs against a rubric and points at what in your prompt caused each problem. You
+  then revise one thing at a time so you learn which change actually helped.
+data:
+  steps:
+    - label: Write
+      detail: Read the brief carefully. Write v1 of your prompt, or start from the weak starter.
+    - label: Run on the test set
+      detail: Your prompt runs once for each pinned input. The last input is the tricky one.
+    - label: Critique
+      detail: Read the rubric scores and evidence. Find the weakest criterion, not just the overall number.
+    - label: Revise
+      detail: Change one or two things that target that weakness. Run again and compare v1 with v2.
+    - label: Name the technique
+      detail: Pick the technique your change used (for example, explicit task). This is how you build a toolkit you can reuse.
+source: Iterative prompt development as described in The Prompt Report §6 (case study) and provider prompt-engineering guides; loop design is original to this course.

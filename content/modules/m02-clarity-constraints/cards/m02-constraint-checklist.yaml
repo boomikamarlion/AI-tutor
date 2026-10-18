@@ -1,0 +1,24 @@
+id: m02-constraint-checklist
+title: A constraint checklist before you run
+technique: constraints
+template: checklist
+takeaway: Check length, scope, tone, must-include, must-avoid and the "what if it's missing" case before every run.
+body: >
+  Most failed runs break a rule the writer had in mind but never wrote down. Run through
+  this list against the brief before you press run. Each item you add should be something
+  you could check in the output.
+data:
+  items:
+    - label: Length
+      detail: A number — words, sentences, bullets or lines. Leave a small margin.
+    - label: Scope
+      detail: What is in and out. "Only details for III year students."
+    - label: Tone
+      detail: Describe it with a reader and an example — "friendly, like a senior messaging juniors" — not just "professional".
+    - label: Must include
+      detail: The facts or sections that must always appear, such as date, place, deadline.
+    - label: Must avoid
+      detail: The specific traps from the brief, each paired with what to do instead.
+    - label: When it's missing
+      detail: What to write if the input lacks a needed detail — "write 'date not given'" — so the model does not invent one.
+source: Constraint and style instructions in The Prompt Report §2.2; checklist is original to this course.

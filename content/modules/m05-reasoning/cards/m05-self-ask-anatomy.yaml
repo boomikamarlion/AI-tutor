@@ -1,0 +1,29 @@
+id: m05-self-ask-anatomy
+title: Anatomy of a self-ask prompt
+technique: self-ask
+template: anatomy
+takeaway: Have the model write down the smaller questions it needs, answer each, and only then answer yours.
+body: >
+  Many questions hide two or three smaller ones. "Can I make the 9:10 class if I
+  take the 8:15 bus from Thirumangalam?" depends on travel time, walking time and
+  how late the bus usually runs. Asking the model to surface those sub-questions
+  first — and to say which ones it cannot answer from what it has — makes the
+  final answer more honest.
+data:
+  parts:
+    - label: The question
+      text: "Can our club afford a ₹4,000 speaker for the Tamil Mandram event?"
+      note: The real question, stated once and plainly.
+    - label: Facts provided
+      text: "<facts>Balance ₹6,200. Pending: ₹1,500 for certificates, ₹900 for snacks. Sponsor may give ₹1,000 (not confirmed).</facts>"
+      note: The model can only reason from what it is given.
+    - label: Sub-question step
+      text: "First list the follow-up questions you need answered to decide, one per line, starting 'Follow-up:'."
+      note: Makes the hidden questions visible before any conclusion.
+    - label: Answer each
+      text: "Answer each follow-up from the facts. If the facts do not answer it, write 'Unknown'."
+      note: Stops the model treating an unconfirmed sponsor as money in hand.
+    - label: Final answer
+      text: "Then give 'Final answer:' in one or two sentences, saying which unknowns it depends on."
+      note: The conclusion is tied to the sub-answers and their gaps.
+source: Self-ask prompting (Press et al., 2022), as summarised in The Prompt Report §2.2.4. Example is original.

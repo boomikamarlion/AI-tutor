@@ -1,0 +1,131 @@
+id: m08-lab-internship-extractor
+title: Stage 1 of a chain — extract internship facts
+difficulty: 2
+estimated_minutes: 15
+techniques_targeted: [prompt-chaining, structured-output]
+uses_product_case: false
+brief: |
+  **From:** Ms. Priya S., Placement Coordinator
+  **To:** Student volunteers, placement cell
+
+  Hi all, we get 20-30 internship mails a week — forwards from alumni, HR
+  emails, WhatsApp text pasted into email. Last month we posted a "registration
+  fee" internship on the student group by mistake. Never again.
+
+  We are building a two-step system. **Step 2** (already done) takes clean data
+  and writes the WhatsApp notice for students. I need you to write **Step 1**:
+  read one raw message and output the facts as JSON so Step 2 can use them.
+
+  What Step 2 needs, exactly these keys:
+  - `company` (string or null)
+  - `roles`: list of `{ "title", "stipend_inr_per_month" (number or null), "eligible_departments" (list) }`
+  - `mode`: "onsite", "remote", "hybrid" or null
+  - `location` (string or null)
+  - `deadline`: "YYYY-MM-DD" or null — work it out if the mail gives a weekday and a sent date
+  - `apply_link` (string or null)
+  - `fee_required` (true/false) — does the student have to pay anything?
+  - `missing_fields`: list of keys that were not stated
+  - `red_flags`: short list of warning signs (fees, guaranteed jobs, personal Gmail for a "company"), empty if none
+
+  JSON only — Step 2 breaks if there is any text before or after it. And
+  **never guess**. If it is not in the message, it is null and goes into
+  `missing_fields`.
+input_label: Raw internship message
+test_cases:
+  - id: tc1
+    input: |
+      Subject: Summer Internship – Content Writing – Tamil & English
+      From: hr@kalamtextbooks.in
+      Kalam Textbooks Pvt Ltd invites applications for Content Writing Interns
+      (2 months, remote). Stipend: Rs. 8,000 per month. Open to BA English,
+      BA Tamil and B.Sc Visual Communication students. Last date to apply:
+      15 November 2025. Apply at https://kalamtextbooks.in/careers/intern
+    note: The clean case. Every field is present and stated plainly.
+  - id: tc2
+    input: |
+      Fwd: from Ramesh anna (2019 batch)
+      Sent: Monday, 6 October 2025
+      hi priya mam, our startup GreenLoop is hiring 3 interns for data entry
+      + social media, office near Anna Nagar Madurai, 9 to 5, hybrid ok after
+      first month. stipend 5k. any UG dept fine. pls send resumes to my mail
+      ramesh@greenloop.co.in before this friday. thanks!!
+    note: Casual text, a relative deadline ("this Friday" after a Monday 6 October send date = 10 October), and no apply link.
+  - id: tc3
+    input: |
+      Subject: Internship openings at Vaigai Analytics
+      We have two openings for the Dec–Jan winter break, both on-site at our
+      Madurai office (K.K. Nagar):
+      1) Junior Data Analyst Intern — B.Sc Maths, B.Sc Statistics, B.Sc CS. Rs 10,000/month.
+      2) HR Operations Intern — BBA, B.Com, MA HRM. Stipend will be discussed at interview.
+      Please apply through the form: https://forms.vaigaianalytics.in/winter
+    note: Two roles with different stipends and departments; one stipend is not a number, and the deadline is missing.
+  - id: tc4
+    input: |
+      CONGRATULATIONS!!! Your college is shortlisted for the NATIONAL
+      DIGITAL SKILLS INTERNSHIP. 100% placement guaranteed in MNC after
+      completion. Work from home, any degree. Register by paying a
+      refundable fee of Rs 1,500 via GPay to 90000 12345. Limited seats!!
+      Contact: digitalskills.hr2025@gmail.com
+    note: The edge case. A naive prompt fills in fields and forgets fee_required and red_flags. Company is not actually named, stipend is absent, and there are several warning signs.
+starter_prompt: |
+  Read this internship email and give me the important details in JSON.
+
+  {{input}}
+reference_prompt: |
+  You are stage 1 of a two-step pipeline for a college placement cell. Your only
+  job is to extract facts from one raw internship message into JSON. Stage 2
+  will write the student notice from your JSON, so accuracy matters more than
+  completeness.
+
+  <message>
+  {{input}}
+  </message>
+
+  Output exactly one JSON object with these keys and nothing else — no text
+  before or after, no code fences:
+  {
+    "company": string or null,
+    "roles": [{"title": string, "stipend_inr_per_month": number or null, "eligible_departments": [string]}],
+    "mode": "onsite" | "remote" | "hybrid" | null,
+    "location": string or null,
+    "deadline": "YYYY-MM-DD" or null,
+    "apply_link": string or null,
+    "fee_required": true | false,
+    "missing_fields": [string],
+    "red_flags": [string]
+  }
+
+  Rules:
+  - Use only what the message states. If a value is not stated, use null (or
+    [] for lists) and add the key name to missing_fields. Do not guess.
+  - Stipend must be a monthly number in rupees ("5k" = 5000). If the stipend is
+    vague ("to be discussed"), use null and add "stipend" to missing_fields.
+  - "Any department" becomes ["Any UG department"].
+  - If the deadline is a weekday and a sent date is given, calculate the date.
+    If no sent date is given, use null.
+  - An email address or form link counts as apply_link.
+  - fee_required is true if the student must pay anything, even "refundable".
+  - Add a red flag for: any fee, guaranteed placement or job, a personal email
+    domain (gmail, yahoo) for a company, no company name, or pressure words
+    like "limited seats". Keep each flag under 10 words.
+success_criteria:
+  - Output is a single valid JSON object with exactly the nine required keys, and no text outside it.
+  - Values not stated in the message are null or empty, and their keys appear in missing_fields.
+  - tc2 deadline is 2025-10-10 and the stipend is 5000.
+  - tc3 has two role objects; the HR role has a null stipend.
+  - tc4 has fee_required true, a null or missing company, and at least three red flags (fee, guaranteed placement, Gmail address).
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "The starter prompt just says 'give me the details in JSON'. What will go wrong first on tc4?"
+    options:
+      - "It will refuse to answer"
+      - "It will produce keys Step 2 does not expect and miss the warning signs"
+      - "It will produce perfect JSON"
+    answer: 1
+    explanation: Without a fixed schema the model invents its own keys, and nothing tells it to look for fees or scams, so Step 2 receives the wrong shape and no warnings.
+hints:
+  - Step 2 can only read the keys it expects. Paste the exact schema into your prompt.
+  - Say what to do when something is missing — null plus missing_fields — so the model does not fill gaps with guesses.
+  - List the warning signs you want flagged. The model will not decide on its own that a "refundable fee" is a problem.

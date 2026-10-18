@@ -1,0 +1,78 @@
+id: m01-lab-abstract-for-juniors
+title: Research abstracts for the department newsletter
+difficulty: 2
+estimated_minutes: 12
+techniques_targeted: [audience-persona, context-provision]
+uses_product_case: false
+brief: |
+  **From:** Harish, student editor, "Kural" — the Dept. of Zoology newsletter
+
+  Each issue we feature 3 research papers by our faculty and PhD scholars. The
+  abstracts are too heavy for our readers — **first-year B.Sc. students**, many from
+  Tamil-medium schools. I want a prompt that turns an abstract into a short newsletter
+  blurb:
+
+  - A catchy but **honest** title (no "breakthrough" or "proves").
+  - **What they studied, how, and what they found** — in plain words.
+  - Why it might matter to someone in Madurai or Tamil Nadu, only if the abstract supports it.
+  - About **100 words**. Explain any science word you keep.
+
+  Last issue the AI wrote "scientists prove neem cures diabetes" from a mouse study. Our HOD was very upset.
+input_label: Abstract
+test_cases:
+  - id: tc1
+    input: |
+      We surveyed butterfly diversity across three habitat types (scrub forest, agricultural land and urban parks) in Madurai district over 12 months. A total of 64 species from 5 families were recorded. Scrub forest showed the highest species richness, while urban parks supported a smaller but distinct community dominated by generalist species. Results highlight the role of remnant scrub in sustaining local butterfly diversity.
+    note: A clear field study. Straightforward to translate.
+  - id: tc2
+    input: |
+      Water samples from 18 temple tanks in Madurai city were analysed for physicochemical parameters and coliform counts during pre-monsoon and post-monsoon seasons. Dissolved oxygen was below permissible limits in 11 tanks in the pre-monsoon season. Faecal coliforms exceeded WHO guidelines in 7 tanks. Post-monsoon values improved in most tanks. We recommend periodic desilting and restriction of sewage inflow.
+    note: Jargon (physicochemical, coliform) that must be explained, and a local angle the abstract does support.
+  - id: tc3
+    input: |
+      Larvicidal activity of aqueous leaf extracts of Ocimum tenuiflorum was tested against third-instar larvae of Aedes aegypti under laboratory conditions. Mortality increased with concentration, with an LC50 of 312 ppm after 24 h. Further field trials are needed to assess efficacy under natural conditions.
+    note: A lab-only result. The blurb must not suggest tulsi water stops dengue at home.
+  - id: tc4
+    input: |
+      This pilot study examined whether daily consumption of a millet-based breakfast for 8 weeks affected fasting blood glucose in 22 adults with prediabetes. Mean fasting glucose decreased from 112 to 106 mg/dL, but the change was not statistically significant (p = 0.09). The small sample and absence of a control group limit conclusions. A larger randomised trial is planned.
+    note: A non-significant result with stated limits. A naive prompt writes "millets lower blood sugar". The blurb must say the result is not yet clear.
+starter_prompt: |
+  You are a science journalist. Make this abstract simple.
+reference_prompt: |
+  You write for "Kural", a zoology department newsletter read by first-year B.Sc. students in Madurai. Many readers studied in Tamil-medium schools and are new to research papers.
+
+  Turn the research abstract below into a newsletter blurb.
+
+  Abstract:
+  {{input}}
+
+  Write:
+  - A short title that is interesting but honest. Do not use "breakthrough", "proves", "cure" or "miracle".
+  - About 100 words (90–110) covering: what was studied, how, and what was found.
+  - Explain any scientific word you keep, in a few plain words in brackets.
+  - Describe results exactly as strongly as the abstract does. If it was a lab-only, small, pilot or not-significant study, say so in plain words (for example, "the change was too small to be sure").
+  - Add one sentence on why it may matter locally only if the abstract supports it.
+  Use only the abstract. Add no numbers or claims it does not contain.
+success_criteria:
+  - Each blurb has a title without "breakthrough", "proves", "cure" or "miracle", and a body of roughly 90–110 words.
+  - Each blurb states what was studied, how, and what was found, using only the abstract.
+  - Technical terms that are kept (coliform, larvae, LC50, prediabetes) are explained in plain words.
+  - tc3 says the result is from a laboratory test only; tc4 says the change was not statistically clear and the study was small.
+  - Local relevance is mentioned only where the abstract supports it.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "What will the starter prompt most likely do with tc4?"
+    options:
+      - "Say millets were shown to lower blood sugar"
+      - "Say the result was not clear and the study was small"
+      - "Refuse because it is medical"
+    answer: 0
+    explanation: >
+      A "journalist" role leans toward a strong headline. Without context about the
+      readers and a rule to match the abstract's strength, the cautious parts get dropped.
+hints:
+  - Who reads the newsletter? Describe them — that is the audience part of your prompt.
+  - Harish's story about the neem article tells you a rule the prompt must state.
+  - For tc4, tell the model how to describe a result that is not statistically significant.

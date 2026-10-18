@@ -1,0 +1,26 @@
+id: m07-cognitive-verifier-checklist
+title: Verify before you commit
+technique: cognitive-verifier
+template: checklist
+takeaway: Have the model turn its claims into check questions, answer each one independently, and keep only what survives.
+body: >
+  A draft can read well and still contain a wrong date, an invented promise or
+  a number that does not add up. The cognitive-verifier approach asks the model
+  to write questions that would test its own claims, answer them separately from
+  the draft, and then fix the final answer. It is especially useful before
+  something goes public.
+data:
+  items:
+    - label: List the claims
+      detail: Pull out every fact, number, promise and name in the draft as a short list.
+    - label: Write a check question for each
+      detail: For example, "Does the fact sheet say delivery is free outside Madurai?"
+    - label: Answer them separately
+      detail: Answer each question from the source alone, without looking at the draft's wording.
+    - label: Mark each claim
+      detail: Supported, not supported, or contradicted — with the source line.
+    - label: Repair the draft
+      detail: Remove or correct anything not supported. Do not replace it with a new guess.
+    - label: Say what changed
+      detail: A short note of what was removed or corrected, so a human can approve it.
+source: Cognitive Verifier pattern from A Prompt Pattern Catalog (White et al., 2023) and Chain-of-Verification (Dhuliawala et al., 2023). Wording is original.

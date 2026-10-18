@@ -1,0 +1,21 @@
+id: m00-orientation
+order: 0
+title: How a language model thinks — and how this workspace works
+summary: >
+  See what a language model actually does when you type a prompt, why the same
+  prompt can give different answers, and how you will improve prompts here:
+  write, run, critique, revise, name the technique.
+design_stage: none
+design_stage_note: >
+  Meet Meenakshi Textiles. You write a short brief that introduces the shop to your
+  team, so everyone starts the case with the same facts before the empathise stage in m01.
+tier: free
+estimated_minutes: 20
+techniques: [zero-shot, explicit-task]
+objectives:
+  - You will be able to explain, in one sentence, that a model writes by predicting the next word-piece.
+  - You will be able to say why the same prompt can give different outputs, and why vague prompts give vague results.
+  - You will be able to follow the workspace loop — write, run on the test set, critique, revise, name the technique.
+  - You will be able to turn a one-line request into an explicit task and see the score move.
+cards: [m00-next-token, m00-why-outputs-vary, m00-garbage-in, m00-workspace-loop]
+labs: [m00-lab-leave-letter, m00-lab-canteen-feedback, m00-lab-case-meet-the-shop]

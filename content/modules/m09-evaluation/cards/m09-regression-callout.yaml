@@ -1,0 +1,21 @@
+id: m09-regression-callout
+title: A fix that breaks something else is not a fix
+technique: rubric-evaluation
+template: callout
+takeaway: After every change, re-run the whole test set — not just the case you were fixing.
+body: >
+  Prompts are tangled. Adding "be brief" to fix one long reply can make another
+  reply drop a required fact. This is called a regression. The only way to see
+  it is to keep the old scores and compare case by case after each edit, so you
+  know the total went up without any single case going down.
+data:
+  headline: Compare every case, every version
+  stat: "1 edit → re-run all cases"
+  detail: >
+    Keep a small table: one row per test case, one column per prompt version.
+    If a case drops, find out why before you keep the change. A higher average
+    with one broken case can still mean a customer gets a wrong answer.
+source: >
+  Regression testing idea adapted from software engineering practice and eval
+  guidance in The Prompt Report (Schulhoff et al., arXiv 2406.06608, §5).
+  Wording original.

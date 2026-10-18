@@ -1,0 +1,22 @@
+id: m01-anatomy
+order: 1
+title: The six parts of a prompt
+summary: >
+  A strong prompt is built from parts you can name — role, task, context, audience,
+  constraints and output format. Learn what each part does and which one is missing
+  when an output goes wrong.
+design_stage: empathise
+design_stage_note: >
+  The team starts listening. You write a prompt that drafts empathy-interview
+  questions for the shop's two customer groups — long-time regulars and college
+  students — so the interviews uncover real needs, not opinions about ideas.
+tier: free
+estimated_minutes: 30
+techniques: [role-prompting, audience-persona, explicit-task, context-provision]
+objectives:
+  - You will be able to label the role, task, context, audience, constraints and output format in any prompt.
+  - You will be able to tell the difference between the model's role and the reader's persona, and use both.
+  - You will be able to add the background facts a model cannot know on its own.
+  - You will be able to diagnose a weak output by finding which part of the prompt was missing.
+cards: [m01-six-parts, m01-role-vs-audience, m01-context-checklist, m01-role-callout]
+labs: [m01-lab-sql-explainer, m01-lab-case-empathy-questions, m01-lab-abstract-for-juniors]

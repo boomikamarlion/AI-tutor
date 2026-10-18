@@ -1,0 +1,37 @@
+id: m07-question-refinement-compare
+title: Answer the question vs. improve it first
+technique: question-refinement
+template: compare
+takeaway: When you are not sure how to ask, ask the model to suggest a better version of your question before it answers.
+body: >
+  Vague questions get vague answers. A quick way out is to ask the model to
+  rewrite your question into a sharper one — adding the details that would
+  change the answer — and to tell you what it assumed. You then answer the
+  better question, or correct the assumptions.
+data:
+  left:
+    label: Before
+    prompt: |
+      Which course should I do after B.Sc. Maths?
+    output: |
+      There are many great options after B.Sc. Maths, such as M.Sc., MBA, MCA,
+      data science, actuarial science, teaching and government exams. Choose
+      based on your interest!
+  right:
+    label: After
+    prompt: |
+      Which course should I do after B.Sc. Maths? Before answering, suggest a
+      better version of my question that would get a more useful answer, and
+      list the details you would need from me.
+    output: |
+      Better question: "I finish B.Sc. Maths in Madurai in April 2027, I enjoy
+      statistics, my family can support two more years of study, and I want a
+      job in Tamil Nadu. Which two or three courses fit, and what are their
+      entrance requirements?"
+      Details I need: what you enjoy, budget and years you can study, whether
+      you want to stay in Tamil Nadu, and whether you prefer a job or research.
+  verdict: >
+    The first answer was a list anyone could write. The refined question
+    showed which facts actually change the advice, so the next answer can be
+    specific instead of generic.
+source: Question Refinement pattern from A Prompt Pattern Catalog (White et al., 2023). Example is original.

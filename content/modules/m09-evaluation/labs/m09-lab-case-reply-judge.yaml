@@ -1,0 +1,134 @@
+id: m09-lab-case-reply-judge
+title: "Meenakshi Textiles: judge the assistant's replies"
+difficulty: 3
+estimated_minutes: 18
+techniques_targeted: [llm-as-judge, rubric-evaluation, grounding]
+uses_product_case: true
+brief: |
+  **WhatsApp from Karthik**
+
+  The assistant prototype is working! But every time I change its
+  instructions I have to read 50 replies again to see if something broke. Amma
+  says one wrong price to a regular and we lose them for life.
+
+  Can you make a checker? I give it the customer's message and the reply the
+  assistant wrote. It tells me if the reply is safe to send.
+
+  Shop facts (the reply may only use these):
+  - Open Mon–Sat 10 am – 9 pm, Sun 10 am – 2 pm
+  - Sungudi cotton Rs 650 – 1,800. Kanchipuram silk from Rs 6,500.
+  - Madurai city delivery free above Rs 1,500, else Rs 60. Outside Madurai: courier 3–5 days, I confirm the charge.
+  - UPI, or cash on delivery inside Madurai only. Exchange within 7 days with tag and bill, no cash refunds.
+
+  What I check, each scored 0, 1 or 2:
+  - **facts** — 2 if every price/date/policy in the reply is in the facts; 0 if anything is wrong or made up (discounts, free courier, dates)
+  - **escalation** — must hand over (`[handoff: Karthik — reason]`) for complaints, damage, refunds, more than 10 pieces, discounts, courier charges. 2 = right decision, 0 = wrong decision
+  - **tone_language** — warm and respectful, same language as the customer (Tamil/Tanglish → Tamil/Tanglish). 2 = yes, 1 = OK but stiff or wrong language, 0 = rude
+  - **brevity** — 80 words or fewer = 2, up to 120 = 1, more = 0
+
+  If facts or escalation is 0, it must NOT ship, even if everything else is
+  perfect. Show me the words from the reply you are judging on — I want to
+  see why. JSON please:
+  `{"criteria": [{"id", "evidence", "score"}], "must_fix": [...], "ship": true/false}`
+input_label: Customer message and candidate reply
+test_cases:
+  - id: tc1
+    input: |
+      <customer>Sungudi saree evlo price? Anna Nagar ku delivery irukka?</customer>
+      <reply>Vanakkam! Engal Sungudi cotton sarees Rs 650 mudhal Rs 1,800 varai irukku. Madurai city-la Rs 1,500-ku mela order panna delivery free, illana Rs 60 mattum. Shop-ku vandhu paakkalaam — Mon–Sat 10 am – 9 pm. 🙏</reply>
+    note: A good reply in Tanglish with correct facts and no handover needed. Should ship.
+  - id: tc2
+    input: |
+      <customer>Ungal shop Sunday open-a? Varalaama?</customer>
+      <reply>Dear Customer, Please be informed that our establishment operates on Sundays from 10:00 AM to 2:00 PM. Kindly plan your visit accordingly. Regards, Management.</reply>
+    note: Facts are right but the tone is stiff and in English for a Tamil message. Should be a tone_language 1 — fixable, but facts and escalation are fine so it can still ship with a must_fix note.
+  - id: tc3
+    input: |
+      <customer>The silk saree I bought on Monday has a colour patch. I want a full refund today.</customer>
+      <reply>So sorry about this! Don't worry, we will refund your full amount today itself. Please send your UPI ID.</reply>
+    note: Promises a refund (policy is exchange only) and does not hand over a damage complaint. Facts 0, escalation 0 — must not ship.
+  - id: tc4
+    input: |
+      <customer>Hi! I'm a college student in Chennai. Can I get 3 Sungudi sarees by this Saturday for our Onam day?</customer>
+      <reply>Hi! How lovely — Sungudi is perfect for Onam day 😊 Yes, we can send 3 sarees to Chennai with free courier, and they will reach you by Friday. As a student you also get our 10% student discount! Just share your address and pay by UPI. Happy Onam!</reply>
+    note: The edge case. Warm, short, in the right language — and wrong. Free courier, a delivery date and a student discount are all invented, and courier charges needed a handover. A judge that is charmed by tone will ship it.
+starter_prompt: |
+  Is this WhatsApp reply from a saree shop good? Score it and say if it can be
+  sent. JSON.
+
+  {{input}}
+reference_prompt: |
+  You check WhatsApp replies written by an assistant for Meenakshi Textiles, a
+  saree shop in Madurai, before they are sent to customers. You are strict on
+  facts and handovers. A friendly tone never makes up for a wrong fact.
+
+  Shop facts — the only facts a reply may state:
+  - Open Mon–Sat 10 am–9 pm, Sun 10 am–2 pm.
+  - Sungudi cotton Rs 650–1,800. Kanchipuram silk from Rs 6,500.
+  - Madurai city delivery free above Rs 1,500, else Rs 60. Outside Madurai:
+    courier, 3–5 days, charge confirmed by Karthik.
+  - UPI, or cash on delivery inside Madurai only.
+  - Exchange within 7 days with tag and bill. No cash refunds.
+  There is no discount, no free courier and no fixed delivery date in the facts.
+
+  The input has a <customer> message and a candidate <reply>:
+  {{input}}
+
+  For each criterion, first write evidence (quote the reply's exact words and
+  say what you checked), then give the score.
+  - facts: List every price, charge, date, discount or policy in the reply and
+    check each against the facts. 2 = all match; 1 = vague but not wrong;
+    0 = anything wrong or not in the facts.
+  - escalation: Decide whether the customer message needs a handover (complaint,
+    damage, refund, more than 10 pieces, discount, courier charge, or anything
+    outside the facts). Then check whether the reply contains a
+    "[handoff: Karthik — …]" line. 2 = decision correct; 0 = handover missing
+    when needed, or added when not needed.
+  - tone_language: Is the reply warm and respectful, and in the customer's
+    language (Tamil or Tanglish → Tamil or Tanglish; English → English)?
+    2 = yes; 1 = polite but stiff or wrong language; 0 = rude or dismissive.
+  - brevity: Count the words. 2 = 80 or fewer; 1 = 81–120; 0 = more than 120.
+
+  ship is false if facts or escalation is 0. Otherwise ship is true.
+  must_fix lists each problem in one short line (empty if none).
+
+  Output only this JSON:
+  {"criteria": [
+     {"id": "facts", "evidence": "...", "score": 0},
+     {"id": "escalation", "evidence": "...", "score": 0},
+     {"id": "tone_language", "evidence": "...", "score": 0},
+     {"id": "brevity", "evidence": "...", "score": 0}],
+   "must_fix": ["..."], "ship": false}
+success_criteria:
+  - Output is valid JSON with four criteria in order, each with evidence before its score, plus must_fix and ship.
+  - Evidence quotes the reply's own words.
+  - tc1 ships with facts 2 and escalation 2.
+  - tc2 scores tone_language 1 with a must_fix about language or stiffness, and still ships.
+  - tc3 scores facts 0 and escalation 0 and does not ship.
+  - tc4 scores facts 0 (free courier, Friday date, 10% discount all flagged), escalation 0, and does not ship.
+rubric:
+  base: core
+  extra_criteria:
+    - id: judge_reliability
+      name: Judge reliability
+      weight: 2
+      description: Do the ship decisions and scores match what Karthik would decide, with evidence that supports each score?
+      diagnoses_prompt: Did the prompt give the judge the shop facts, explicit anchors and a hard ship rule?
+      anchors:
+        0: Ships the wrong replies or blocks the good one.
+        1: Correct on the obvious cases only.
+        2: Ship decisions right but tc4's invented facts are only partly found.
+        3: All decisions right; one score a point off.
+        4: Every score and ship decision correct, each backed by quotes.
+predictions:
+  - id: p1
+    question: "With the starter prompt, what will the judge most likely say about tc4?"
+    options:
+      - "Ship it — the reply is warm and helpful"
+      - "Don't ship — it invents a discount and free courier"
+    answer: 0
+    explanation: The starter judge does not know the shop's facts, so it cannot tell that the discount and free courier are made up. It grades the tone it can see.
+hints:
+  - A judge can only catch made-up facts if it has the real ones. Put the shop facts in the judge prompt.
+  - Turn "must not ship" into a hard rule tied to the scores, not a judgement call.
+  - Ask for every price, date and discount in the reply to be listed and checked one by one.

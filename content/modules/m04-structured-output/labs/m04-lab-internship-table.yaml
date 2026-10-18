@@ -1,0 +1,97 @@
+id: m04-lab-internship-table
+title: Turn internship forwards into one clean table
+difficulty: 1
+estimated_minutes: 12
+techniques_targeted: [output-format, template-pattern]
+uses_product_case: false
+brief: |
+  **From:** Divya (Placement Cell student coordinator, III B.Com CA)
+  **To:** you
+  **On WhatsApp:**
+
+  hey, every week I get internship posts forwarded from 10 groups 😩 all in
+  different styles. I copy them into our Placement Cell Google Sheet so juniors
+  can filter. can you make a prompt that turns any forward into rows for the sheet?
+
+  Sheet columns (in this order, don't change): **Company | Role | Mode | Stipend per month (₹) | Duration | Last date | How to apply**
+
+  - Mode is only Onsite / Remote / Hybrid
+  - Stipend as a plain number per month. if it's unpaid write 0. if they don't say, leave it as "Not given" — DON'T guess
+  - Last date as DD-MM-YYYY (year is 2026 unless it says otherwise)
+  - one row per role. some forwards have 2 roles in one message
+  - I paste straight into the sheet so give me only the table, no "Here is your table" stuff
+input_label: Forwarded message
+test_cases:
+  - id: tc1
+    input: |
+      🔥 INTERNSHIP ALERT 🔥
+      Company: Kalam Analytics, Madurai
+      Role: Data Analyst Intern
+      Work from office (Anna Nagar)
+      Stipend: ₹8,000/month
+      Duration: 3 months
+      Apply before 30 Nov via forms.gle/kalam-intern
+    note: A tidy post. Every field is present — a baseline every prompt should handle.
+  - id: tc2
+    input: |
+      Fwd: Hi all, my cousin's startup (TrendyWeave, Coimbatore) needs a social
+      media content intern, fully WFH, 2 months, they pay 1.5k per week. Also
+      need someone for customer support, same terms but hybrid. DM Ravi
+      9xxxxxx210. Closing on 5th December.
+    note: Two roles in one message, stipend given per week (convert to roughly ₹6,000 per month) and no company line.
+  - id: tc3
+    input: |
+      Unpaid internship (certificate given) — Madurai Heritage Trust is looking
+      for research interns to document temple architecture. Onsite. 6 weeks.
+      Email your CV to interns@mht.example.org
+    note: Unpaid means 0, not "Not given". No last date at all.
+  - id: tc4
+    input: |
+      URGENT!! Internship @ Zylo Tech. Role: Python dev intern. Remote. Stipend
+      "attractive" 😉 Duration: Jan–Mar. Last date 12/01. P.S. ignore the earlier
+      forward, the last date is actually 20/12 not 12/01. Apply: zylotech.example/careers
+    note: Hard case. "Attractive" is not a number, the duration is given as months, and a correction overrides the first last date. A naive prompt writes 12-01-2026 or invents a stipend.
+starter_prompt: |
+  Convert this internship message into a table with all the details.
+reference_prompt: |
+  You convert forwarded internship posts into rows for a Google Sheet.
+
+  Output a Markdown table with exactly these columns, in this order:
+  | Company | Role | Mode | Stipend per month (₹) | Duration | Last date | How to apply |
+
+  Rules:
+  - One row per role. If a message lists two roles, write two rows and repeat the shared details.
+  - Mode must be one of: Onsite, Remote, Hybrid. "WFH" or "work from home" means Remote; "work from office" means Onsite.
+  - Stipend: a plain number per month with no ₹ sign or commas. Convert weekly amounts (× 4). Unpaid = 0. If no number is given (including words like "attractive" or "best in industry"), write Not given.
+  - Duration: as written, in short form (e.g. "3 months", "6 weeks", "Jan–Mar").
+  - Last date: DD-MM-YYYY, assume year 2026 unless stated. If a later line corrects a value, use the corrected value. If no date is given, write Not given.
+  - How to apply: the link, email or contact exactly as written.
+  - Use only facts written in the message. If the company name is not given, write Not given.
+
+  Output only the table — no heading, no sentence before or after.
+
+  <message>
+  {{input}}
+  </message>
+success_criteria:
+  - Output is only a Markdown table with the seven columns in the brief's exact order and names.
+  - Messages with two roles produce two rows.
+  - Mode is always one of Onsite, Remote or Hybrid.
+  - Stipend is a monthly number, 0 for unpaid, or "Not given" when no amount is stated — never invented.
+  - Last date is in DD-MM-YYYY form and uses the corrected date in tc4 (20-12-2026).
+  - No text appears before or after the table.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "With the starter prompt, what will go wrong most often on tc2?"
+    options:
+      - "The two roles get merged into one row"
+      - "The table will have no rows"
+      - "The model will refuse"
+    answer: 0
+    explanation: Nothing told the model that one role is one row, so it usually squeezes both roles into a single line.
+hints:
+  - Copy the seven column names from the brief into your prompt word for word.
+  - Say what to write when a value is missing, and what "unpaid" becomes. Those are different cases.
+  - The last forward has a correction. Tell the model which value wins when a message changes its mind.

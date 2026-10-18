@@ -1,0 +1,27 @@
+id: m04-extraction-checklist
+title: Checklist for pulling data out of messy text
+technique: structured-output
+template: checklist
+takeaway: Extraction is copying, not guessing — every value must be traceable to the text or marked missing.
+body: >
+  Real inputs are untidy: WhatsApp messages, mixed Tamil and English, typos,
+  corrections halfway through. Before you run an extraction prompt, check that it
+  answers these questions. Each one closes a door the model would otherwise walk
+  through by guessing.
+data:
+  items:
+    - label: What is one record?
+      detail: Say when a new record starts — one per product, per student, per event — so two items in one line are not merged.
+    - label: Fixed field list
+      detail: Give exact field names, types and allowed values. No extra fields, no renamed fields.
+    - label: Missing means null
+      detail: State the value to use when something is not written. Forbid filling gaps from general knowledge.
+    - label: Normalise units
+      detail: Decide one form for money, dates, sizes and quantities, and say how to convert common variants (e.g. "1.2k" means 1200).
+    - label: Handle corrections
+      detail: Tell the model that a later correction in the same message replaces the earlier value.
+    - label: Mixed language
+      detail: Say which language the field values should be in, and that Tamil or Tanglish words should be translated or kept as written.
+    - label: Flag doubt
+      detail: Add a field such as "needs_check" so uncertain records are marked for a human instead of silently guessed.
+source: Information extraction practice summarised in The Prompt Report (Schulhoff et al., 2024); hallucination-mitigation guidance from Anthropic and OpenAI documentation.

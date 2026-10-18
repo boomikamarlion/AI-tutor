@@ -1,0 +1,19 @@
+id: m00-next-token
+title: A model writes one word-piece at a time
+technique: zero-shot
+template: callout
+takeaway: A language model continues your text by guessing the most likely next piece, again and again — your prompt is the start of that text.
+body: >
+  A large language model has read a huge amount of text and learned which pieces of
+  words tend to follow which. When you send a prompt, it picks a likely next piece
+  (a "token"), adds it, and repeats until it stops. It is not looking anything up and
+  it does not know what you meant — it only sees the words you gave it. That is why
+  the words you choose matter so much.
+data:
+  headline: Your prompt is the beginning of the answer
+  stat: "1 token ≈ ¾ of an English word"
+  detail: >
+    Everything the model writes is shaped by what came before it. A clear, specific
+    prompt makes the useful continuation the most likely one. A one-line prompt with
+    no details leaves the model to guess, and it guesses the most common, average answer.
+source: Idea from Brown et al. 2020 (GPT-3, "Language Models are Few-Shot Learners") and The Prompt Report (Schulhoff et al., arXiv 2406.06608) §1. Original wording.

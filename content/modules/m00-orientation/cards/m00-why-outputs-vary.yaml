@@ -1,0 +1,28 @@
+id: m00-why-outputs-vary
+title: Why the same prompt gives different answers
+technique: zero-shot
+template: spectrum
+takeaway: Outputs vary because the model samples from likely options — a tighter prompt narrows the options, so results become steadier.
+body: >
+  At each step the model has several likely next tokens, not one. It usually picks
+  among them with a little randomness, so two runs of the same prompt can differ. A
+  vague prompt leaves many good-looking paths open; a specific prompt closes most of
+  them. That is why this workspace runs your prompt on a fixed test set — one lucky
+  output proves nothing.
+data:
+  left_label: Many possible answers (vague prompt)
+  right_label: Few possible answers (specific prompt)
+  points:
+    - label: "\"Write about Madurai\""
+      position: 8
+      note: History, food, temple, traffic, a poem — anything is a fair answer.
+    - label: "\"Write a paragraph about Madurai for tourists\""
+      position: 40
+      note: Audience narrows it, but length, focus and tone are still open.
+    - label: "\"Write 80 words for first-time tourists on what to see near Meenakshi Amman Temple in one evening\""
+      position: 75
+      note: Audience, length, topic and time-frame are fixed. Runs look alike.
+    - label: "Same prompt plus a format: \"3 bullet points, each with a place and a tip\""
+      position: 92
+      note: Shape is fixed too. Different runs differ only in small wording.
+source: Sampling and temperature concepts from Holtzman et al. 2020 ("The Curious Case of Neural Text Degeneration") and model provider docs. Original wording and examples.

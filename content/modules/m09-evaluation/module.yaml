@@ -1,0 +1,22 @@
+id: m09-evaluation
+order: 9
+title: Test against the rubric — test sets and LLM judges
+summary: >
+  "It looks good" is not a test. Learn to build a small fixed test set, write
+  rubric criteria with score anchors, and use a model as a judge that shows its
+  evidence before it gives a score.
+design_stage: test
+design_stage_note: >
+  The WhatsApp assistant is ready to be tested. You write the judge that scores
+  candidate replies against Karthik's rules, so every change to the assistant
+  can be checked before a customer ever sees it.
+tier: pro
+estimated_minutes: 50
+techniques: [rubric-evaluation, llm-as-judge]
+objectives:
+  - Build a test set that mixes typical, edge and adversarial cases, each with an expected behaviour.
+  - Write a rubric criterion with a clear description and anchored scores.
+  - Write a judge prompt that quotes evidence before scoring and returns JSON.
+  - Re-run the whole test set after every change to catch regressions.
+cards: [m09-test-set-checklist, m09-criterion-anatomy, m09-evidence-first-compare, m09-regression-callout]
+labs: [m09-lab-test-set-builder, m09-lab-summary-judge, m09-lab-case-reply-judge]

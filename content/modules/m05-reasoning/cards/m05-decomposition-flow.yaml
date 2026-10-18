@@ -1,0 +1,26 @@
+id: m05-decomposition-flow
+title: Plan, solve, check
+technique: decomposition
+template: flow
+takeaway: Big tasks go better as small ordered parts — plan them first, solve them in order, then check against the plan.
+body: >
+  "Plan our department fest" is too big to get right in one jump. Breaking it
+  into parts — what is fixed, what must be decided, in what order — means each
+  part gets proper attention and nothing is silently skipped. Asking the model
+  to write the plan before solving, and to check its result against that plan at
+  the end, catches the steps it forgot.
+data:
+  steps:
+    - label: State the goal and the limits
+      detail: One line for what success looks like, then every hard constraint — budget, dates, people, rules.
+    - label: List the sub-tasks
+      detail: Ask the model to write the parts of the problem as a numbered plan before doing any of them.
+    - label: Order them
+      detail: Solve the parts that others depend on first — for example fix the venue before the timings.
+    - label: Solve one part at a time
+      detail: Each sub-task gets its own short answer, using the results of the earlier ones.
+    - label: Check against the plan
+      detail: Go back through the goal and every constraint and mark each as met or not met, with a reason.
+    - label: Give the final answer
+      detail: Only after the check, in the format you asked for. If something could not be met, say which and why.
+source: Decomposition and least-to-most prompting (Zhou et al., 2022) and Plan-and-Solve prompting (Wang et al., 2023), as summarised in The Prompt Report §2.2.4.

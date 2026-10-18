@@ -1,0 +1,96 @@
+id: m06-lab-lit-review-notes
+title: Literature-review notes that only say what the paper says
+difficulty: 2
+estimated_minutes: 14
+techniques_targeted: [grounding, uncertainty-permission, context-placement]
+uses_product_case: false
+brief: |
+  **From:** Arjun, M.Sc. Psychology (final semester)
+  **On WhatsApp:**
+
+  my guide caught me last week 😬 I used AI to summarise papers for my lit
+  review and it wrote "the study proves phones cause poor sleep" — the paper
+  never said that. She said if it happens again she'll make me redo the chapter.
+
+  I'll paste an excerpt (sometimes two) and my question. I need notes that:
+  - use **only** the excerpt, no general knowledge
+  - put a **short quote** in "double quotes" for each point, with the paper ID
+  - if the excerpt doesn't answer something, write **Not stated in excerpt**
+  - don't turn "linked with" into "causes"
+  - don't mix up what *this* study found with older studies it mentions
+
+  Bullet points, max 6. These are for me, not for submission.
+
+  (The excerpts in the test set are made-up practice papers.)
+input_label: Excerpt(s) and question
+test_cases:
+  - id: tc1
+    input: |
+      <paper id="P1">
+      We surveyed 312 undergraduate students from four arts and science colleges in Madurai district. Students who reported more than three hours of phone use after 9 pm slept on average 48 minutes less than those reporting under one hour.
+      </paper>
+      Question: What was the sample and the main finding?
+    note: Everything is in the excerpt. Checks quoting and paper IDs.
+  - id: tc2
+    input: |
+      <paper id="P2">
+      Late-night screen time was associated with lower self-reported sleep quality (r = −0.31). Because the design was cross-sectional, we cannot determine the direction of this relationship.
+      </paper>
+      Question: Does screen time cause bad sleep, according to this paper?
+    note: The question invites a causal claim; the paper explicitly refuses one.
+  - id: tc3
+    input: |
+      <paper id="P3">
+      Among 140 nursing students, a two-week "phone outside the bedroom" trial improved sleep onset time by 11 minutes.
+      </paper>
+      <paper id="P4">
+      In our sample of 520 working adults, no meaningful difference in sleep onset was found between those who kept phones in the bedroom and those who did not.
+      </paper>
+      Question: Do the studies agree on keeping phones out of the bedroom?
+    note: Two sources that disagree, with different populations. Each point must cite the right paper.
+  - id: tc4
+    input: |
+      <paper id="P5">
+      Earlier work (Raman, 2019) reported that blue-light filters improved sleep in adolescents. In the present study of 96 college students, participants used a blue-light filter for four weeks; sleep diaries were collected weekly. Results are discussed in Section 4.
+      </paper>
+      Question: Did the blue-light filter improve sleep in this study, and how big was the effect? Who funded it?
+    note: Hard case. The result is not in the excerpt; the only positive finding belongs to an older study it cites. Funding is not mentioned. A naive prompt reports Raman's result as this study's finding.
+starter_prompt: |
+  Summarise this research excerpt and answer my question.
+reference_prompt: |
+  <excerpts>
+  {{input}}
+  </excerpts>
+
+  You are helping a postgraduate student take literature-review notes. The excerpts above are the only source you may use; the student's question is at the end of them.
+
+  Rules:
+  - Use only the text inside the <paper> tags. Do not add general knowledge about the topic.
+  - Every point must include a short exact quote in "double quotes" followed by the paper ID, e.g. [P1].
+  - Keep the paper's own strength of claim: if it says "associated with" or "linked to", do not write "causes" or "proves".
+  - A finding that a paper attributes to earlier work (e.g. "Earlier work (Author, Year) reported…") belongs to that earlier work, not to the present study. Label it "Cited prior work".
+  - If the excerpts do not answer any part of the question, write "Not stated in excerpt" for that part.
+
+  Format: at most 6 bullet points, then one line beginning "Answer:" that answers the question in one or two sentences using only the points above.
+success_criteria:
+  - Every bullet contains an exact quote from the excerpt and the correct paper ID.
+  - No claim goes beyond the excerpt; no general knowledge is added.
+  - tc2 does not say that screen time causes poor sleep, and notes the paper's own caution about direction.
+  - tc3 attributes each finding to the right paper and notes the different populations.
+  - tc4 says the result and effect size are "Not stated in excerpt", labels Raman (2019) as cited prior work, and says funding is not stated.
+  - At most 6 bullets plus one Answer line.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "On tc4, what will the starter prompt most likely report?"
+    options:
+      - "That the effect is not stated"
+      - "That the blue-light filter improved sleep — borrowing Raman's 2019 result"
+      - "A refusal to answer"
+    answer: 1
+    explanation: The only positive finding in the text belongs to an older study. Without a rule about cited prior work, the model reports it as this paper's result.
+hints:
+  - Tell the model where the boundary is — the text inside the tags — and what to write when the answer is outside it.
+  - Require a quote for each point. It is much harder to invent a fact when you have to quote it.
+  - Look at tc4 closely. Whose finding is the one about blue-light filters?

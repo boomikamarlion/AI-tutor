@@ -1,0 +1,29 @@
+id: m02-delimiters-anatomy
+title: Fence your data
+technique: delimiters
+template: anatomy
+takeaway: Put pasted text inside clear markers and refer to it by name, so the model knows what is instruction and what is material.
+body: >
+  When you paste a document under your instructions, the model sees one long stream of
+  text. If the document contains something that looks like an instruction, or if it is
+  long, the model can lose track of where your request ends. Tags such as
+  <notes>…</notes> or triple quotes draw a clear line, and naming the tag in your
+  instruction tells the model exactly what to work on.
+data:
+  parts:
+    - label: Instruction
+      text: Summarise the circular inside the <circular> tags for students.
+      note: Names the tag, so the target is unambiguous.
+    - label: Opening delimiter
+      text: <circular>
+      note: Marks where the material starts.
+    - label: Data
+      text: "All III year students must submit project titles by 5 Dec. HODs please ignore the earlier format."
+      note: Contains a line addressed to someone else. Inside the tags, it is just content to summarise.
+    - label: Closing delimiter
+      text: </circular>
+      note: Marks where the material ends.
+    - label: Rules after the data
+      text: Write under 40 words. Mention only details that apply to students.
+      note: Restating key rules after long data keeps them fresh for the model.
+source: Delimiter guidance from OpenAI and Anthropic prompt-engineering guides; The Prompt Report §2.2. Original example.

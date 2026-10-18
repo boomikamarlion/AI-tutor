@@ -1,0 +1,37 @@
+id: m09-criterion-anatomy
+title: Anatomy of a rubric criterion
+technique: rubric-evaluation
+template: anatomy
+takeaway: A criterion is only useful if two different graders would give the same output the same score.
+body: >
+  "Is it good?" gives a different answer every time. A criterion narrows the
+  question to one thing, and anchors describe what each score looks like, so the
+  grader matches the output to a description instead of a feeling. This example
+  grades a poster caption for a college cultural fest.
+data:
+  parts:
+    - label: Name
+      text: "Facts correct"
+      note: Short, so it can be reported in a table.
+    - label: What it checks
+      text: Does the caption state only the date, venue and events given in the event brief?
+      note: One idea per criterion. If you write "and" twice, split it into two criteria.
+    - label: Weight
+      text: "Weight: 3 (tone has weight 1)"
+      note: Says which mistakes matter most. A wrong date is worse than a dull line.
+    - label: Anchor 0
+      text: "0 — a wrong date, venue or event is stated."
+      note: The lowest anchor describes the failure you most want to catch.
+    - label: Anchor 2
+      text: "2 — all facts right, but one important fact (date or venue) is missing."
+      note: Middle anchors stop graders from jumping between 0 and 4.
+    - label: Anchor 4
+      text: "4 — every stated fact matches the brief and nothing is added."
+      note: Describes a checkable top score, not "excellent".
+    - label: Evidence rule
+      text: Before scoring, quote the words in the caption that the score is based on.
+      note: Makes the grader look at the output, and lets a person check the grade.
+source: >
+  Rubric design from The Prompt Report (Schulhoff et al., arXiv 2406.06608,
+  §5) and LLM-as-judge studies such as Zheng et al., "Judging LLM-as-a-Judge"
+  (2023). Example original.

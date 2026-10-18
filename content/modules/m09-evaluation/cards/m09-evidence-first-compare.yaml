@@ -1,0 +1,43 @@
+id: m09-evidence-first-compare
+title: Ask for evidence before the score
+technique: llm-as-judge
+template: compare
+takeaway: A judge that writes the score first will invent reasons to match it; a judge that quotes first scores what it actually saw.
+body: >
+  Models write left to right. If the score comes first, the explanation that
+  follows is written to defend it. If the judge must first quote the exact
+  words it is judging, then compare them to the anchors, the score follows from
+  the evidence. Fluent, confident outputs are where this matters most.
+data:
+  left:
+    label: Score first
+    prompt: |
+      Rate this caption 0-4 for "facts correct" against the brief. Give the
+      score and a short reason.
+      Brief: Kalai Vizha, 14 Feb, main auditorium, dance + music + quiz.
+      Caption: "Kalai Vizha is here! 15 Feb in the main auditorium — dance,
+      music, quiz and a DJ night. Don't miss it!"
+    output: |
+      Score: 4. The caption is lively and covers the events and venue well.
+  right:
+    label: Evidence first
+    prompt: |
+      For "facts correct": first quote every fact the caption states. For
+      each, write "matches", "wrong" or "not in brief". Then pick the anchor
+      that fits and give the score. Output JSON.
+      (same brief and caption)
+    output: |
+      {"evidence": [
+         {"quote": "15 Feb", "check": "wrong — brief says 14 Feb"},
+         {"quote": "main auditorium", "check": "matches"},
+         {"quote": "dance, music, quiz", "check": "matches"},
+         {"quote": "DJ night", "check": "not in brief"}],
+       "score": 0}
+  verdict: >
+    The score-first judge was swayed by the friendly tone and missed a wrong
+    date and an invented event. Forcing a quote-and-check step made both
+    errors visible before any number was written.
+source: >
+  Evidence-before-verdict advice from LLM-as-judge literature (Zheng et al.,
+  2023; The Prompt Report §5.1, Schulhoff et al., arXiv 2406.06608). Example
+  original.

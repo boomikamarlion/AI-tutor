@@ -1,0 +1,30 @@
+id: m07-iteration
+order: 7
+title: Draft, check, improve — iteration
+summary: >
+  The first answer is a draft. Learn to make the model critique its own work
+  against your criteria, improve your question before answering it, ask you what
+  it needs, and check its claims before it commits.
+design_stage: test
+design_stage_note: >
+  Test. Karthik has drafted the shop's Instagram bio and first three posts. You
+  test them against the criteria built up in earlier modules — audience,
+  language, constraints, format and grounded facts — and have the model
+  critique, verify and improve them before anything goes live.
+tier: pro
+estimated_minutes: 40
+techniques: [self-critique, question-refinement, flipped-interaction, cognitive-verifier]
+objectives:
+  - Have the model critique a draft against explicit criteria, with evidence, and then rewrite it.
+  - Ask the model to improve a vague request and say what it still needs before starting.
+  - Set up a flipped interaction where the model asks you the questions, one at a time.
+  - Use verification questions to check facts and claims before the final answer.
+cards:
+  - m07-self-refine-flow
+  - m07-question-refinement-compare
+  - m07-flipped-interaction-anatomy
+  - m07-cognitive-verifier-checklist
+labs:
+  - m07-lab-cover-letter-refine
+  - m07-lab-request-clarifier
+  - m07-lab-case-instagram-launch

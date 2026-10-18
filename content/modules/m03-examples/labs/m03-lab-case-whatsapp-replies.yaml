@@ -1,0 +1,125 @@
+id: m03-lab-case-whatsapp-replies
+title: "Meenakshi Textiles: WhatsApp replies in the shop's voice"
+difficulty: 3
+estimated_minutes: 18
+techniques_targeted: [few-shot, exemplar-selection, one-shot]
+uses_product_case: true
+brief: |
+  **From:** Karthik, Meenakshi Textiles
+
+  Your problem statements hit home — people want **quick, warm, trustworthy answers**
+  and I can't reply to 40 WhatsApp messages a day alone. Can the AI draft replies that I
+  check and send? They must sound like **us**, not like a bank. Here are three real
+  replies of mine that customers liked:
+
+  > *Customer:* Sungudi saree available ah? Price evlo?
+  > *Me:* Vanakkam! Yes, we have Sungudi cotton sarees from ₹650 — over 50 colours right now. Shall I send you photos of a few? – Karthik, Meenakshi Textiles
+
+  > *Customer:* Shop open on Tuesday?
+  > *Me:* Vanakkam! Sorry, we are closed on Tuesdays. Open all other days 10 am to 9 pm. See you soon! – Karthik, Meenakshi Textiles
+
+  > *Customer:* Can you send a silk saree to Coimbatore?
+  > *Me:* Vanakkam Madam! Yes, we courier anywhere in Tamil Nadu at actual courier cost. Tell me the colour and budget you have in mind and I'll send options. – Karthik, Meenakshi Textiles
+
+  Shop facts the replies can use:
+  - Open 10 am – 9 pm, closed Tuesdays. West Masi Street, near the temple's west tower.
+  - Sungudi cotton from ₹650. Kanchipuram silk from ₹8,500.
+  - Courier within Tamil Nadu at actual cost. No courier outside Tamil Nadu yet.
+  - Exchange within 7 days with the bill, if unused and the tag is on. **Refunds only Amma decides — never promise one.**
+  - We send photos on request. We do **not** confirm stock of a specific design without checking.
+
+  Rules: reply in **English** (customers write in Tamil, Tanglish or English), "Vanakkam" greeting is fine, **under 60 words**, end with my sign-off. Never make up prices, offers or discounts.
+input_label: Customer message
+test_cases:
+  - id: tc1
+    input: |
+      Hi, do you have Kanchipuram silk in peacock blue? Budget around 10k
+    note: Specific design and budget. The reply must not confirm stock of that exact colour — offer to check and send photos.
+  - id: tc2
+    input: |
+      College farewell ku saree venum, first time wearing. Enna saree nalla irukum? Budget 1000 dhaan
+    note: A first-time student buyer in Tanglish. The voice should be warm and reassuring; Sungudi fits the budget.
+  - id: tc3
+    input: |
+      Student discount iruka? We are 8 girls from Fatima College buying for our dept day
+    note: Asks for a discount that does not exist in the facts. The reply must not invent one, but can offer to pass the request on.
+  - id: tc4
+    input: |
+      நேத்து வாங்கின சுங்குடி சேலை முதல் wash-லயே கலர் போயிடுச்சு. ரொம்ப ஏமாற்றம். பணத்தை திருப்பி குடுங்க.
+    note: An upset customer, in Tamil script, asking for a refund after the saree's colour ran. A naive prompt either promises a refund or sounds defensive. The reply must apologise, explain the exchange option or ask for the bill and a photo, and say Mrs. Lakshmi will look into a refund — without promising it.
+starter_prompt: |
+  You are a customer service assistant for a saree shop. Reply to this WhatsApp message politely.
+reference_prompt: |
+  You draft WhatsApp replies for Meenakshi Textiles, a 40-year-old family saree shop in Madurai. Karthik reads each draft before sending it.
+
+  Shop facts (use only these; never invent prices, offers, discounts or stock):
+  - Open 10 am to 9 pm, closed Tuesdays. West Masi Street, near the temple's west tower.
+  - Sungudi cotton from ₹650. Kanchipuram silk from ₹8,500.
+  - Courier within Tamil Nadu at actual cost. No courier outside Tamil Nadu yet.
+  - Exchange within 7 days with the bill, if unused and the tag is on.
+  - Refunds are decided only by Mrs. Lakshmi, the owner. Never promise a refund.
+  - Photos sent on request. Never confirm a specific design is in stock — offer to check.
+
+  Voice: warm, simple and respectful, like a trusted family shop. Customers may write in Tamil, Tanglish or English; always reply in English. You may start with "Vanakkam". Under 60 words. Always end with "– Karthik, Meenakshi Textiles".
+  If the customer is upset, apologise first, then give the next step. If they ask for something not in the facts, say you will check with Amma rather than inventing an answer.
+
+  Customer: Sungudi saree available ah? Price evlo?
+  Reply: Vanakkam! Yes, we have Sungudi cotton sarees from ₹650 — many colours to choose from. Shall I send you photos of a few? – Karthik, Meenakshi Textiles
+
+  Customer: Can you send a silk saree to Bangalore?
+  Reply: Vanakkam! Sorry, right now we courier only within Tamil Nadu. If someone in Tamil Nadu can receive it, we can send it there at actual courier cost. – Karthik, Meenakshi Textiles
+
+  Customer: Ordered saree blouse stitching was not ready on the date you said. Very bad.
+  Reply: Vanakkam Madam, I am really sorry for the delay and the trouble it caused. Please share your bill number and I will check today and tell you exactly when it will be ready. – Karthik, Meenakshi Textiles
+
+  Customer: Any Deepavali offer this year?
+  Reply: Vanakkam! I will check with Amma about any Deepavali plans and message you back soon. Meanwhile, shall I send photos of our new Sungudi and silk collection? – Karthik, Meenakshi Textiles
+
+  Customer: {{input}}
+  Reply:
+success_criteria:
+  - Every reply is in English, under 60 words, optionally opens with "Vanakkam", and ends with "– Karthik, Meenakshi Textiles".
+  - Replies use only the shop facts; no invented prices, offers, discounts or stock confirmations.
+  - tc1 offers to check and send photos instead of confirming peacock-blue stock.
+  - tc3 does not invent a student discount and offers to check with Amma or the owner.
+  - tc4 apologises first, asks for the bill and/or a photo or explains the exchange option, and does not promise a refund.
+rubric:
+  base: core
+  extra_criteria:
+    - id: brand_voice
+      name: Shop voice
+      weight: 2
+      description: Do the replies sound like Karthik — warm, simple, respectful, short — rather than a formal call centre?
+      diagnoses_prompt: Did the prompt show example replies in the shop's voice, including a complaint and an unknown request?
+      anchors:
+        0: Formal or robotic; does not sound like the shop.
+        1: Polite but generic customer-service tone.
+        2: Warm on easy cases; stiff or defensive on the complaint.
+        3: Consistent voice with small slips (too long, missing sign-off).
+        4: Every reply sounds like Karthik, including the complaint.
+predictions:
+  - id: p1
+    question: "You use Karthik's three examples exactly as given. None of them is a complaint. What happens on tc4?"
+    options:
+      - "A warm apology in the same voice, with no refund promise"
+      - "A cheerful product reply that ignores how upset she is, or a promise of a refund"
+      - "A reply in Tamil script"
+    answer: 1
+    explanation: >
+      All three examples are cheerful answers to simple questions. The model copies that
+      mood. Adding one example of a complaint, and one of a request the facts do not cover,
+      teaches it how to handle the hard cases.
+  - id: p2
+    question: "Which example would most help tc3 (the student discount)?"
+    options:
+      - "Another price question with a clear answer"
+      - "A question about an offer that is not in the facts, answered with \"I'll check with Amma\""
+      - "A courier question"
+    answer: 1
+    explanation: >
+      tc3 asks for something the facts do not cover. An example that shows the safe move —
+      check instead of inventing — is the closest match.
+hints:
+  - Karthik's three replies are ready-made examples. Put them in a fixed Customer → Reply layout and end with the real message.
+  - Look at your test set. Which kinds of message have no matching example? Add one example for a complaint and one for an unknown offer — written by you, not copied from the test cases.
+  - Keep the shop facts and the refund rule as instructions above the examples; examples show the voice, facts keep it honest.

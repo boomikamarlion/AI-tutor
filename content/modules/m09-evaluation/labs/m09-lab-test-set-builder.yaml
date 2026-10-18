@@ -1,0 +1,112 @@
+id: m09-lab-test-set-builder
+title: Build a test set for someone else's prompt
+difficulty: 2
+estimated_minutes: 15
+techniques_targeted: [rubric-evaluation, structured-output]
+uses_product_case: false
+brief: |
+  **Email from Dr. N. Meena, coordinator, college AI club**
+
+  Dear volunteers,
+
+  Students keep showing me prompts and saying "it works". When I ask "on
+  what?", they show me one example. For the club workshop next week I want a
+  helper: paste in the brief for any prompt, and it gives back a starter test
+  set the student can use.
+
+  For each brief I want **6 test cases**:
+  - at least 2 typical, 2 edge and 1 adversarial (someone trying to misuse it)
+  - each with a realistic input written out in full (not "a long message" — write the long message)
+  - what a good output must do, in one or two lines
+  - why the case is there, in a few words
+
+  Please keep it as JSON so we can load it into our sheet:
+  `{"test_cases": [{"id", "category", "input", "expected_behaviour", "why"}], "open_questions": [...]}`
+
+  `open_questions` is for things the brief does not say but a tester needs to
+  know (e.g. "what language should the replies be in?"). If the brief is very
+  vague, this list matters more than the cases.
+
+  Use made-up names and numbers only. Many of the briefs come from real
+  offices and I don't want anyone's details in our sheet.
+input_label: Prompt brief
+test_cases:
+  - id: tc1
+    input: |
+      A prompt that turns a student's plain-English question into a SQL query
+      for our library database. Tables: books(book_id, title, author,
+      language, year), loans(loan_id, book_id, student_id, issued_on,
+      due_on, returned_on). Output only the SQL.
+    note: A technical brief. Good edge cases include questions the schema cannot answer and Tamil questions; a good adversarial case asks for a query that deletes data.
+  - id: tc2
+    input: |
+      A prompt that writes Instagram captions for our NSS camp photos. Input is
+      a one-line description of the photo. Captions should be under 30 words,
+      friendly, and end with #NSSMadurai.
+    note: Creative brief. Edge cases include sad or sensitive photos; adversarial includes a description asking for a caption that mocks villagers.
+  - id: tc3
+    input: |
+      A prompt for the front desk of a small hospital in Madurai. It takes an
+      English notice (timings, rules) and translates it into simple Tamil for
+      patients. Medical terms must stay accurate.
+    note: High-stakes translation. Edge cases include drug names, numbers and very long notices; open questions about which Tamil words to use for medical terms are expected.
+  - id: tc4
+    input: |
+      Make a bot that answers student questions.
+    note: The edge case. The brief is nearly empty. A naive prompt invents a narrow scope and writes confident tests; a good one still produces 6 cases but fills open_questions with what must be decided first (which questions, which college data, which language, what is off-limits).
+starter_prompt: |
+  Give me 6 test cases for this prompt.
+
+  {{input}}
+reference_prompt: |
+  You help college students test their prompts. Given the brief for a prompt,
+  write a starter test set that a student can run against that prompt.
+
+  <brief>
+  {{input}}
+  </brief>
+
+  Write exactly 6 test cases: at least 2 "typical", 2 "edge" and 1
+  "adversarial".
+  - typical: what real users would send on a normal day.
+  - edge: very short or long input, mixed Tamil and English, missing details,
+    two requests at once, or anything the brief does not clearly cover.
+  - adversarial: an input that tries to make the prompt break its own rules
+    (harmful, rude, off-topic, or containing instructions to ignore the rules).
+  Each input must be written out in full, exactly as a user would send it.
+  Use only made-up names, numbers and addresses.
+
+  For each case give expected_behaviour (1–2 lines on what a good output must
+  do, checkable by a reader) and why (under 10 words).
+
+  Then list open_questions: things the brief leaves undecided that change what
+  a correct output is. If the brief is vague, say so plainly in the first
+  question and list at least 4 decisions the author must make. Do not invent
+  answers to these questions inside the test cases; write expected_behaviour
+  that depends on them as "depends on: <question>".
+
+  Output only this JSON, nothing before or after:
+  {"test_cases": [{"id": "t1", "category": "typical|edge|adversarial",
+   "input": "...", "expected_behaviour": "...", "why": "..."}],
+   "open_questions": ["..."]}
+success_criteria:
+  - Output is valid JSON with exactly 6 test cases and an open_questions list.
+  - Each brief gets at least 2 typical, 2 edge and 1 adversarial case.
+  - Inputs are written out in full and are realistic for the brief; no real personal data.
+  - expected_behaviour is checkable (names a concrete property of the output), not "should be good".
+  - tc4 has at least 4 open questions and does not pretend the brief is clear.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "For the vague brief in tc4, what will the starter prompt most likely do?"
+    options:
+      - "Ask what the bot is for"
+      - "Pick a narrow scope on its own and write confident test cases for it"
+      - "Refuse to write test cases"
+    answer: 1
+    explanation: Models fill gaps with assumptions. Unless the prompt makes room for open questions, the assumptions get hidden inside the test cases.
+hints:
+  - Define what typical, edge and adversarial mean in your prompt — the model's idea of an "edge case" is often too mild.
+  - Ask for inputs written in full. Descriptions like "a long message" cannot be run.
+  - Give the model a separate place to say what the brief is missing.

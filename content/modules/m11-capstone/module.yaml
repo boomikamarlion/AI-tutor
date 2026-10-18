@@ -1,0 +1,33 @@
+id: m11-capstone
+order: 11
+title: Capstone — one prompt, the whole journey
+summary: >
+  Put everything together. You will take a real brief from problem to tested,
+  production-quality prompt — once for Meenakshi Textiles, and once for a brief
+  of your own choosing.
+design_stage: prototype
+design_stage_note: >
+  The Meenakshi Textiles case comes full circle. You turn what you learned about
+  the shop's customers, problem and constraints into one prompt that produces a
+  complete festival collection launch kit — problem statement, ideas, a chosen
+  plan and bilingual-ready copy — and test it across very different seasons.
+tier: pro
+estimated_minutes: 90
+techniques:
+  - context-provision
+  - constraints
+  - decomposition
+  - plan-and-solve
+  - structured-output
+  - grounding
+  - uncertainty-permission
+  - self-critique
+  - rubric-evaluation
+  - privacy-hygiene
+objectives:
+  - Turn a messy brief into a problem statement, options and a justified choice inside one prompt.
+  - Combine structure, grounding, constraints and safety rules into a single production-quality prompt.
+  - Test that prompt across varied inputs, including one that breaks the usual pattern, and revise it.
+  - Explain which technique fixed which failure, using the course vocabulary.
+cards: [m11-technique-recap, m11-capstone-flow]
+labs: [m11-lab-case-festival-launch-kit, m11-lab-internship-application-kit]

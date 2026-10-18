@@ -1,0 +1,50 @@
+id: m04-template-compare
+title: Describe the format vs. hand over a template
+technique: template-pattern
+template: compare
+takeaway: When the layout matters, give the model the template itself and tell it to keep every label.
+body: >
+  Describing a layout in words leaves room for interpretation. A template with
+  placeholders leaves almost none: the model copies your labels, keeps your order
+  and only fills the blanks. Say which parts are fixed and what goes in each
+  placeholder.
+data:
+  left:
+    label: Before
+    prompt: |
+      Write a short notice for the department notice board about the guest
+      lecture. Include the important details.
+    output: |
+      Dear students, we are happy to announce an exciting guest lecture on
+      Data Science by an eminent speaker. All are welcome to attend and benefit.
+      Please be on time!
+  right:
+    label: After
+    prompt: |
+      Fill this template for the guest lecture. Keep every label and the line
+      order exactly. Replace each [PLACEHOLDER]; if the detail is not given,
+      write "To be announced".
+
+      GUEST LECTURE: [TOPIC]
+      Speaker: [NAME, DESIGNATION]
+      Date & time: [DAY, DATE, TIME]
+      Venue: [HALL]
+      Who should attend: [YEAR / DEPARTMENT]
+      Contact: [COORDINATOR NAME, PHONE]
+
+      Details: Topic "Data Science in Agriculture", Dr. S. Priya, Associate
+      Professor, TNAU. Friday 14 Nov, 2 pm, Seminar Hall 2. For II and III B.Sc.
+      Computer Science. Coordinator: Mr. Arun.
+    output: |
+      GUEST LECTURE: Data Science in Agriculture
+      Speaker: Dr. S. Priya, Associate Professor, TNAU
+      Date & time: Friday, 14 Nov, 2 pm
+      Venue: Seminar Hall 2
+      Who should attend: II and III B.Sc. Computer Science
+      Contact: Mr. Arun, To be announced
+  verdict: >
+    The first prompt let the model choose both content and layout, so it padded
+    with praise and dropped the facts. The template fixed the layout, forced every
+    detail into a slot and gave a rule for the missing phone number instead of
+    letting the model invent one.
+source: Template pattern from A Prompt Pattern Catalog (White et al., 2023). Example is original.

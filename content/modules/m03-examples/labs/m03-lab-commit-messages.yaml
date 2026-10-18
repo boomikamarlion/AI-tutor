@@ -1,0 +1,101 @@
+id: m03-lab-commit-messages
+title: Commit messages in the team's style
+difficulty: 2
+estimated_minutes: 12
+techniques_targeted: [one-shot, few-shot, exemplar-selection]
+uses_product_case: false
+brief: |
+  **From:** Joel, team lead, college app-dev club (we're building the attendance app)
+
+  Our commit history is a mess — "changes", "final fix", "final final fix". From now on
+  we follow one style. I wrote the rules in our README but nobody reads it, so I want a
+  prompt where you paste a short description of what changed and it writes the commit
+  message:
+
+  ```
+  type(scope): summary in imperative, lowercase, max 60 chars
+  ```
+  - type is one of: feat, fix, docs, style, refactor, test, chore
+  - scope is the main folder or feature: attendance, auth, ui, db, docs
+  - add a body (1–2 bullet lines starting with "- ") only when the reason isn't obvious
+  - never describe behaviour changes that the diff doesn't make
+
+  Look at our good commits, that's the style.
+
+  `fix(auth): stop logout when token refresh fails`
+  `feat(attendance): add weekly summary screen for advisors`
+input_label: Change description
+test_cases:
+  - id: tc1
+    input: |
+      Added a button on the student screen to download your attendance as PDF.
+    note: A plain new feature.
+  - id: tc2
+    input: |
+      Attendance percentage was showing 101% for some students because medical leave days were counted twice. Fixed the calculation in attendance/percent.py.
+    note: A bug fix where a short body explaining why is useful.
+  - id: tc3
+    input: |
+      Updated README with setup steps for Windows and added a Tamil translation of the student guide in docs/.
+    note: Docs-only. The type must be docs, not feat.
+  - id: tc4
+    input: |
+      Ran black formatter over the whole db/ folder. Only whitespace and quote changes, no logic changed. 34 files.
+    note: >
+      A formatting-only change. A naive prompt writes "refactor(db): improve database code"
+      or invents a behaviour change. The correct type is style, with no claim of new behaviour.
+starter_prompt: |
+  Write a good git commit message for this change.
+reference_prompt: |
+  Write a git commit message for the change described below, following our team's style.
+
+  Format: type(scope): summary
+  - type: feat, fix, docs, style, refactor, test or chore. Use style for formatting-only changes and docs for documentation-only changes.
+  - scope: attendance, auth, ui, db or docs — the main area touched.
+  - summary: imperative, lowercase, at most 60 characters, no full stop.
+  - Add a body of 1–2 lines starting with "- " only when the reason for the change is not obvious from the summary.
+  - Describe only what the change description says. Never claim new behaviour for a change that does not change behaviour.
+  Reply with the commit message only.
+
+  Change: Login kept failing silently when the refresh token expired; now it shows a "session expired" message and returns to the login screen.
+  Commit:
+  fix(auth): show session-expired message on token expiry
+  - refresh failures were silent and left users stuck
+
+  Change: Moved the colour values from each screen into one theme file. Screens look exactly the same.
+  Commit:
+  refactor(ui): move screen colours into shared theme file
+
+  Change: Added unit tests for the advisor weekly summary.
+  Commit:
+  test(attendance): add tests for advisor weekly summary
+
+  Change: Fixed indentation and trailing spaces in the ui/ screens. Nothing else changed.
+  Commit:
+  style(ui): fix indentation and trailing spaces in screens
+
+  Change: {{input}}
+  Commit:
+success_criteria:
+  - 'Every output is only a commit message whose first line matches "type(scope): summary".'
+  - Types and scopes come only from the allowed lists; summaries are imperative, lowercase and at most 60 characters.
+  - tc2 is a fix in the attendance scope with a short body explaining the double counting.
+  - tc3 uses type docs.
+  - tc4 uses type style with scope db and claims no change in behaviour.
+rubric:
+  base: core
+predictions:
+  - id: p1
+    question: "None of the examples in a few-shot prompt is a formatting-only change. What is the risk on tc4?"
+    options:
+      - "No risk, the rules mention style"
+      - "The model may still pick refactor or invent an improvement, because no example shows the style type"
+      - "The model will refuse"
+    answer: 1
+    explanation: >
+      Rules help, but examples pull harder. If your examples show only feat, fix and
+      refactor, the model leans toward them. A rule plus a nearby example is safest.
+hints:
+  - Joel already gave you two good commits. Put them in as examples, in a fixed Change → Commit layout.
+  - Write the rules out too — the allowed types and scopes, and the 60-character limit.
+  - Choose examples that are not all features. Think about what tc3 and tc4 need to see.

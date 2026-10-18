@@ -1,0 +1,29 @@
+id: m11-capstone-flow
+title: The capstone process
+technique: plan-and-solve
+template: flow
+takeaway: Plan the prompt like a product — understand, decide, build, test, then improve one thing at a time.
+body: >
+  A capstone prompt is not written in one sitting. Follow the same path the
+  course took, but quickly and in order. Write your success criteria before you
+  write the prompt, so you know what "done" looks like before you start.
+data:
+  steps:
+    - label: Read the brief like a detective
+      detail: Underline the audience, the deliverable and every hidden constraint — budget, people, language, what must never happen.
+    - label: Write success criteria first
+      detail: Turn the brief into 5-6 checkable statements. These become your own mini-rubric.
+    - label: Sketch the output shape
+      detail: Decide the sections or JSON keys before writing instructions. The shape is the contract.
+    - label: Build the prompt in layers
+      detail: Role and context, then task and steps, then facts and constraints, then format, then safety and "not stated" rules.
+    - label: Run every test case
+      detail: Look hardest at the last, unusual case. Note which criterion each failure hits.
+    - label: Change one thing, re-run all
+      detail: Fix the biggest failure, name the technique you used, and confirm no other case got worse.
+    - label: Stop when the criteria pass
+      detail: A good prompt is the shortest one that passes every case — cut anything that does not change a result.
+source: >
+  Plan-and-solve prompting (Wang et al., 2023, via The Prompt Report §2.2.4)
+  applied to the design-thinking cycle; regression practice from software
+  testing. Wording original.

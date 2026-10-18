@@ -1,0 +1,25 @@
+id: m06-long-context-flow
+title: Working with a long document
+technique: context-placement
+template: flow
+takeaway: Long document at the top, labelled; question at the bottom; quotes before the answer.
+body: >
+  When the source runs to many pages, where you put it matters. Models tend to
+  do better when the long material comes first and the question comes last,
+  close to where they start writing. Asking for the relevant quotes before the
+  answer forces the model to find its evidence first.
+data:
+  steps:
+    - label: Put the document first
+      detail: Paste the long text at the top of the prompt, before your instructions and question.
+    - label: Wrap and label it
+      detail: Use tags with a name and, where possible, numbered sections — <policy>, <paper id="P2">, <notes>.
+    - label: Several documents? Label each
+      detail: Give each one its own tag and ID so the model can say which one a fact came from.
+    - label: Ask for quotes first
+      detail: Have the model copy the exact sentences that bear on the question into a quotes section.
+    - label: Answer from the quotes
+      detail: The answer may use only what the quotes contain, with each claim citing its quote.
+    - label: Put the question last
+      detail: End the prompt with the question itself, so it is the freshest thing the model reads.
+source: Anthropic long-context prompting tips (document placement, quote extraction); The Prompt Report §6 on context length. Wording is original.

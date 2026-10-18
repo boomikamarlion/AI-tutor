@@ -1,0 +1,37 @@
+id: m06-not-stated-compare
+title: Without and with permission to say "not stated"
+technique: uncertainty-permission
+template: compare
+takeaway: Tell the model exactly what to say when the source is silent — otherwise it will fill the silence.
+body: >
+  "Use only the document" is necessary but not enough. When a question asks for
+  something the document does not contain, the model feels pressure to answer
+  anyway. Naming the fallback answer — word for word — makes the honest reply
+  as easy to produce as the invented one.
+data:
+  left:
+    label: Before
+    prompt: |
+      Using only the hostel rules below, answer the student's question.
+      <rules>Gate closes 9:30 pm. Visitors allowed Sunday 10 am–5 pm in the
+      visitors' room. Mess timings: 7–9 am, 12:30–2 pm, 7:30–9 pm.</rules>
+      Question: Can my parents stay overnight in the hostel when they visit?
+    output: |
+      Parents may stay overnight in the guest room with prior permission from
+      the warden, as per hostel rules.
+  right:
+    label: After
+    prompt: |
+      Using only the hostel rules below, answer the student's question. If the
+      rules do not cover something, reply "The rules don't say — please ask the
+      warden." for that part. Never fill gaps with what hostels usually do.
+      (Same rules and question.)
+    output: |
+      The rules don't say — please ask the warden. They only mention daytime
+      visits: Sunday 10 am–5 pm in the visitors' room.
+  verdict: >
+    The first answer invented a guest room and a permission process because
+    that is what hostels often have. Naming the exact fallback sentence, and
+    forbidding "what usually happens", produced an honest answer that still
+    gave the related fact the rules do contain.
+source: Uncertainty-permission guidance from Anthropic and OpenAI documentation on reducing hallucinations. Example is original.
